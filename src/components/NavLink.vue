@@ -1,22 +1,26 @@
 <template>
-  <div class="group flex flex-col space-y-2 font-bold">
-    <a :href="href" class="py-2 block">
+  <div class="group flex flex-col space-y-1 font-bold">
+    <a :href="href" class="py-1 block">
       <slot></slot>
     </a>
     <span
       class="block bg-darkMoustard h-0.5 scale-0 origin-left transition-transform duration-500 ease-in-out group-hover:scale-100"
-    ></span>
+      :class="[{ 'scale-0': !active }, { 'scale-100': active }]"></span>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
 const props = defineProps({
-  href: {
+  nav: {
     required: false,
     default: "",
   },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 });
-const href = ref(props.href);
+const href = ref(props.nav);
 </script>
 <style scoped>
 h1 {
@@ -25,6 +29,7 @@ h1 {
   margin: 0;
   text-transform: uppercase;
 }
+
 h1:after {
   display: block;
   content: "";
@@ -32,6 +37,7 @@ h1:after {
   transform: scaleX(0);
   transition: transform 250ms ease-in-out;
 }
+
 h1:hover:after {
   transform: scaleX(1);
 }
