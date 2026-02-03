@@ -19,7 +19,7 @@ import { ref, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
     modelValue: { type: String, default: '' },
-    debounce: { type: Number, default: 300 },
+    debounce: { type: Number, default: 750 },
     placeholder: { type: String, default: 'Search...' },
     type: { type: String, default: 'search' },
     ariaLabel: { type: String, default: 'Search input' }

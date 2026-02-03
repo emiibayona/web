@@ -1,7 +1,8 @@
 <template>
-    <div class="flex flex-row gap-2 items-center h-6">
-        <input v-bind="$attrs" type="checkbox" id="checkbox" :value="checked" @change="$emit('update', !checked)" />
-        <label for="checkbox">{{ label }}</label>
+    <div class="flex flex-row gap-2 items-center h-6 hover:font-bold hover:cursor-pointer">
+        <input v-bind="$attrs" type="checkbox" id="checkbox" :value="checked" @change="$emit('update', !checked)"
+            class="hover:cursor-pointer" />
+        <label for="checkbox" class="hover:cursor-pointer">{{ label }}</label>
     </div>
 </template>
 

@@ -71,8 +71,7 @@ onBeforeUnmount(() => setListener())
     font-family: Inter, system-ui, Arial;
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
-
-
+    background: #FFEDB8;
 }
 
 .toggle {

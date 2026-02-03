@@ -23,13 +23,13 @@ const useFilters = (game = GAMES.MAGIC) => {
         { label: "Special", value: "special", checked: false },
         { label: "Basic Land", value: "basicland", checked: false },
       ],
-      Color: [
+      Colors: [
         { label: "White", value: "W", checked: false },
         { label: "Blue", value: "U", checked: false },
         { label: "Black", value: "B", checked: false },
         { label: "Red", value: "R", checked: false },
         { label: "Green", value: "G", checked: false },
-        { label: "Colorless", value: "C", checked: false },
+        { label: "Colorless", value: "CLS", checked: false },
       ],
     };
 

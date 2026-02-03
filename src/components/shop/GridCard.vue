@@ -2,11 +2,14 @@
     <div class="flex flex-row justify-center" ref="root">
         <div class="flex flex-col gap-4 p-4  max-w-[250px]">
             <div class="group relative max-w-max">
-                <img class=" border-black duration-300 ease-in-out" :class="[{ 'scale-150': zoomed }]"
+                <div v-if="isFoil"
+                    class="rainbow-bg absolute top-0 h-full w-full z-[2] transition-all duration-300 ease-in-out"
+                    :class="[{ 'scale-150': zoomed }]"></div>
+                <img class="block border-black duration-300 ease-in-out " :class="[{ 'scale-150': zoomed }]"
                     :title="title + '(' + expansion + ')'" :alt="title + '(' + expansion + ')'" loading="eager"
                     :src="image">
-                <div class="absolute opacity-0 flex justify-center items-center text-white  bottom-4 transition-all duration-300 ease-in-out bg-black rounded-full cursor-pointer p-1 text-xl  ring-white group-hover:opacity-80"
-                    :class="[{ '-right-9 -bottom-[50px] h-10 w-10 ring-2 z-10': zoomed }, { 'right-2 h-6 w-6 ring-1 z-0': !zoomed }]"
+                <div class="absolute opacity-0 flex justify-center items-center text-white  bottom-4 transition-all duration-300 ease-in-out bg-black rounded-full cursor-pointer p-1 text-xl  ring-white group-hover:opacity-80 z-10"
+                    :class="[{ '-right-9 -bottom-[50px] h-10 w-10 ring-2': zoomed }, { 'right-2 h-6 w-6 ring-1': !zoomed }]"
                     @click=" zoomed = !zoomed">
                     <span class="flex justify-center items-center"> {{ zoomed ? "-" : "+" }}</span>
                 </div>
@@ -15,7 +18,7 @@
                 <span class="text-bold">{{ title }}</span>
                 <span class="font-thin text-xs">{{ expansion }}</span>
             </div>
-            <div class="flex flex-col gap-2 border-t-2 border-black py-2">
+            <div v-if="fromShop" class="flex flex-col gap-2 border-t-2 border-black py-2">
                 <div class="flex flex-col gap-2">
                     <span class="font-bold">Disponibles: <span class="font-normal">1</span></span>
                     <span class="font-bold">{{ price }} USD <span class="font-thin text-xs">{{
@@ -59,6 +62,8 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    fromShop: { type: Boolean, default: false },
+    isFoil: { type: Boolean, default: false }
 });
 
 const zoomed = ref(false);

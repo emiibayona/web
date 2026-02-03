@@ -10,6 +10,7 @@
   "dependencies": {
     "@nuxt/image": "^2.0.0",
     "@vueuse/core": "^14.1.0",
+    "axios": "^1.13.4",
     "pinia": "^3.0.4",
     "vue": "^3.2.47",
     "vue-router": "^4.6.4",

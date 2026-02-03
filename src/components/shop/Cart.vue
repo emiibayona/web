@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-3xl mx-auto p-4">
+    <div class="max-w-3xl mx-auto p-4 w-full">
         <h2 class="text-2xl font-semibold mb-4">Cart (<span>{{ resume.items }}</span>)</h2>
 
         <ul class="space-y-1">
@@ -59,7 +59,7 @@
             <div class="text-lg font-medium">Subtotal</div>
             <div class="text-lg font-semibold">{{ formatCurrency(subtotal) }}</div>
         </div> -->
-        <div class="w-full flex mt-4">
+        <div v-if="items?.length" class="w-full flex mt-4">
             <button @click="console.log('Edit clicked')"
                 class="px-4 py-2 rounded-md font-medium shadow-sm bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-600">
                 Editar
@@ -82,22 +82,23 @@ import { ref, computed } from "vue";
 defineProps({
     edit: { type: Boolean, default: false }
 })
-const items = ref([
-    {
-        name: "Hexing Squelcher",
-        id: 1,
-        qty: 2,
-        expansions: [
-            { qty: 1, qtyAvailable: 2, id: "a", name: "Lorwyn Eclipsed", price: 2.5 },
-            { qty: 1, qtyAvailable: 2, id: "b", name: "Lorwyn Eclipsed Variants", price: 3.0 },
-        ],
-    },
-    {
-        id: 2,
-        name: "Necropotence",
-        expansions: [{ qty: 1, qtyAvailable: 2, id: "a", name: "Wilds of Eldraine Enchanting Tales", }],
-    },
-]);
+const items = ref([]);
+// const items = ref([
+//     {
+//         name: "Hexing Squelcher",
+//         id: 1,
+//         qty: 2,
+//         expansions: [
+//             { qty: 1, qtyAvailable: 2, id: "a", name: "Lorwyn Eclipsed", price: 2.5 },
+//             { qty: 1, qtyAvailable: 2, id: "b", name: "Lorwyn Eclipsed Variants", price: 3.0 },
+//         ],
+//     },
+//     {
+//         id: 2,
+//         name: "Necropotence",
+//         expansions: [{ qty: 1, qtyAvailable: 2, id: "a", name: "Wilds of Eldraine Enchanting Tales", }],
+//     },
+// ]);
 
 const increase = (item) => {
     item.qty++;

@@ -12,7 +12,7 @@
                     </template>
                     <template #apply>
                         <button
-                            class="mt-4 p-2 border border-black  hover:bg-slate-400 hover:cursor-pointer hover:rounded-md transition-all duration-300 ease-in-out"
+                            class="mt-4 p-2 border border-black hover:shadow-lg hover:bg-slate-400 hover:cursor-pointer rounded-md transition-all duration-300 ease-in-out"
                             @click="applyIt">Apply
                             Filters</button>
                     </template>
@@ -34,36 +34,49 @@
                 </div>
                 <div>
 
-                    <div v-if="!loading"
-                        class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-5 2xl:grid-cols-7 2xl:gap-4">
-                        <!-- Example usage of GridCard component -->
-                        <GridCard title="Hexing Squelcher"
+                    <!-- <div v-if="!loading"
+                        class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-5 2xl:grid-cols-7 2xl:gap-4"> -->
+                    <!-- Example usage of GridCard component -->
+                    <!-- <GridCard title="Hexing Squelcher"
                             image="https://cards.scryfall.io/large/front/6/7/674960ce-ff33-4d5e-a24a-a4582b2e9809.jpg?1767658306"
-                            expansion="Lorwyn Eclipsed (R)" price="24.99" />
+                            expansion="Lorwyn Eclipsed (R)" price="24.99" from-shop />
                         <GridCard
                             image="https://cards.scryfall.io/large/front/6/8/68618675-3e00-4b07-b1da-0e4be5700a1c.jpg?1767660870"
-                            title="Hexing Squelcher" expansion="Lorwyn Eclipsed Variants (R)" price="44.99" />
+                            title="Hexing Squelcher" expansion="Lorwyn Eclipsed Variants (R)" price="44.99" from-shop />
                         <GridCard
                             image="https://cards.scryfall.io/large/front/1/4/145f10ab-b41b-4213-b75f-522aafe940fb.jpg?1769126263"
-                            title="Hexing Squelcher" expansion="Promo Pack (R)" price="29.99" />
+                            title="Hexing Squelcher" expansion="Promo Pack (R)" price="29.99" from-shop />
                         <GridCard title="Hexing Squelcher"
                             image="https://cards.scryfall.io/large/front/6/7/674960ce-ff33-4d5e-a24a-a4582b2e9809.jpg?1767658306"
-                            expansion="Lorwyn Eclipsed (R)" price="24.99" />
+                            expansion="Lorwyn Eclipsed (R)" price="24.99" from-shop />
                         <GridCard
                             image="https://cards.scryfall.io/large/front/6/8/68618675-3e00-4b07-b1da-0e4be5700a1c.jpg?1767660870"
-                            title="Hexing Squelcher" expansion="Lorwyn Eclipsed Variants (R)" price="44.99" />
+                            title="Hexing Squelcher" expansion="Lorwyn Eclipsed Variants (R)" price="44.99" from-shop />
                         <GridCard
                             image="https://cards.scryfall.io/large/front/1/4/145f10ab-b41b-4213-b75f-522aafe940fb.jpg?1769126263"
-                            title="Hexing Squelcher" expansion="Promo Pack (R)" price="29.99" />
+                            title="Hexing Squelcher" expansion="Promo Pack (R)" price="29.99" from-shop />
                         <GridCard title="Hexing Squelcher"
                             image="https://cards.scryfall.io/large/front/6/7/674960ce-ff33-4d5e-a24a-a4582b2e9809.jpg?1767658306"
-                            expansion="Lorwyn Eclipsed (R)" price="24.99" />
+                            expansion="Lorwyn Eclipsed (R)" price="24.99" from-shop />
                         <GridCard
                             image="https://cards.scryfall.io/large/front/6/8/68618675-3e00-4b07-b1da-0e4be5700a1c.jpg?1767660870"
-                            title="Hexing Squelcher" expansion="Lorwyn Eclipsed Variants (R)" price="44.99" />
+                            title="Hexing Squelcher" expansion="Lorwyn Eclipsed Variants (R)" price="44.99" from-shop
+                            is-foil />
                         <GridCard
                             image="https://cards.scryfall.io/large/front/1/4/145f10ab-b41b-4213-b75f-522aafe940fb.jpg?1769126263"
-                            title="Hexing Squelcher" expansion="Promo Pack (R)" price="29.99" />
+                            title="Hexing Squelcher" expansion="Promo Pack (R)" price="29.99" from-shop /> -->
+                    <!-- <div class="grid grid-cols-5 gap-8 max-w-[1600px]">
+                            <div v-for="(card, index) in localCollection" :id="index" class="flip-container">
+
+                            </div>
+                        </div> -->
+                    <!-- </div> -->
+                    <div v-if="!loading">
+                        <div class="grid grid-cols-4 gap-8 max-w-[1600px]">
+                            <MtgCard v-for="(card, index) in localCollection" :id="index" :card="card" />
+                        </div>
+                        <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit"
+                            :loading="loading" @page-changed="fetchLocalCollection" />
                     </div>
                     <div v-else class="col-span-4 2xl:col-span-5 flex flex-row">
                         <div
@@ -98,10 +111,16 @@
 import GridCard from "@/components/shop/GridCard.vue";
 import NavList from "@/components/NavList.vue";
 import Filters from "@/components/shop/Filters.vue";
-import { computed, ref, watch } from "vue";
+// import Filters from '@/components/Filters.vue';
+import { computed, ref, watch, onMounted } from "vue";
 import InputField from "@/components/atomic/InputField.vue";
 import Dropdown from "@/components/atomic/Dropdown.vue";
 import Cart from "@/components/shop/Cart.vue";
+import Loader from '@/components/atomic/Loader.vue';
+import MtgCard from '@/components/MtgCard.vue';
+import Pagination from '@/components/Pagination.vue';
+import { useCollectionStore } from '@/stores/collection'
+
 const loading = ref(false);
 const filters = ref(null);
 const expansionSelected = ref(null);
@@ -109,16 +128,92 @@ const searched = ref('');
 
 // TODO: clean it
 
-function applyIt() {
-    if (Object.values(filters?.value?.activeFilters || {}).length || searched.value) {
-        loading.value = true;
-        const active = filters.value.activeFilters;
-        console.log("Active Filters:", active);
 
-        setTimeout(() => {
-            loading.value = false;
-        }, 1000);
+const store = useCollectionStore();
+const collection = computed(() => store.collection)
+const localCollection = ref([]);
+const page = ref(1);
+const limit = 15;
+const currentFilters = ref({})
+
+const currentUser = "emii.bayona22@gmail.com";
+
+async function fetchLocalCollection(params, query = filters?.value?.activeFilters) {
+    console.log("Filters", query)
+    const app = document.getElementById("app");
+    app.style.overflow = "hidden";
+    page.value = params.page || 1;
+    loading.value = true;
+    await store.fetchCollection(currentUser, { ...params, cardWhere: JSON.stringify(query), cards: true });
+    localCollection.value = localCollection.value?.length === collection.value.data.length ? localCollection.value : []
+    collection.value?.data?.forEach((cd, index) => {
+        const cardToShow = { ...cd, image: loadImg(cd.card) }
+        if (localCollection.value?.length === collection.value.data.length) {
+            localCollection.value[index] = cardToShow
+        } else {
+            localCollection.value.push(cardToShow)
+        }
+    })
+    setTimeout(() => {
+        loading.value = false;
+        app.scroll({ top: 0, behavior: 'smooth' });
+        document.getElementById("app").style.overflow = "auto";
+    }, 1000)
+}
+
+onMounted(async () => {
+    await fetchLocalCollection({ limit, offset: 0 });
+})
+
+const loadImg = (card) => {
+    const sources = { hasDouble: false, faceUp: null, faceDown: null };
+    if (card?.card_faces?.length && card?.card_faces?.every(x => x.image_uris)) {
+        sources.faceUp = card.card_faces[0]?.image_uris?.png;
+        sources.faceDown = card.card_faces[1]?.image_uris?.png;
+        sources.hasDouble = true;
+    } else {
+        sources.faceUp = card?.image_uris?.png || card?.image_uris?.large;
     }
+    return sources;
+};
+
+// watch(currentFilters, async () => {
+//     loading.value = true;
+//     page.value = 1;
+//     await fetchLocalCollection({
+//         page: page.value,
+//         offset: (page.value - 1) * limit,
+//         limit: limit,
+//     }, currentFilters.value)
+// }, { deep: true })
+async function initCollection(addParams) {
+    page.value = 1;
+    await fetchLocalCollection({
+        page: page.value,
+        offset: (page.value - 1) * limit,
+        limit: limit,
+        ...addParams
+    }, filters?.value?.activeFilters)
+}
+
+watch(searched, async () => {
+    await initCollection({ name: searched.value })
+}, { deep: true })
+async function applyIt() {
+
+    // TODO: button active if the params are differents from the previous search
+    // if (Object.values(filters?.value?.activeFilters || {}).length || searched.value) {
+
+    await initCollection();
+
+    // loading.value = true;
+    // const active = filters.value.activeFilters;
+    // console.log("Active Filters:", active);
+
+    // setTimeout(() => {
+    //     loading.value = false;
+    // }, 1000);
+    // }
 }
 </script>
 
