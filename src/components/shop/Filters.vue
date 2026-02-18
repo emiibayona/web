@@ -75,6 +75,7 @@ watch(filtersMapped, () => {
 
     if (!filtersMapped.value) return;
 
+    console.log("Filters", filtersMapped?.value)
     filtersMapped.value.forEach(([group, filters]) => {
         const checkedFilters = filters.filter(f => f.checked).map(f => f.value);
         if (checkedFilters.length > 0) {
