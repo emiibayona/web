@@ -12,6 +12,26 @@ const router = createRouter({
       component: () => import("@/pages/magic/index.vue"),
     },
     {
+      path: "/yugioh",
+      name: "yugioh",
+      component: () => import("@/pages/yugioh/index.vue"),
+    },
+    {
+      path: "/pokemon",
+      name: "pokemon",
+      component: () => import("@/pages/pokemon/index.vue"),
+    },
+    {
+      path: "/digimon",
+      name: "digimon",
+      component: () => import("@/pages/digimon/index.vue"),
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: () => import("@/pages/about/index.vue"),
+    },
+    {
       path: "/magic/singles",
       name: "magic-singles",
       component: () => import("@/pages/magic/singles/index.vue"),

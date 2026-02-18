@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 bg-header min-h-[300px]">
-        <HeaderVue></HeaderVue>
+        <!-- <HeaderVue></HeaderVue> -->
     </div>
     <main>
         <div class="flex flex-col w-full justify-around bg-main">
@@ -17,14 +17,16 @@
                 <span class="text-xl pb-4">Nuestros juegos</span>
                 <div class="grid grid-cols-2 gap-4">
 
-                    <AnimatedBanner bg="https://images3.alphacoders.com/613/thumb-1920-613696.png" text="Yu Gi Oh!!!"
-                        big />
+                    <AnimatedBanner img="/src/assets/img/mtg-logo.png" path="magic" big
+                        bg="https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80" />
+                    <AnimatedBanner
+                        bg="https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/08/yugioh-1.jpg?w=1200&h=675&fit=crop"
+                        text="Yu Gi Oh!!!" big />
                     <AnimatedBanner bg="https://champions.pokemon.com/_images/global/header/header-lg.jpg" big
                         img="
                         https://www.pokemon.com/static-assets/content-assets/cms2-es-es/img/trading-card-game/series/me_series/me01/me01_logo_169_es.png" />
-                    <AnimatedBanner text="Digimon" big />
-                    <AnimatedBanner img="/src/assets/img/mtg-logo.png" path="magic" big
-                        bg="https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80" />
+                    <AnimatedBanner text="Digimon" big
+                        bg="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkfPGewkn2AAbB5M98NlrAXvwykPbajfv7St2X3yWBZVg_z4TmkllnTHZgEnuB6hb8CUAineeD2kN8-eJrN8fXbhTcTX3SjYjMiC5wl6IFlQlwAWBwDrMfbauf-AybR71tT9gTO3wYsG8O/d/Digimon+Data+squad+savers.jpg" />
 
                 </div>
             </div>
@@ -42,7 +44,7 @@ import NavList from "@/components/NavList.vue";
 import { computed } from "vue";
 import AnimatedBanner from "@/components/AnimatedBanner.vue";
 const data = computed(() => [
-    { name: "Magic: The Gathering", path: "magic",  },
+    { name: "Magic: The Gathering", path: "magic", },
     { name: "Yu Gi Oh!", path: "yu-gi-oh" },
     { name: "Digimon", path: "digimon" },
     { name: "Sobre nosotros", path: "about" },
@@ -56,8 +58,9 @@ const data = computed(() => [
     background-repeat: no-repeat;
     background-size: contain;
 
-    animation: opening 2s ease-in-out;
-    animation-fill-mode: both;
+    // animation: opening 2s ease-in-out;
+    // animation-fill-mode: both;
+    background-image: url("@/assets/img/banner.gif");
 }
 
 @keyframes opening {

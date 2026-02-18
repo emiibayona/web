@@ -12,13 +12,20 @@
         <!-- class="absolute bottom-0 left-[100px] w-full h-[200px] bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center gap-2 cursor-pointer" -->
         <div v-if="shop" class="shop">
             <div class="flex flex-row gap-1">
-                <span class="text-white font-bold drop-shadow-md hover:cursor-pointer" @click="addCard">+1
-                    Carrito |</span>
-                <span class="text-white font-bold drop-shadow-md hover:cursor-pointer" @click="addWishlist">+1
+                <span
+                    class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2"
+                    @click="addCard">+1
+                    Carrito</span>
+                <span class="text-white font-bold drop-shadow-md">|</span>
+                <span
+                    class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2"
+                    @click="addWishlist">+1
                     Wishlist</span>
             </div>
-            <a :href="ckUrl" target="_blank" class="text-sm text-gray-300 underline">Ver versiones en CardKingdom</a>
-            <span v-if="!price" class="text-white font-bold" @click="checkPrice">Check price</span>
+            <a :href="ckUrl" target="_blank" class="text-sm text-gray-300 underline hover:scale-110 duration-300">Ver
+                versiones en CardKingdom</a>
+            <span v-if="!price" class="text-white font-bold hover:scale-125 duration-300" @click="checkPrice">Check
+                price</span>
             <div v-else class="flex flex-col justify-center items-center gap-2">
                 <span class="text-white font-bold">{{ price }}</span>
             </div>
