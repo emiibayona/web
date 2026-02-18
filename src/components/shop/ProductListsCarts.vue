@@ -35,7 +35,7 @@ const checkoutViaWhatsApp = (cart) => {
             items.push(`*${itemSet.qty}x* | ${item.name} | *SET:* ${itemSet.set.name} | *Tratamiento:* ${capi(itemSet.treatment === "" ? "normal" : itemSet.treatment)}`)
         })
     )
-    window.open(`https://wa.me/${59893838941}?text=${encodeURIComponent(messageHeader + items.join('\n'))}`, '_blank');
+    window.open(`https://wa.me/${import.meta.env.VITE_PHONE_CONTACT}?text=${encodeURIComponent(messageHeader + items.join('\n'))}`, '_blank');
 };
 </script>
 
