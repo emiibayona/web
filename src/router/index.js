@@ -36,6 +36,11 @@ const router = createRouter({
       name: "Wishlist",
       component: () => import("@/pages/wishlist.vue"),
     },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: () => import("@/pages/NotFound.vue"),
+    },
   ],
 });
 
