@@ -23,7 +23,7 @@
                         img="
                         https://www.pokemon.com/static-assets/content-assets/cms2-es-es/img/trading-card-game/series/me_series/me01/me01_logo_169_es.png" />
                     <AnimatedBanner text="Digimon" big />
-                    <AnimatedBanner img="src/assets/img/mtg-logo.png" path="magic" big
+                    <AnimatedBanner img="/src/assets/img/mtg-logo.png" path="magic" big
                         bg="https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80" />
 
                 </div>
