@@ -3,6 +3,8 @@ import { ApiURL } from "./constants";
 
 export default {
   get: async (path, options) => {
+    console.log("ApiURL", ApiURL);
+    console.log("Path", path);
     try {
       const response = await axios.get(ApiURL + path, options);
       return response.data;
