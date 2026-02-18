@@ -4,7 +4,8 @@
       <NavLink :nav="item.path" :active="item.active">{{ item.name }}</NavLink>
     </li>
     <div class="absolute top-4 right-4 flex flex-row gap-4 cursor-pointer">
-      <a class="" :href="`/user${data.find(x => x.active)?.path}`">Tus cartas</a>
+      <a v-if="data.find(x => x.active && x.path !== '/')" class=""
+        :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a>
       <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
         <span v-if="listsLength.cart">{{ listsLength.cart }}</span>
         <img class="icon" src="/src/assets/img/cart.png" alt="Logo" />
