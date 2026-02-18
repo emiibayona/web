@@ -3,7 +3,8 @@
         @click="path ? router.push(route.fullPath + (route.fullPath.endsWith('/') ? '' : '/') + path) : null">
         <div class="content">
             <span v-if="text">{{ text }}</span>
-            <img class="img-logo" :src="img || '/src/assets/img/mtg-logo.png'" alt="Right Image" />
+            <img v-if="img || path === 'magic'" class="img-logo" :src="img || '/src/assets/img/mtg-logo.png'"
+                alt="Right Image" />
         </div>
         <!-- </div> -->
         <div v-if="bg" class="bg-img" :style="{ backgroundImage: `url(${bg})` }"></div>
