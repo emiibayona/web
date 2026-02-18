@@ -1,0 +1,59 @@
+@mixin flex(
+  $direction: row,
+  $justify: flex-start,
+  $align: flex-start,
+  $gap: 0
+) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin grid($columns: auto, $rows: auto, $gap: 0) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  grid-template-rows: $rows;
+  gap: $gap;
+}
+
+/*
+* Breakpoint
+    nm: "1000px",
+    hd: "1280px",
+    hd1: "1366px",
+    hd2: "1660px",
+    fhd: "1920px",
+*/
+@mixin breakpoint($size) {
+  @if $size == nm {
+    @media (max-width: 999px) {
+      @content;
+    }
+  } @else if $size == hd {
+    @media (min-width: 1000px) {
+      @content;
+    }
+  } @else if $size == hd1 {
+    @media (min-width: 1280px) {
+      @content;
+    }
+  } @else if $size == hd2 {
+    @media (min-width: 1366px) {
+      @content;
+    }
+  } @else if $size == fhd {
+    @media (min-width: 1660px) {
+      @content;
+    }
+  } @else if $size == fhd2 {
+    @media (min-width: 1920px) {
+      @content;
+    }
+  } @else if $size == fhd3 {
+    @media (min-width: 2560px) {
+      @content;
+    }
+  }
+}

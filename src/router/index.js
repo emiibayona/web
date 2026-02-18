@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/pages/home/index.vue";
 
 const router = createRouter({
+  scrollBehavior: () => ({ left: 0, top: 0 }),
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: "/", name: "home", component: HomeView },
@@ -16,9 +17,24 @@ const router = createRouter({
       component: () => import("@/pages/magic/singles/index.vue"),
     },
     {
+      path: "/magic/sealed",
+      name: "magic-sealed",
+      component: () => import("@/pages/magic/sealed/index.vue"),
+    },
+    {
       path: "/user/magic",
       name: "user Collection",
       component: () => import("@/pages/user/magic/index.vue"),
+    },
+    {
+      path: "/cart",
+      name: "Cart",
+      component: () => import("@/pages/cart.vue"),
+    },
+    {
+      path: "/wishlist",
+      name: "Wishlist",
+      component: () => import("@/pages/wishlist.vue"),
     },
   ],
 });

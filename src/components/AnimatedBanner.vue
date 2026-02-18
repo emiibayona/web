@@ -38,10 +38,6 @@ defineProps({
 });
 const route = useRoute();
 const router = useRouter();
-router.push(route.fullPath + '/');
-
-console.log(router);
-// Pending navigation
 </script>
 
 <style lang="scss" scoped>

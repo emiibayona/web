@@ -58,9 +58,13 @@ module.exports = {
           },
         },
       },
-      screens: {
-        xs: "420px",
-      },
+    },
+    screens: {
+      nm: "1000px",
+      hd: "1280px",
+      hd1: "1366px",
+      hd2: "1660px",
+      fhd: "1920px",
     },
   },
   plugins: [],

@@ -88,7 +88,7 @@ button:hover {
 </style> -->
 
 <template>
-    <nav v-if="total > limit" class="flex items-center justify-center space-x-2 py-4">
+    <nav v-if="total > limit" class="flex items-center justify-center space-x-2 py-10 z-[200]">
         <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1"
             class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#2D2D2D] text-white transition-colors hover:bg-[#3D3D3D] disabled:opacity-50 disabled:cursor-not-allowed">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -137,11 +137,11 @@ const changePage = (page) => {
     if (props.loading) return;
     if (page >= 1 && page <= props.total) {
         emit('update:currentPage', page);
-        emit('page-changed', {
-            page,
-            offset: (page - 1) * props.limit,
-            limit: props.limit,
-        })
+        // emit('page-changed', {
+        //     page,
+        //     offset: (page - 1) * props.limit,
+        //     limit: props.limit,
+        // })
     }
 };
 

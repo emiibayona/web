@@ -1,6 +1,6 @@
 <template>
-  <div class="group flex flex-col space-y-1 font-bold">
-    <a :href="href" class="py-1 block">
+  <div class="group flex flex-col space-y-1 font-bold text-lg ">
+    <a :href="href" class="py-1 block link">
       <slot></slot>
     </a>
     <span
@@ -20,9 +20,21 @@ const props = defineProps({
     default: false,
   },
 });
-const href = ref(props.nav);
+const href = ref(`${window?.location?.origin}${props.nav}`);
+
 </script>
-<style scoped>
+<style scoped lang="scss">
+.link {
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    text-shadow:
+      4px 4px 4px rgba(0, 0, 0, 0.4),
+      0 0 1em white,
+      0 0 0.2em white;
+  }
+}
+
 h1 {
   color: #666;
   display: inline-block;

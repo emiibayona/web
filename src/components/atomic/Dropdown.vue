@@ -1,8 +1,9 @@
 <template>
     <div class="dropdown" ref="root">
         <button class="toggle" @click="open = !open">
-            {{ selectedLabel }}
-            <span class="caret">▾</span>
+            <span class="truncate">{{ selectedLabel }}</span>
+            <span v-if="!modelValue" class="caret">▾</span>
+            <span v-else class="caret" @click.stop="select(null)">×</span>
         </button>
 
         <div v-if="open" class="menu">
@@ -14,7 +15,8 @@
             </template>
 
             <template v-else>
-                <div v-for="it in normItems" :key="it.value" class="item" @click="select(it)">{{ it.label }}</div>
+                <div v-for="it in normItems" :key="it.value" class="item truncate" @click="select(it)">{{ it.label }}
+                </div>
             </template>
         </div>
     </div>
@@ -47,7 +49,7 @@ const selected = computed(() => flat.value.find(i => i.value === props.modelValu
 const selectedLabel = computed(() => selected.value?.label || props.placeholder)
 
 function select(it) {
-    emit('update:modelValue', it.value)
+    emit('update:modelValue', it?.value || null)
     open.value = false
 }
 
@@ -105,8 +107,9 @@ onBeforeUnmount(() => setListener())
     border-radius: 8px;
     min-width: 180px;
     z-index: 20;
-    overflow: hidden;
+    overflow: auto;
     width: 100%;
+    max-height: 300px;
 }
 
 .item {

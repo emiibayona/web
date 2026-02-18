@@ -1,7 +1,6 @@
 <template>
-    <div class="col-span-4 2xl:col-span-5 flex flex-row">
-        <div
-            class="flex flex-row min-h-[140px] w-full justify-center gap-4 mt-4 overflow-x-scroll rounded-lg p-6 lg:overflow-visible">
+    <div class="flex flex-row">
+        <div class="flex flex-row min-h-[140px] w-full justify-center gap-4 mt-4 rounded-lg p-6">
             Loading
             <svg class="text-gray-300 animate-spin" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24">
