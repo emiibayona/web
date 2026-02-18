@@ -21,7 +21,7 @@ import Toast from 'primevue/toast';
 import useDevices from '@/composables/useDevices';
 const devices = useDevices();
 onBeforeMount(() => {
-  localStorage.setItem("user", "emii.bayona22@gmail.com");
-  localStorage.setItem("seller", "turco@gmail.com");
+  localStorage.setItem("user", import.meta.env.VITE_USER_EMAIL);
+  localStorage.setItem("seller", import.meta.env.VITE_SELLER_EMAIL);
 })
 </script>

@@ -6,10 +6,10 @@
         <span class="text-3xl">Pero mientras tanto....</span>
         <div class="flex flex-row gap-20">
             <a href="https://www.instagram.com/geartowntcg/" target="_blank"
-                class="flex flex-row items-center gap-2 animated"><img src="src/assets/img/instagram.png"
+                class="flex flex-row items-center gap-2 animated"><img src="/src/assets/img/instagram.png"
                     class="w-16 h-16" /><span class="font-bold">Vísitanos en nuestro Instagram</span></a>
             <span class="flex flex-row items-center gap-2 animated" @click="toWpp"><img
-                    src="src/assets/img/whatsapp.png" class="w-16 h-16" /><span class="font-bold">Contactanos por
+                    src="/src/assets/img/whatsapp.png" class="w-16 h-16" /><span class="font-bold">Contactanos por
                     whatsapp</span></span>
         </div>
     </div>
