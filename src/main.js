@@ -7,8 +7,6 @@ import Aura from "@primeuix/themes/aura";
 
 import "./assets/main.css";
 import router from "./router";
-// Esto le dice a Vite: "Carga todas las imágenes de esta carpeta"
-// Aunque no las uses ahora, Vite las incluirá en el build.
 const images = import.meta.glob(
   "@/assets/images/**/*.{png,jpg,jpeg,svg,webp}",
   { eager: true },
