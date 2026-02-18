@@ -3,7 +3,8 @@
   <div class="px-10 h-full">
 
     <!-- sticky top-0 -->
-    <NavList class="flex justify-center space-x-4 items-center gap-24 py-5 px-20 sticky top-0 z-20 bg-site" />
+    <NavList
+      class="flex flex-col nm:flex-row justify-center space-x-4 items-center py-5 px-20 sticky top-0 z-20 bg-site hd:gap-5 hd2:gap-24" />
     <!-- <div class=""> -->
     <router-view>
     </router-view>

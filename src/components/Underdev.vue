@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-col gap-10 items-center mt-20">
-        <h1 class="font-black text-5xl">
+        <h1 class="font-black text-5xl text-center">
             ¡¡¡ Sección en construcción, pronto traeremos mas novedades !!!
         </h1>
         <span class="text-3xl">Pero mientras tanto....</span>
