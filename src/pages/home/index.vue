@@ -18,7 +18,7 @@
                 <div class="grid grid-cols-2 gap-4">
 
                     <!-- <AnimatedBanner img="/src/assets/img/mtg-logo.png" path="magic" big -->
-                    <AnimatedBanner path="magic" big
+                    <AnimatedBanner path="magic" big text="Magic"
                         bg="https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80" />
                     <AnimatedBanner
                         bg="https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/08/yugioh-1.jpg?w=1200&h=675&fit=crop"
