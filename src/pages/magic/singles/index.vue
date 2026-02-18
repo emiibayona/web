@@ -49,7 +49,6 @@ import useCollection from "@/composables/mtg/useCollection";
 import useCarts from '@/composables/useCart';
 import { GAMES, RECIPIENTS_LISTS } from '@/utils/constants';
 import Loader from "@/components/atomic/Loader.vue";
-import useDevices from "@/composables/useDevices";
 
 const activeTab = ref("normal");
 const activeTabClass = "border-t-2 border-r-2 -mb-[2px]";
@@ -64,7 +63,7 @@ const params = ref({ page: 1 });
 
 const page = ref(1);
 const limit = computed(() => {
-    const wd = width.value;
+    const wd = width?.value;
     if (wd >= 2560) {
         return 30
     } else if (wd >= 1920) {
@@ -75,6 +74,8 @@ const limit = computed(() => {
         return 21
     } else if (wd < 1366) {
         return 18
+    } else {
+        return 12
     }
 });
 

@@ -60,6 +60,9 @@ const setStates = (ini = null) => {
     initialState.value = { ...obj };
     currentState.value = { ...obj };
 }
+const shouldActiveApplyFilter = computed(() => {
+    return JSON.stringify(currentState.value) !== JSON.stringify(initialState.value);
+});
 const shouldClearDisabled = computed(() => {
     if (props.fetching || onClear.value || shouldActiveApplyFilter.value) return true;
 
@@ -67,9 +70,6 @@ const shouldClearDisabled = computed(() => {
     // console.log(JSON.stringify(currentState.value) !== JSON.stringify(initialStateValues.value))
     return JSON.stringify(currentState.value) === JSON.stringify(initialStateValues)
 })
-const shouldActiveApplyFilter = computed(() => {
-    return JSON.stringify(currentState.value) !== JSON.stringify(initialState.value);
-});
 
 
 async function clear() {
