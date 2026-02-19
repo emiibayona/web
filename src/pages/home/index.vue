@@ -61,28 +61,28 @@ const data = computed(() => [
 
     // animation: opening 2s ease-in-out;
     // animation-fill-mode: both;
-    background-image: url("@/images/banner.gif");
+    background-image: url("/public/images/banner.gif");
 }
 
 @keyframes opening {
     0% {
-        background-image: url("@/images/h1.png");
+        background-image: url("/public/images/h1.png");
     }
 
     30% {
-        background-image: url("@/images/h2.png");
+        background-image: url("/public/images/h2.png");
     }
 
     40% {
-        background-image: url("@/images/h3.png");
+        background-image: url("/public/images/h3.png");
     }
 
     50% {
-        background-image: url("@/images/h4.png");
+        background-image: url("/public/images/h4.png");
     }
 
     100% {
-        background-image: url("@/images/h5.png");
+        background-image: url("/public/images/h5.png");
     }
 }
 

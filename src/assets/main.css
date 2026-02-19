@@ -36,5 +36,5 @@ body {
 }
 
 .bg-site {
-  background: url("@/images/bg.png") repeat;
+  background: url("/public/images/bg.png") repeat;
 }
