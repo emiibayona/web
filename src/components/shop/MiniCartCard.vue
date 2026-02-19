@@ -37,7 +37,7 @@
                         <Button v-if="edit"
                             @click="$emit('remove', { item: { ...item, set: value.set.code }, all: true })" size="small"
                             color="#D9B14F">
-                            <img src="/src/assets/img/trash.png" />
+                            <img src="/images/trash.png" />
                         </Button>
                     </div>
                 </div>

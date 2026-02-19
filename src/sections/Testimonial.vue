@@ -8,7 +8,7 @@
     >
       <Card>
         <template #img
-          ><img class="" src="../assets/img/avatar-anisha.png" alt="anisha"
+          ><img class="" src="../images/avatar-anisha.png" alt="anisha"
         /></template>
         <template #name> Anisha Li </template>
         <template #quote
@@ -20,7 +20,7 @@
 
       <Card>
         <template #img
-          ><img class="" src="../assets/img/avatar-ali.png" alt="ali"
+          ><img class="" src="../images/avatar-ali.png" alt="ali"
         /></template>
         <template #name> Ali Bravo </template>
         <template #quote
@@ -32,7 +32,7 @@
 
       <Card>
         <template #img>
-          <img class="" src="../assets/img/avatar-richard.png" alt="richard" />
+          <img class="" src="../images/avatar-richard.png" alt="richard" />
         </template>
         <template #name> Richard Watts </template>
         <template #quote

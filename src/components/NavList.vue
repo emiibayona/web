@@ -8,11 +8,11 @@
         :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a>
       <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
         <span v-if="listsLength?.cart">{{ listsLength.cart }}</span>
-        <img class="icon" src="/src/assets/img/cart.png" alt="Logo" />
+        <img class="icon" src="/images/cart.png" alt="Logo" />
       </a>
       <a class="icon-wrapper" href="/wishlist" :class="[{ 'active': route.path.includes('wishlist') }]">
         <span v-if="listsLength?.wishlist">{{ listsLength.wishlist }}</span>
-        <img class="icon" src="/src/assets/img/wishlist.png" alt="Logo" />
+        <img class="icon" src="/images/wishlist.png" alt="Logo" />
       </a>
     </div>
   </ul>

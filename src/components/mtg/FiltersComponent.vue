@@ -24,7 +24,7 @@
                 </div>
             </template>
         </Filters>
-        <button v-if="row" @click="collapsed = !collapsed" class="self-end"> <img src="/src/assets/img/arrow.svg"
+        <button v-if="row" @click="collapsed = !collapsed" class="self-end"> <img src="/images/arrow.svg"
                 :class="`curosr-pointer  transition-all duration-500 ease-in-out h-5 w-5 ${collapsed && 'rotate-0' || '-rotate-180'}`" /></button>
     </div>
 </template>

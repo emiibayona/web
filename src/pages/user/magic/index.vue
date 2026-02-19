@@ -88,7 +88,6 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .flip-container {
     background-color: transparent;
-    border: 1px solid #ccc;
     perspective: 1000px;
     width: 215px;
     height: 300px;

@@ -5,7 +5,7 @@
                 <div class="flex flex-row justify-center items-center p-2 rounded-md hover:bg-slate-300 cursor-pointer"
                     :class="{ 'bg-gt-moustard-700': currentFilters?.colors?.includes(color) }">
                     <span @click="() => colorFilter(color)">
-                        <img :src="`/src/assets/img/mtg/${color}.SVG`" class="h-4 w-4" />
+                        <img :src="`/images/mtg/${color}.SVG`" class="h-4 w-4" />
                     </span>
                 </div>
             </div>

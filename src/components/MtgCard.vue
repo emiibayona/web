@@ -64,7 +64,6 @@ const addWishlist = () => {
 <style lang="scss" scoped>
 .flip-container {
     background-color: transparent;
-    border: 1px solid #ccc;
     perspective: 1000px;
     width: 230px;
     height: 320px;

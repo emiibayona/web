@@ -14,11 +14,11 @@
             <!-- <h1 class="self-center text-center font-bold"> -->
 
             <div class="flex flex-col w-full">
-                <span class="text-xl pb-4">Nuestros juegos</span>
+                <span class="text-xl font-bold pb-4">Nuestros juegos</span>
                 <div class="grid grid-cols-2 gap-4">
 
-                    <!-- <AnimatedBanner img="/src/assets/img/mtg-logo.png" path="magic" big -->
-                    <AnimatedBanner path="magic" big text="Magic"
+                    <!-- <AnimatedBanner path="magic" big text="Magic"-->
+                    <AnimatedBanner path="magic" big img="/images/mtg-logo.png"
                         bg="https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80" />
                     <AnimatedBanner
                         bg="https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/08/yugioh-1.jpg?w=1200&h=675&fit=crop"
@@ -61,28 +61,28 @@ const data = computed(() => [
 
     // animation: opening 2s ease-in-out;
     // animation-fill-mode: both;
-    background-image: url("@/assets/img/banner.gif");
+    background-image: url("@/images/banner.gif");
 }
 
 @keyframes opening {
     0% {
-        background-image: url("@/assets/img/h1.png");
+        background-image: url("@/images/h1.png");
     }
 
     30% {
-        background-image: url("@/assets/img/h2.png");
+        background-image: url("@/images/h2.png");
     }
 
     40% {
-        background-image: url("@/assets/img/h3.png");
+        background-image: url("@/images/h3.png");
     }
 
     50% {
-        background-image: url("@/assets/img/h4.png");
+        background-image: url("@/images/h4.png");
     }
 
     100% {
-        background-image: url("@/assets/img/h5.png");
+        background-image: url("@/images/h5.png");
     }
 }
 

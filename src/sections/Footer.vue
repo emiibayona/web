@@ -10,29 +10,29 @@
         <div class="md:hidden">Copyright © 2022, All Rights Reserved</div>
         <!-- Logo -->
         <div>
-          <img class="h-8" src="../assets/img/logo-white.svg" alt="" />
+          <img class="h-8" src="../images/logo-white.svg" alt="" />
         </div>
         <!-- Social Links Container -->
         <div class="flex justify-center space-x-4">
           <!-- Link 1 -->
           <a href="#">
-            <img class="w-8" src="../assets/img/icon-facebook.svg" alt="" />
+            <img class="w-8" src="../images/icon-facebook.svg" alt="" />
           </a>
           <!-- Link 2 -->
           <a href="#">
-            <img class="w-8" src="../assets/img/icon-youtube.svg" alt="" />
+            <img class="w-8" src="../images/icon-youtube.svg" alt="" />
           </a>
           <!-- Link 3 -->
           <a href="#">
-            <img class="w-8" src="../assets/img/icon-twitter.svg" alt="" />
+            <img class="w-8" src="../images/icon-twitter.svg" alt="" />
           </a>
           <!-- Link 4 -->
           <a href="#">
-            <img class="w-8" src="../assets/img/icon-pinterest.svg" alt="" />
+            <img class="w-8" src="../images/icon-pinterest.svg" alt="" />
           </a>
           <!-- Link 5 -->
           <a href="#">
-            <img class="w-8" src="../assets/img/icon-instagram.svg" alt="" />
+            <img class="w-8" src="../images/icon-instagram.svg" alt="" />
           </a>
         </div>
       </div>

@@ -17,7 +17,7 @@
       <MainButton class="bg-brightRed text-white">Get Started</MainButton>
     </div>
     <div class="md:w-1/2">
-      <img src="../assets/img/illustration-intro.svg" alt="statistic" />
+      <img src="../images/illustration-intro.svg" alt="statistic" />
     </div>
   </section>
 </template>
