@@ -79,8 +79,6 @@ const limit = computed(() => {
     }
 });
 
-
-
 // TODO: Move to composable, it's not working
 const width = ref(window.innerWidth);
 const height = ref(window.innerHeight);

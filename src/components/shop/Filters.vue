@@ -7,24 +7,23 @@
             :class="[{ 'min-w-[300px]': row }, { '': !row }]">
             <slot name="search"></slot>
             <slot name="expansions"></slot>
-
         </div>
-        <div v-if="filtersMapped" class="min-w-[700px] max-w-[900px] flex"
-            :class="[{ 'flex-col justify-between': row }, { 'flex-col mt-4 mb-2': !row }]">
+        <slot v-if="!row" name="apply"></slot>
+        <div v-if="filtersMapped" class="flex"
+            :class="[{ 'flex-col justify-between min-w-[700px] max-w-[900px]': row }, { 'flex-col mt-4 mb-2 gap-2': !row }]">
             <div v-for="(groupFilter, index) in filtersMapped" :key="`fg-${index}-${cleaned}`">
-                <!-- {{ `${groupFilter}-Collapsed:${collapsed}` }} -->
                 <!-- Name -->
-                <div v-if="groupFilter[0] !== 'Colors' && !collapsed" class="flex"
-                    :class="[{ 'flex-row items-center h-8 ': row }, { 'flex-col mt-4 mb-2 items-start': !row }]">
-                    <span class="font-bold w-[70px]">{{ groupFilter[0] }}</span>
-                    <!-- Filters non-color -->
-                    <div class="flex"
-                        :class="[{ 'flex-row items-center flex-wrap gap-y-1 gap-x-2': row }, { 'flex-col items-start': !row }]">
-                        <Checkbox v-for="(filter, index_2) in groupFilter[1]" :checked="filter.checked"
-                            :label="filter.label" :key="`${groupFilter[0]}-${index_2}-${cleaned}`"
-                            :id="`${groupFilter[0]}-${index_2}`" @update="val => applyFilter(val, filter)" />
-                    </div>
-                </div>
+                <Compressor v-if="groupFilter[0] !== 'Colors' && !collapsed" :id="`compressor-${index}-${cleaned}`">
+                    <template #title><span class="font-bold w-[70px]">{{ groupFilter[0] }}</span></template>
+                    <template #content>
+                        <div class="content flex"
+                            :class="[{ 'flex-row items-center flex-wrap gap-y-1 gap-x-2': row }, { 'flex-col items-start': !row }]">
+                            <Checkbox v-for="(filter, index_2) in groupFilter[1]" :checked="filter.checked"
+                                :label="filter.label" :key="`${groupFilter[0]}-${index_2}-${cleaned}`"
+                                :id="`${groupFilter[0]}-${index_2}`" @update="val => applyFilter(val, filter)" />
+                        </div>
+                    </template>
+                </Compressor>
                 <!-- Color filter -->
                 <div v-else-if="groupFilter[0] === 'Colors'" class="flex"
                     :class="[{ 'flex-row': row }, { 'flex-col': !row }]">
@@ -35,7 +34,7 @@
                                 :class="{ 'bg-gt-moustard-700': color.checked }"
                                 @click="applyFilter(!color.checked, color)">
                                 <span class="h-4 w-4">
-                                    <img :src="`/images/mtg/${color.value}.SVG`" class="h-4 w-4" />
+                                    <img :src="`/public/images/mtg/${color.value}.SVG`" class="h-4 w-4" />
                                 </span>
                             </div>
                         </div>
@@ -43,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <slot name="apply"></slot>
+        <slot v-if="row" name="apply"></slot>
     </div>
 </template>
 
@@ -52,6 +51,7 @@ import { onMounted, ref, watch } from 'vue';
 import Checkbox from '@/components/atomic/Checkbox.vue';
 import useFilters from '@/composables/useFilters';
 import { GAMES } from '@/utils/constants.js';
+import Compressor from '../atomic/Compressor.vue';
 
 defineProps({
     row: { type: Boolean, default: false }, collapsed: { type: Boolean, default: false }

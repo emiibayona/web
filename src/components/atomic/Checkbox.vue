@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row gap-2 items-center h-6 hover:font-bold hover:cursor-pointer">
+    <div class="content-child flex flex-row gap-2 items-center h-6 hover:font-bold hover:cursor-pointer">
         <input v-bind="$attrs" type="checkbox" :id="id" class="hover:cursor-pointer"
             @change="$emit('update', !checked)" />
         <label :for="id" class="hover:cursor-pointer">{{ label }}</label>

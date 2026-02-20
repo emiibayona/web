@@ -14,7 +14,7 @@
             </template>
 
             <template #apply>
-                <div class="flex flex-row justify-between">
+                <div class="flex flex-row justify-between" :class="[{ '': row }, { 'mt-3': !row }]">
                     <Button v-show="!collapsed && withApply" @click="applyIt" :disabled="!shouldActiveApplyFilter">
                         Apply Filters
                     </Button>
