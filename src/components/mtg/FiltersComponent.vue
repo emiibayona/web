@@ -3,9 +3,8 @@
         :class="[{ 'pb-2 border-b-2 border-black': row }, { 'min-h-[50vh] border-r-2 border-black': !row }]">
         <Filters ref="filters" :row="row" :collapsed="collapsed">
             <template #search>
-                <div v-if="!collapsed">
-                    <InputField placeholder="Search singles..." class="self-end my-5 w-full h-10"
-                        @search="searched = $event" :model-value="searched" />
+                <div v-if="!collapsed" class="self-end mt-5 mb-3 w-full h-10">
+                    <InputField placeholder="Search singles..." @search="searched = $event" :model-value="searched" />
                 </div>
             </template>
             <template #expansions>

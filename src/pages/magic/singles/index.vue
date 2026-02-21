@@ -5,19 +5,7 @@
                 class="w-[230px] flex-1 sticky top-[82px]" />
         </div>
         <div class="cards-wrapper">
-            <div class="flex flex-row mb-4 w-full h-min border-b-2 border-black">
-                <div class="p-2 border-black hover:bg-slate-400 hover:cursor-pointer bg-site"
-                    :class="[activeTab === 'normal' && activeTabClass, { 'border-l-0': activeTab === 'normal' }]"
-                    @click="changeTab('normal')">
-                    <span>Normal</span>
-                </div>
-                <div class="p-2 border-black hover:bg-slate-400 hover:cursor-pointer bg-site"
-                    :class="[activeTab === 'foil' && activeTabClass, { 'border-l-2': activeTab === 'foil' }]"
-                    @click="changeTab('foil')">
-                    <span>Foil</span>
-                </div>
-            </div>
-
+            <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
 
             <div v-if="!fetching" class="cards-wrapper_inner gap-8">
                 <div class="list ">
@@ -49,9 +37,10 @@ import useCollection from "@/composables/mtg/useCollection";
 import useCarts from '@/composables/useCart';
 import { GAMES, RECIPIENTS_LISTS } from '@/utils/constants';
 import Loader from "@/components/atomic/Loader.vue";
+import Tabs from "@/components/atomic/Tabs.vue";
 
-const activeTab = ref("normal");
-const activeTabClass = "border-t-2 border-r-2 -mb-[2px]";
+const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, value: 'foil', name: "foil" }])
+const activeTab = ref(0);
 
 const { add } = useCarts(GAMES.MAGIC);
 const { add: addWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
@@ -99,7 +88,7 @@ async function initCollection(addParams = null, filt = null) {
         page: page.value,
         offset: (page.value - 1) * limit.value,
         limit: limit.value,
-        treatment: addParams?.treatment || activeTab.value,
+        treatment: addParams?.treatment || tabs.value[activeTab.value]?.value,
         cardWhere: JSON.stringify(cardFilters.value || {}),
         cards: true,
         ...(addParams || {}),
@@ -110,9 +99,9 @@ async function initCollection(addParams = null, filt = null) {
 }
 
 async function changeTab(tab) {
-    activeTab.value = tab;
+    activeTab.value = tab.index;
     page.value = 1;
-    await initCollection({ ...params.value, page: 1, offset: 0, limit: limit, treatment: tab });
+    await initCollection({ ...params.value, page: 1, offset: 0, limit: limit, treatment: tab.value });
 }
 
 

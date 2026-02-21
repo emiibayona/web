@@ -2,21 +2,27 @@
     <div class="compressor-wrapper">
         <div class="header-wrapper" @click="toggle" :class="[{ expanded }]">
             <slot name="title"></slot>
-            <img v-if="!alwaysOpen" src="/public/images/bleach.png" class="icon" />
+            <img v-if="!alwaysOpen && icon" src="/public/images/bleach.png" class="icon" />
         </div>
-        <div class="expandable-container" :class="[{ 'expanded': alwaysOpen || expanded }]">
+        <div class="expandable-container" :class="[{ 'expanded': alwaysOpen || expanded }, { speedy }]">
             <slot name="content"></slot>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 
-defineProps({ alwaysOpen: { type: Boolean, default: false } })
+defineProps({
+    alwaysOpen: { type: Boolean, default: false },
+    icon: { type: Boolean, default: true },
+    speedy: { type: Boolean, default: false }
+});
 const expanded = ref(false)
 const toggle = () => expanded.value = !expanded.value;
-defineExpose({ toggle })
+onUnmounted(() => expanded.value = false)
+defineExpose({ toggle });
+
 </script>
 
 <style lang="scss" scoped>
@@ -49,9 +55,16 @@ defineExpose({ toggle })
         transition: grid-template-rows 0.5s ease-in-out;
         overflow: hidden;
 
+        width: 100%;
 
         :deep(.content) {
+            width: 100%;
             min-height: 0;
+            border: none;
+        }
+
+        &.speedy {
+            transition: grid-template-rows 0.2s ease-in-out;
         }
 
         // :deep(.content-child) {
@@ -61,11 +74,25 @@ defineExpose({ toggle })
 
         &.expanded {
             grid-template-rows: 1fr;
+            // transition: all 0.5s ease-in-out;
 
             // :deep(.content-child) {
             //     opacity: 1;
             // }
         }
+
+        &.with-border {
+            // transition: border 0.5s ease-in-out;
+
+            :deep(.content) {
+                // transition: border-bottom 0.2s ease-in-out;
+                margin-top: 4px;
+                border-bottom: 2px solid black;
+
+            }
+        }
+
+
     }
 }
 </style>

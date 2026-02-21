@@ -57,6 +57,16 @@ const router = createRouter({
       component: () => import("@/pages/wishlist.vue"),
     },
     {
+      path: "/magic/admin/ventas",
+      name: "Ventas magic",
+      component: () => import("@/pages/magic/admin/ventas.vue"),
+    },
+    {
+      path: "/magic/admin/",
+      name: "ADmin magic",
+      component: () => import("@/pages/magic/admin/index.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "not-found",
       component: () => import("@/pages/NotFound.vue"),

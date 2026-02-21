@@ -104,7 +104,7 @@ const useCarts = (
     const currentSet = sets.value.find((x) => x.code === itemParsed.set);
     const indexCard = recipient.findIndex((i) => i.name === itemParsed.name);
 
-    debugger;
+    // debugger;
     if (indexCard !== -1) {
       const itCard = recipient[indexCard].sets.find(
         (x) =>
@@ -113,6 +113,7 @@ const useCarts = (
 
       if (!itCard) {
         recipient[indexCard].sets.push({
+          cardId: itemParsed.id,
           qty: quantity,
           set: currentSet,
           code: currentSet.code,
@@ -136,6 +137,7 @@ const useCarts = (
         ...itemParsed,
         sets: [
           {
+            cardId: itemParsed.id,
             qty: 1,
             set: currentSet,
             code: currentSet.code,
