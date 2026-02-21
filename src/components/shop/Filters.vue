@@ -34,7 +34,7 @@
                                 :class="{ 'bg-gt-moustard-700': color.checked }"
                                 @click="applyFilter(!color.checked, color)">
                                 <span class="h-4 w-4">
-                                    <img :src="`/images/mtg/${color.value}.SVG`" class="h-4 w-4" />
+                                    <img :src="`/images/mtg/${color.value}.svg`" class="h-4 w-4" />
                                 </span>
                             </div>
                         </div>
