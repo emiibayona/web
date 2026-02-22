@@ -19,8 +19,8 @@
 
         <div v-if="logInfo.logged">
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
-                <div class="overflow-auto flex flex-col gap-4 h-[600px]">
-                    <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 ">
+                <div class="tab-content">
+                    <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 w-full">
                         <!-- {{ sale }} -->
                         <Compressor :icon="false" speedy :id="`compressor-${index}`">
                             <template #title>
@@ -209,6 +209,28 @@ watch(sales, () => {
 </script>
 
 <style lang="scss" scoped>
+.tab-content {
+    // overflow-auto flex flex-col gap-4 h-[600px]
+    overflow-y: auto;
+    @include flex(column, flex-start, flex-start);
+    gap: 10px;
+    width: 100%;
+
+
+    @include breakpoint(hd1) {
+        height: 400px;
+    }
+
+    @include breakpoint(fhd) {
+        height: 600px;
+    }
+
+    @include breakpoint(fhd3) {
+        height: 900px;
+    }
+
+}
+
 .content {
     @include grid($columns: 3, $gap: 10px);
     width: 100%;
