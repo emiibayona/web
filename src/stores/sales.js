@@ -32,5 +32,13 @@ export const useSalesStore = defineStore("sales", () => {
     }
   }
 
-  return { sales, createOrder, fetchSales, fetchOrderResumen };
+  async function confirmOrder(order) {
+    try {
+      return await SalesService.confirm(order);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return { sales, confirmOrder, createOrder, fetchSales, fetchOrderResumen };
 });

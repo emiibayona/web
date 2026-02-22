@@ -41,7 +41,7 @@ function scheduleSearch(value) {
 
 function onInput(event) {
     const value = event.target.value
-    emit('update:modelValue', value)
+    emit('update:modelValue', props.type === 'number' ? parseInt(value) : value)
     scheduleSearch(value)
 }
 

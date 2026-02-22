@@ -19,4 +19,10 @@ export default {
       .then((res) => res)
       .catch((error) => error.response);
   },
+  confirm: async function (params) {
+    return api
+      .patch(`orders/${params.game}/${params.id}`, params)
+      .then((res) => res)
+      .catch((error) => error.response);
+  },
 };

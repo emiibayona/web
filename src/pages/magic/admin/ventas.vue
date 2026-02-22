@@ -18,57 +18,74 @@
         </Modal>
 
         <div v-if="logInfo.logged">
-            <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index">
-                <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5">
-                    <!-- {{ sale }} -->
-                    <Compressor :icon="false" speedy>
-                        <template #title>
-                            <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
-                                :class="[tabs[activeTab].bg]">
-                                <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                }}</span></span>
-                                <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                }}</span></span>
-                                <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
-                                    sale.contact
-                                        }}</span> <span
-                                        class="text-green-300 flex flex-row items-center gap-2 hover:cursor-alias max-w-min"
-                                        @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
-                                            class="w-4 h-4" /></span></span>
-                                <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                }}</span></span>
-                            </div>
-                        </template>
-                        <template #content>
-                            <!-- <div v-if="index === activeAccordeon"> -->
-                            <div class="content w-full flex flex-col gap-2 mt-2">
-                                <div v-for="(card, index_2) in sale.cart"
-                                    class="flex flex-row gap-10 items-center h-[30px]" :key="`card-${index_2}`">
+            <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
+                <div class="overflow-auto flex flex-col gap-4 h-[600px]">
+                    <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 ">
+                        <!-- {{ sale }} -->
+                        <Compressor :icon="false" speedy :id="`compressor-${index}`">
+                            <template #title>
+                                <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
+                                    :class="[tabs[activeTab].bg]">
+                                    <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
+                                            }}</span></span>
+                                    <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
+                                            }}</span></span>
+                                    <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
+                                        sale.contact
+                                            }}</span> <span
+                                            class="text-green-300 flex flex-row items-center gap-2 hover:cursor-alias max-w-min"
+                                            @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
+                                                class="w-4 h-4" /></span></span>
+                                    <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
+                                            }}</span></span>
+                                    <span class="font-bold">Orden de compra: <span class="font-normal"> {{
+                                        Date(sale.createdAt)
+                                            }}</span></span>
+                                </div>
+                            </template>
+                            <template #content>
+                                <!-- <div v-if="index === activeAccordeon"> -->
+                                <div class="content rounded-md bg-opacity-50" :class=[tabs[activeTab].bg]>
+                                    <div v-for="(card, index_2) in sale.cart" class="content-cards p-4 "
+                                        :key="`card-${index_2}`">
 
-                                    <span>{{ `${card.quantity}x | ${card.name} | SET: ${card?.set?.name} |
-                                        Tratamiento: ${capi(card.treatment === "" ? "normal" : card.treatment)}`
-                                    }}</span>
-                                    <div class="flex flex-row items-center gap-2 max-w-[60px]"
-                                        v-if="tabs[activeTab].value !== 'complete'">
-                                        <InputField v-model="card.sold" :placeholder="0" type="number"
-                                            class="max-w-[40px] max-h-[20px] mr-4" :debounce="0"
-                                            :max="parseInt(card.quantity)" />
+                                        <img v-if="tabs[activeTab].value !== 'complete'" :src="card.image"
+                                            class="h-[200px] w-auto" />
+                                        <div class="flex flex-col gap-2 justify-center">
+                                            <span>{{ `${card.quantity}x | ${card.name.split('//')[0]}` }}</span>
+                                            <span class="ml-6">{{ `Tratamiento: ${capi(card.treatment === "" ? "normal"
+                                                :
+                                                card.treatment)}` }}</span>
+                                            <span class="ml-6">
+                                                {{ `SET: ${card?.set?.name}` }}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-row items-center gap-2 max-w-[60px]"
+                                            v-if="tabs[activeTab].value !== 'complete'">
+                                            <InputField v-model="card.sold" :placeholder="0" type="number"
+                                                class="max-w-[40px] max-h-[20px] mr-4" :debounce="0"
+                                                :max="parseInt(card.quantity)" :min="0" />
 
-                                        <img :src="`/images/check${parseInt(card.sold) === parseInt(card.quantity) ? '' : '-progress'}.png`"
-                                            class="w-6 h-6" />
+                                            <img :src="`/images/check${parseInt(card.sold) === parseInt(card.quantity) ? '' : '-progress'}.png`"
+                                                class="w-6 h-6"
+                                                :class="[`bg-${parseInt(card.sold) === parseInt(card.quantity) ? 'green-600' : 'red-600'}`]" />
+                                        </div>
+                                        <div class="flex flex-row items-center gap-2" v-else>
+                                            <span>Pedidas {{ card.quantity }}</span>|
+                                            <span>Vendidas {{ card.sold }}</span>
+                                        </div>
                                     </div>
-                                    <div class="flex flex-row items-center gap-2" v-else>
-                                        <span>Pedidas {{ card.quantity }}</span>|
-                                        <span>Vendidas {{ card.sold }}</span>
 
+                                    <div class="flex flex-row justify-end p-4 col-span-full w-full">
+                                        <Button v-if="tabs[activeTab].button" size="small" class="self-end"
+                                            @click="confirmLocalOrder(sale)">{{
+                                                tabs[activeTab].button }}</Button>
                                     </div>
                                 </div>
-                                <Button v-if="tabs[activeTab].button" size="small" class="self-end">{{
-                                    tabs[activeTab].button }}</Button>
-                            </div>
-                            <!-- </div> -->
-                        </template>
-                    </Compressor>
+                                <!-- </div> -->
+                            </template>
+                        </Compressor>
+                    </div>
                 </div>
             </Tabs>
 
@@ -91,7 +108,7 @@ import useWhatsapp from '@/composables/useWhatsapp';
 
 const router = useRouter();
 const toast = useToast();
-const { fetchSales, sales, fetchSalesResumen } = useSales();
+const { fetchSales, sales, fetchSalesResumen, confirmOrder } = useSales();
 const { openWhatsApp } = useWhatsapp()
 const showModal = ref(false);
 const loading = ref(false);
@@ -150,6 +167,13 @@ function goWpp(phone) {
 async function loadSales(status) {
     await fetchSales({ status });
 }
+async function confirmLocalOrder(params) {
+    const result = await confirmOrder(params)
+    if (result) {
+        document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
+        activeTab.value = result.every(x => x.added) ? 2 : 1;
+    }
+}
 
 onMounted(async () => {
     logInfo.value = JSON.parse(localStorage.getItem(magicKey) || '{}');
@@ -184,4 +208,18 @@ watch(sales, () => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.content {
+    @include grid($columns: 3, $gap: 10px);
+    width: 100%;
+    justify-items: start;
+
+    &-cards {
+        width: 100%;
+        @include grid($columns: 3, $gap: 10px);
+        grid-template-columns: max-content auto 150px;
+        border-bottom: 1px solid black;
+    }
+
+}
+</style>

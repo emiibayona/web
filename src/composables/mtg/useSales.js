@@ -29,7 +29,13 @@ const useSales = () => {
               quantity: y.qty,
               cardId: y.cardId,
               treatment: y.treatment,
-              set: y.set,
+              image: y.image,
+              set: {
+                code: y.set.code,
+                id: y.set.id,
+                icon_svg_uri: y.set.icon_svg_uri,
+                name: y.set.name,
+              },
             });
           });
         });
@@ -49,7 +55,20 @@ const useSales = () => {
     });
     return result;
   };
-  return { createOrder, fetchSales, updateSales, fetchSalesResumen, sales };
+
+  const confirmOrder = async (sale) => {
+    console.log(sale);
+    return await store.confirmOrder(sale);
+  };
+
+  return {
+    confirmOrder,
+    createOrder,
+    fetchSales,
+    updateSales,
+    fetchSalesResumen,
+    sales,
+  };
 };
 
 export default useSales;

@@ -104,7 +104,17 @@ const useCarts = (
     const currentSet = sets.value.find((x) => x.code === itemParsed.set);
     const indexCard = recipient.findIndex((i) => i.name === itemParsed.name);
 
-    // debugger;
+    debugger;
+    const newCard = {
+      cardId: itemParsed.id,
+      qty: quantity,
+      set: currentSet,
+      code: currentSet.code,
+      treatment: itemParsed.treatment,
+      maxQty: itemParsed.maxQty,
+      image: item?.image?.faceUp,
+    };
+
     if (indexCard !== -1) {
       const itCard = recipient[indexCard].sets.find(
         (x) =>
@@ -112,14 +122,7 @@ const useCarts = (
       );
 
       if (!itCard) {
-        recipient[indexCard].sets.push({
-          cardId: itemParsed.id,
-          qty: quantity,
-          set: currentSet,
-          code: currentSet.code,
-          treatment: itemParsed.treatment,
-          maxQty: itemParsed.maxQty,
-        });
+        recipient[indexCard].sets.push(newCard);
       } else {
         if (itCard.qty < itCard.maxQty) {
           itCard.qty += quantity;
@@ -135,16 +138,7 @@ const useCarts = (
     } else {
       recipient.push({
         ...itemParsed,
-        sets: [
-          {
-            cardId: itemParsed.id,
-            qty: 1,
-            set: currentSet,
-            code: currentSet.code,
-            treatment: itemParsed.treatment,
-            maxQty: itemParsed.maxQty,
-          },
-        ],
+        sets: [{ ...newCard, qty: 1 }],
       });
     }
 
@@ -193,6 +187,11 @@ const useCarts = (
     if (toastOpt) {
       toast.add(toastOpt);
     }
+  };
+
+  const cleanCart = () => {
+    const recipient = getCurrentRecipient();
+    recipient = [];
   };
 
   function calculateTotal(arr) {
@@ -249,6 +248,7 @@ const useCarts = (
     getWishlist,
     getCart,
     getWishlist,
+    cleanCart,
   };
 };
 
