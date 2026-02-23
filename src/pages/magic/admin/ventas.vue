@@ -20,6 +20,10 @@
         <div v-if="logInfo.logged">
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
                 <div class="tab-content">
+                    <div class="w-full pb-2 sticky top-0 bg-site">
+                        <InputField placeholder="Busca por id, nombre de persona o numero" :model-value="searchOrder"
+                            @search="searchOrder = $event" />
+                    </div>
                     <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 w-full">
                         <!-- {{ sale }} -->
                         <Compressor :icon="false" speedy :id="`compressor-${index}`">
@@ -78,7 +82,8 @@
 
                                     <div class="flex flex-row justify-end p-4 gap-2 col-span-full w-full">
                                         <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
-                                            @click="confirmLocalOrder(sale, true)">Cerrar orden</Button>
+                                            @click="confirmLocalOrder(sale, true)" :loading="loading">Cerrar
+                                            orden</Button>
                                         <Button v-if="tabs[activeTab].button" size="small" :loading="loading"
                                             :disabled="!confirmButtonActive(sale.cart)" class="self-end"
                                             @click="confirmLocalOrder(sale)">{{
@@ -116,6 +121,7 @@ const { openWhatsApp } = useWhatsapp()
 const showModal = ref(false);
 const loading = ref(false);
 const password = ref(null);
+const searchOrder = ref("");
 const magicKey = "magic_admin_available";
 const logInfo = ref({ logged: false });
 
@@ -169,7 +175,7 @@ function goWpp(phone) {
     openWhatsApp("Hola, te hablo por tu pedido", " ", phone)
 }
 async function loadSales(status) {
-    await fetchSales({ status });
+    await fetchSales({ status, search: searchOrder.value });
 }
 async function confirmLocalOrder(params, forceClose = false) {
     loading.value = true;
@@ -214,7 +220,7 @@ onMounted(async () => {
     }
 })
 
-watch(activeTab, async () => {
+watch([activeTab, searchOrder], async () => {
     await loadSales(tabs.value[activeTab.value]?.value)
 })
 watch(sales, () => {

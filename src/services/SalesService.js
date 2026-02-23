@@ -1,7 +1,7 @@
 import api from "@/utils/api";
 
 export default {
-  list: async function (params, game) {
+  list: async function (game, params) {
     return api
       .get(`orders/${game}`, { params: params })
       .then((res) => res)

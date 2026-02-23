@@ -10,7 +10,7 @@ export const useSalesStore = defineStore("sales", () => {
   async function fetchSales(params, game = GAMES.MAGIC) {
     sales.value = null;
     try {
-      sales.value = await SalesService.list(params, game);
+      sales.value = await SalesService.list(game, params);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
