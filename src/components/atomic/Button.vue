@@ -4,19 +4,24 @@
         `btn--${size}`,
         {
             'btn--outlined': outlined,
-            'btn--disabled': disabled
+            'btn--disabled': disabled || loading
         }
     ]" :style="{ '--btn-color': color }" :disabled="disabled" v-bind="$attrs">
-        <slot />
+        <div class="btn-slot" v-if="!loading">
+            <slot />
+        </div>
+        <loader v-else />
     </button>
 </template>
 
 <script setup>
+import Loader from './Loader.vue';
+
 defineProps({
     size: {
         type: String,
         default: 'md',
-        validator: (value) => ['xxsmall', 'xsmall', 'small', 'md', 'lg', 'block'].includes(value)
+        validator: (value) => ['xxsmall', 'xsmall', 'small', 'md', 'lg', 'block', 'fit'].includes(value)
     },
     color: {
         type: String,
@@ -27,6 +32,10 @@ defineProps({
         default: false
     },
     disabled: {
+        type: Boolean,
+        default: false
+    },
+    loading: {
         type: Boolean,
         default: false
     },
@@ -77,6 +86,7 @@ defineProps({
         font-size: 12px;
         min-height: 20px;
         height: 32px;
+        min-width: 60px;
     }
 
     &--xsmall {
@@ -85,18 +95,21 @@ defineProps({
         font-size: 12px;
         min-height: 18px;
         height: 32px;
+        min-width: 80px;
     }
 
     &--small {
         // padding: 8px 16px;
         font-size: 14px;
         min-height: 32px;
+        min-width: 100px;
     }
 
     &--md {
         // padding: 12px 24px;
         font-size: 16px;
         min-height: 40px;
+        min-width: 100px;
     }
 
     &--lg {
@@ -104,6 +117,12 @@ defineProps({
         padding: 8px 16px;
         font-size: 18px;
         min-height: 48px;
+        min-width: 100px;
+    }
+
+    &--fit {
+        min-height: 32px;
+        min-width: min-content;
     }
 
     &--block {
@@ -133,5 +152,10 @@ defineProps({
         cursor: not-allowed;
         pointer-events: none;
     }
+
+    &-slot {
+        height: 100%;
+    }
+
 }
 </style>

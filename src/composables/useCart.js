@@ -104,7 +104,7 @@ const useCarts = (
     const currentSet = sets.value.find((x) => x.code === itemParsed.set);
     const indexCard = recipient.findIndex((i) => i.name === itemParsed.name);
 
-    debugger;
+    // debugger;
     const newCard = {
       cardId: itemParsed.id,
       qty: quantity,
@@ -158,7 +158,7 @@ const useCarts = (
     const itemParsed = parseCard(item);
     const indexCard = recipient.findIndex((i) => i.id === itemParsed.id);
 
-    debugger;
+    // debugger;
     if (indexCard !== -1) {
       const setIndex = recipient[indexCard].sets.findIndex(
         (x) =>
@@ -191,7 +191,7 @@ const useCarts = (
 
   const cleanCart = () => {
     const recipient = getCurrentRecipient();
-    recipient = [];
+    recipient = recipient.splice(0);
   };
 
   function calculateTotal(arr) {

@@ -47,7 +47,7 @@ const useSales = () => {
     return cart;
   };
   const createOrder = async ({ name: game, values, form }) => {
-    debugger;
+    // debugger;
     const result = await store.createOrder({
       ...form,
       game,
@@ -56,9 +56,8 @@ const useSales = () => {
     return result;
   };
 
-  const confirmOrder = async (sale) => {
-    console.log(sale);
-    return await store.confirmOrder(sale);
+  const confirmOrder = async (sale, forceClose = false) => {
+    return await store.confirmOrder({ ...sale, forceClose });
   };
 
   return {

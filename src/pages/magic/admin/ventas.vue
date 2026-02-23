@@ -61,7 +61,7 @@
                                             </span>
                                         </div>
                                         <div class="flex flex-row items-center gap-2 max-w-[60px]"
-                                            v-if="tabs[activeTab].value !== 'complete'">
+                                            v-if="tabs[activeTab].value !== 'complete' && !card.added">
                                             <InputField v-model="card.sold" :placeholder="0" type="number"
                                                 class="max-w-[40px] max-h-[20px] mr-4" :debounce="0"
                                                 :max="parseInt(card.quantity)" :min="0" />
@@ -76,8 +76,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-row justify-end p-4 col-span-full w-full">
-                                        <Button v-if="tabs[activeTab].button" size="small" class="self-end"
+                                    <div class="flex flex-row justify-end p-4 gap-2 col-span-full w-full">
+                                        <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
+                                            @click="confirmLocalOrder(sale, true)">Cerrar orden</Button>
+                                        <Button v-if="tabs[activeTab].button" size="small" :loading="loading"
+                                            :disabled="!confirmButtonActive(sale.cart)" class="self-end"
                                             @click="confirmLocalOrder(sale)">{{
                                                 tabs[activeTab].button }}</Button>
                                     </div>
@@ -127,6 +130,7 @@ const tabs = computed(() => ([{ index: 0, value: 'pending', name: "Pendientes", 
 const activeTab = ref(0);
 
 const passwordIsEmpty = computed(() => password.value === null || password.value === '')
+const confirmButtonActive = (row) => row.filter(x => !x.added).some(x => x.sold)
 
 const capi = (str) => capitalizeFirstLetter(str);
 async function goVentas() {
@@ -167,11 +171,22 @@ function goWpp(phone) {
 async function loadSales(status) {
     await fetchSales({ status });
 }
-async function confirmLocalOrder(params) {
-    const result = await confirmOrder(params)
+async function confirmLocalOrder(params, forceClose = false) {
+    loading.value = true;
+    const result = await confirmOrder(params, forceClose)
     if (result) {
-        document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
-        activeTab.value = result.every(x => x.added) ? 2 : 1;
+        toast.add({
+            severity: "success",
+            life: 2000,
+            detail: "Moviendo orden a la lista correspondiente",
+            summary: forceClose ? "Orden cerrada correctamente" : result.every(x => x.added) ? "Orden completada correctamente" : "Orden completada parcialmente"
+        })
+        setTimeout(async () => {
+            loading.value = false;
+            orderResumen.value = await fetchSalesResumen();
+            await loadSales(tabs.value[activeTab.value]?.value);
+            document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
+        }, 1000);
     }
 }
 
@@ -192,7 +207,6 @@ onMounted(async () => {
                 localStorage.setItem(magicKey, JSON.stringify(logInfo.value));
             }, 1000);
         } else {
-
             await loadSales(tabs.value[activeTab.value]?.value);
         }
     } else {
@@ -210,7 +224,6 @@ watch(sales, () => {
 
 <style lang="scss" scoped>
 .tab-content {
-    // overflow-auto flex flex-col gap-4 h-[600px]
     overflow-y: auto;
     @include flex(column, flex-start, flex-start);
     gap: 10px;

@@ -28,14 +28,14 @@
                         <div class="flex flex-row gap-1">
                             <Button v-if="value.maxQty > value.qty"
                                 @click="$emit('add', { item: { ...item, set: value.set.code }, quantity: 1 })"
-                                size="small">+1</Button>
+                                size="fit">+1</Button>
                             <Button @click="$emit('remove', { item: { ...item, set: value.set.code }, quantity: 1 })"
-                                size="small">
+                                size="fit">
                                 -1
                             </Button>
                         </div>
                         <Button v-if="edit"
-                            @click="$emit('remove', { item: { ...item, set: value.set.code }, all: true })" size="small"
+                            @click="$emit('remove', { item: { ...item, set: value.set.code }, all: true })" size="fit"
                             color="#D9B14F">
                             <img src="/images/trash.png" />
                         </Button>

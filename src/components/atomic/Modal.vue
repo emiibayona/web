@@ -4,7 +4,7 @@
             <div v-if="modelValue" class="modal-overlay" @click.self="close">
                 <div class="modal-content">
                     <header class="modal-header">
-                        <h3>{{ title }}</h3>
+                        <h3 class="font-bold">{{ title }}</h3>
                         <button v-if="!closeDisabled" class="close-btn" @click="close">&times;</button>
                     </header>
 

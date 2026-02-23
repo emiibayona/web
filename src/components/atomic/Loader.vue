@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-row">
-        <div class="flex flex-row min-h-[140px] w-full justify-center gap-4 mt-4 rounded-lg p-6">
-            Loading
+        <div class="flex flex-row w-full justify-center items-center gap-4 rounded-lg">
+            <slot />
             <svg class="text-gray-300 animate-spin" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24">
                 <path
