@@ -200,7 +200,6 @@ watch(
     { deep: true },
 );
 watch(page, async () => {
-    filtersComponent?.value?.toggle();
     await initCollection()
 })
 watch(binderTyped, () => {
