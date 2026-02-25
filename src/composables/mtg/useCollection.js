@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import useCards from "./useCards";
 const useCollection = () => {
   const store = useCollectionStore();
-  const { getImages } = useCards();
+  const { getImages, fetchDoubleFaces } = useCards();
 
   const fetching = ref(false);
   const collectionMapped = ref([]);
@@ -20,6 +20,9 @@ const useCollection = () => {
       collectionMapped.value?.length === collection.value.data.length
         ? collectionMapped.value
         : [];
+
+    await fetchDoubleFaces(collection.value?.data.map((x) => x.cardId));
+
     collection.value?.data?.forEach((cd, index) => {
       const cardToShow = { ...cd, image: getImages(cd.card) };
       if (collectionMapped.value?.length === collection.value.data.length) {

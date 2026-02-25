@@ -123,7 +123,6 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .singles-wrapper {
-    // @include flex();
     width: 100%;
     position: relative;
     display: grid;
@@ -133,17 +132,14 @@ onUnmounted(() => {
     }
 
     @include breakpoint(hd) {
-        // background-color: red;
         grid-template-columns: 230px auto 200px;
     }
 
     @include breakpoint(hd2) {
-        // background-color: red;
         grid-template-columns: 230px auto 270px;
     }
 
     .filter-wrapper {
-        // width: 230px;
         width: 100%;
         height: 75vh;
         width: 100%;
