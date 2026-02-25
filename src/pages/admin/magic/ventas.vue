@@ -1,28 +1,19 @@
 <template>
     <div>
-        <h1 class="text-2xl font-bold mb-5">Panel de Ventas</h1>
-        <!-- <button @click="showModal = true">Abrir Modal</button> -->
-        <Modal v-model="showModal" title="PANEL DE ADMIN" close-disabled>
-            <p class="mb-1">Coloca la contraseña para acceder</p>
+        <h1 class="text-2xl font-bold mb-5">Panel de Admin > Ventas de Magic</h1>
 
-            <form @submit.prevent="goVentas">
-                <InputField v-model="password" @keyup.enter="goVentas" placeholder="Ingrese la contraseña"
-                    type="password" />
-                <div class="flex flex-row justify-between mt-2">
-                    <Button @click="goHome" size="xsmall" :disabled="loading">Volver inicio</button>
-                    <Button @clic.stop="goVentas" size="xsmall"
-                        :disabled="passwordIsEmpty || loading">Confirmar</button>
-                </div>
-            </form>
+        <!-- MODAL ZONE -->
+        <AdminLogin @post-login="loadSales()" />
+        <!-- MODAL ZONE -->
 
-        </Modal>
-
-        <div v-if="logInfo.logged">
+        <div v-if="adminIsLoggedIn">
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
                 <div class="tab-content">
                     <div class="w-full pb-2 sticky top-0 bg-site">
-                        <InputField placeholder="Busca por id, nombre de persona o numero" :model-value="searchOrder"
-                            @search="searchOrder = $event" />
+                        <!-- <form @submit.prevent=""> -->
+                        <InputField v-model="searchOrder" placeholder="Busca por id, nombre de persona o numero"
+                            @input="loadSales" only-enter :debounce="0" />
+                        <!-- </form> -->
                     </div>
                     <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 w-full">
                         <!-- {{ sale }} -->
@@ -90,92 +81,59 @@
                                                 tabs[activeTab].button }}</Button>
                                     </div>
                                 </div>
-                                <!-- </div> -->
                             </template>
                         </Compressor>
                     </div>
                 </div>
             </Tabs>
-
         </div>
     </div>
 </template>
 
 <script setup>
 import { computed, ref, onMounted, watch } from 'vue';
-import Modal from '@/components/atomic/Modal.vue';
 import Button from '@/components/atomic/Button.vue';
 import InputField from '@/components/atomic/InputField.vue';
 import Tabs from "@/components/atomic/Tabs.vue";
-import { useRouter } from 'vue-router';
 import { useToast } from "primevue/usetoast";
 import useSales from '@/composables/mtg/useSales';
 import Compressor from '@/components/atomic/Compressor.vue';
 import { capitalizeFirstLetter } from '@/utils/utils';
 import useWhatsapp from '@/composables/useWhatsapp';
+import AdminLogin from '@/components/admin/AdminLogin.vue';
+import useUser from '@/composables/useUser';
 
-const router = useRouter();
+
 const toast = useToast();
+const { adminIsLoggedIn } = useUser();
 const { fetchSales, sales, fetchSalesResumen, confirmOrder } = useSales();
 const { openWhatsApp } = useWhatsapp()
-const showModal = ref(false);
 const loading = ref(false);
-const password = ref(null);
 const searchOrder = ref("");
-const magicKey = "magic_admin_available";
-const logInfo = ref({ logged: false });
 
 const localSales = ref([])
 const orderResumen = ref([])
 
 const getCount = (status) => orderResumen.value?.find(x => x.status === status)?.total || 0;
 
+const activeTab = ref(0);
 const tabs = computed(() => ([{ index: 0, value: 'pending', name: "Pendientes", bg: "bg-gt-dark-300", button: "Confirmar venta", count: getCount("pending") },
 { index: 1, value: 'incomplete', name: "Sin completar", bg: "bg-red-900", button: "Confirmar venta", count: getCount("incomplete") },
 { index: 2, value: 'complete', name: "Completadas", bg: "bg-green-900", button: null, count: getCount("complete") }]))
-const activeTab = ref(0);
 
-const passwordIsEmpty = computed(() => password.value === null || password.value === '')
 const confirmButtonActive = (row) => row.filter(x => !x.added).some(x => x.sold)
 
 const capi = (str) => capitalizeFirstLetter(str);
-async function goVentas() {
-    loading.value = true;
-    setTimeout(async () => {
-        if (passwordIsEmpty.value) return;
-        if (password.value === import.meta.env.VITE_ADMIN_PASSWORD) {
-            toast.add({
-                severity: "success",
-                summary: "Contraseña exitosa, redirigiendo",
-                life: 1800,
-            })
-            await loadSales(tabs.value[activeTab.value]?.value);
-            setTimeout(() => {
-                showModal.value = false;
-                loading.value = false;
-                logInfo.value = { logged: true, time: new Date() };
-                localStorage.setItem(magicKey, JSON.stringify(logInfo.value));
-            }, 2000);
-        } else {
-            toast.add({
-                severity: "error",
-                summary: "Contraseña erronea, vuelva a intentarlo",
-                life: 2000,
-            })
-            password.value = null;
-            loading.value = false;
-        }
-    }, 250);
-}
-function goHome() {
-    router.push("/");
-}
-function goWpp(phone) {
 
+function goWpp(phone) {
     openWhatsApp("Hola, te hablo por tu pedido", " ", phone)
 }
-async function loadSales(status) {
-    await fetchSales({ status, search: searchOrder.value });
+async function init() {
+    orderResumen.value = await fetchSalesResumen();
+    await loadSales();
+}
+async function loadSales() {
+    await fetchSales({ status: tabs.value[activeTab.value]?.value, search: searchOrder.value });
 }
 async function confirmLocalOrder(params, forceClose = false) {
     loading.value = true;
@@ -189,39 +147,15 @@ async function confirmLocalOrder(params, forceClose = false) {
         })
         setTimeout(async () => {
             loading.value = false;
-            orderResumen.value = await fetchSalesResumen();
-            await loadSales(tabs.value[activeTab.value]?.value);
+            await init();
             document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
         }, 1000);
     }
 }
 
-onMounted(async () => {
-    logInfo.value = JSON.parse(localStorage.getItem(magicKey) || '{}');
-    orderResumen.value = await fetchSalesResumen();
-    if (logInfo.value.logged) {
-        const diff = Math.floor((new Date().getTime() - new Date(logInfo.value.time).getTime()) / (1000 * 60));
-        if (diff >= 240) {
-            logInfo.value = { ...logInfo.value, logged: false };
-            toast.add({
-                severity: "warn",
-                summary: "Sesión caducada, reconectar",
-                life: 2000,
-            });
-            setTimeout(() => {
-                showModal.value = true;
-                localStorage.setItem(magicKey, JSON.stringify(logInfo.value));
-            }, 1000);
-        } else {
-            await loadSales(tabs.value[activeTab.value]?.value);
-        }
-    } else {
-        showModal.value = true;
-    }
-})
 
-watch([activeTab, searchOrder], async () => {
-    await loadSales(tabs.value[activeTab.value]?.value)
+watch([activeTab], async () => {
+    await loadSales()
 })
 watch(sales, () => {
     localSales.value = sales.value?.map((sal) => ({ ...sal, cart: JSON.parse(sal.cart).map(x => ({ ...x, sold: x.sold || 0 })) }))

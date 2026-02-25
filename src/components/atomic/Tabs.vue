@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-4 w-full">
-        <div class="flex flex-row mb-4 w-full h-min border-b-2 border-black">
+        <div class="flex flex-row w-full h-min border-b-2 border-black" :class="[`mb-${margin}`]">
             <div v-for="(tab) in tabs" :key="`tab-${tab.index}`" class="p-2 border-black hover:cursor-pointer bg-site "
                 :class="[activeTab === tab.index && activeTabClass, { 'border-l-0': activeTab === 0 && activeTab === tab.index }, { 'border-l-2': activeTab === tab.index && tab.index >= 1 }]"
                 @click="changeTab(tab)">
@@ -19,7 +19,7 @@
 import { capitalizeFirstLetter } from '@/utils/utils';
 
 const activeTabClass = "border-t-2 border-r-2 -mb-[2px]";
-defineProps({ tabs: { type: Array, default: () => [] }, activeTab: { type: Number, default: 0 }, count: { type: Number, default: 0 }, countDisable: { type: Boolean, default: false } })
+defineProps({ tabs: { type: Array, default: () => [] }, activeTab: { type: Number, default: 0 }, count: { type: Number, default: 0 }, countDisable: { type: Boolean, default: false }, margin: { type: Number, default: 0 } })
 const emit = defineEmits(['change']);
 function changeTab(val) {
     emit("change", val)

@@ -11,7 +11,7 @@
         <input :type="type" :placeholder="placeholder" :value="modelValue" @input="onInput"
             @keydown.enter.prevent="onEnter"
             class="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent"
-            :aria-label="ariaLabel" v-bind="$attrs" />
+            :aria-label="ariaLabel" ref="inputRef" v-bind="$attrs" />
     </div>
 </template>
 
@@ -22,19 +22,24 @@ const props = defineProps({
     modelValue: { type: [String, Number], default: '' },
     debounce: { type: Number, default: 750 },
     placeholder: { type: [String, Number], default: 'Search...' },
-    type: { type: String, default: 'search' },
+    type: { type: String, default: "search" },
     ariaLabel: { type: String, default: 'Search input' },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    onlyEnter: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['update:modelValue', 'search'])
+const emit = defineEmits(['update:modelValue', "input"])
 
-const timer = ref(null)
+const timer = ref(null);
+const inputRef = ref(null);
 
-function scheduleSearch(value) {
+const typesToIgnoreOnOnlyEnter = ['deleteContentBackward', "deleteContentForward", 'insertText', undefined];
+
+function scheduleSearch(value, type) {
+    if (props.onlyEnter && typesToIgnoreOnOnlyEnter.includes(type)) return;
     if (timer.value) clearTimeout(timer.value)
     timer.value = setTimeout(() => {
-        emit('search', value)
+        emit("input", value)
         timer.value = null
     }, props.debounce)
 }
@@ -42,18 +47,23 @@ function scheduleSearch(value) {
 function onInput(event) {
     const value = event.target.value
     emit('update:modelValue', props.type === 'number' ? parseInt(value) : value)
-    scheduleSearch(value)
+    scheduleSearch(value, event.inputType)
 }
 
 function onEnter() {
+    if (!props.onlyEnter) return;
     if (timer.value) {
         clearTimeout(timer.value)
         timer.value = null
     }
-    emit('search', props.modelValue)
+    emit("input", props.modelValue)
 }
 
 onBeforeUnmount(() => {
     if (timer.value) clearTimeout(timer.value)
 })
+
+defineExpose({
+    inputElement: inputRef
+});
 </script>

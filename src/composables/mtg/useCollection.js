@@ -8,6 +8,7 @@ const useCollection = () => {
   const fetching = ref(false);
   const collectionMapped = ref([]);
   const collection = computed(() => store.collection);
+  const binders = computed(() => store.binders);
   const onFetching = computed(() => fetching.value);
 
   async function fetchCollection(params, user) {
@@ -37,12 +38,39 @@ const useCollection = () => {
     }, 1000);
   }
 
+  async function fetchBinders(colId) {
+    await store.fetchBinders(colId);
+  }
+  async function createBinder(params) {
+    try {
+      debugger;
+      if (!params.body.name) throw "Name required";
+      await store.createBinders(params);
+      await fetchBinders(params.collectionId);
+    } catch (error) {
+      console.error("Composable error - creating binder", error);
+    }
+  }
+
+  async function addCards(form) {
+    return await store.addCardsToCollection(form);
+  }
+
+  async function removeCards(arr) {
+    console.log("Removing card from collection as array");
+  }
+
   return {
     fetching,
     onFetching,
     fetchCollection,
+    fetchBinders,
+    createBinder,
     collectionMapped,
     collection,
+    binders,
+    addCards,
+    removeCards,
   };
 };
 

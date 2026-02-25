@@ -1,10 +1,11 @@
 <template>
     <div class="flex flex-row relative"
-        :class="[{ 'pb-2 border-b-2 border-black': row }, { 'min-h-[50vh] border-r-2 border-black': !row }]">
+        :class="[{ 'pb-2 border-b-2 border-black': row }, { 'min-h-[50vh] border-r-2 border-black': !row }]"
+        @keydown.enter.prevent="applyIt">
         <Filters ref="filters" :row="row" :collapsed="collapsed">
             <template #search>
                 <div v-if="!collapsed" class="self-end mt-5 mb-3 w-full h-10">
-                    <InputField placeholder="Search singles..." @search="searched = $event" :model-value="searched" />
+                    <InputField placeholder="Search singles..." @input="searched = $event" :model-value="searched" />
                 </div>
             </template>
             <template #expansions>
@@ -13,12 +14,12 @@
             </template>
 
             <template #apply>
-                <div class="flex flex-row justify-between" :class="[{ '': row }, { 'mt-3': !row }]">
+                <div class="flex flex-row justify-between gap-2" :class="[{ '': row }, { 'mt-3': !row }]">
                     <Button v-show="!collapsed && withApply" @click="applyIt" :disabled="!shouldActiveApplyFilter">
-                        Apply Filters
+                        Aplicar
                     </Button>
                     <Button v-show="!collapsed" @click="clear" outlined :disabled="shouldClearDisabled">
-                        Clear
+                        Limpiar
                     </Button>
                 </div>
             </template>
@@ -65,20 +66,19 @@ const shouldActiveApplyFilter = computed(() => {
 const shouldClearDisabled = computed(() => {
     if (props.fetching || onClear.value || shouldActiveApplyFilter.value) return true;
 
-    // console.log(JSON.stringify(currentState.value), JSON.stringify(initialStateValues.value))
-    // console.log(JSON.stringify(currentState.value) !== JSON.stringify(initialStateValues.value))
     return JSON.stringify(currentState.value) === JSON.stringify(initialStateValues)
 })
 
 
-async function clear() {
-    // Pending clear on the childreds or propagate from children.
+async function clear(cal = "inside") {
+    if (shouldClearDisabled.value) return;
     onClear.value = true;
     filters?.value.clean()
     searched.value = "";
     expansionSelected.value = null;
 }
 async function applyIt() {
+    if (!shouldActiveApplyFilter.value) return;
     setStates({
         active: filters?.value?.activeFilters || {},
         searched: searched.value,
@@ -103,18 +103,8 @@ watch(() => [filters?.value?.activeFilters, expansionSelected.value, searched.va
 
     } else if (!props.withApply) { applyIt(); }
 }, { deep: true })
-// watch(
-//     searched,
-//     () => {
-//         if (props.fetching || onClear.value) return;
-//         currentState.value.searched = searched.value;
-//         applyIt({
-
-//         });
-//     },
-// );
 onMounted(async () => { if (!sets.value.length) await fetchSets() })
-defineExpose({ toggle: () => collapsed.value = !collapsed.value })
+defineExpose({ toggle: () => collapsed.value = !collapsed.value, clear })
 </script>
 
 <style lang="scss" scoped></style>

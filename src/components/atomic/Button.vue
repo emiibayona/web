@@ -129,6 +129,12 @@ defineProps({
         width: 100%;
     }
 
+    &--block-xy {
+        width: 100%;
+        height: 100%;
+
+    }
+
     // Outlined state
     &--outlined {
         background-color: transparent;
@@ -155,6 +161,7 @@ defineProps({
 
     &-slot {
         height: 100%;
+        @include flex(row, center, center);
     }
 
 }

@@ -5,6 +5,7 @@ import CollectionService from "@/services/CollectionService";
 
 export const useCollectionStore = defineStore("collection", () => {
   const collection = ref(null);
+  const binders = ref(null);
 
   async function fetchCollection(params, user = null) {
     try {
@@ -13,9 +14,42 @@ export const useCollectionStore = defineStore("collection", () => {
         params,
       );
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching collection:", error);
     }
   }
 
-  return { collection, fetchCollection };
+  async function addCardsToCollection(params) {
+    try {
+      return await CollectionService.addCards(params);
+    } catch (error) {
+      console.error("Error fetching binder:", error);
+    }
+  }
+
+  // BINDERS
+  async function fetchBinders(collectionId) {
+    try {
+      binders.value = await CollectionService.listBinders(collectionId);
+    } catch (error) {
+      console.error("Error fetching binder:", error);
+    }
+  }
+
+  async function createBinders(params) {
+    try {
+      if (!params.collectionId) throw "collectionId required";
+      await CollectionService.createBinders(params);
+    } catch (error) {
+      console.error("Error creating binder", error);
+    }
+  }
+
+  return {
+    addCardsToCollection,
+    collection,
+    binders,
+    createBinders,
+    fetchBinders,
+    fetchCollection,
+  };
 });

@@ -42,11 +42,6 @@ const router = createRouter({
       component: () => import("@/pages/magic/sealed/index.vue"),
     },
     {
-      path: "/user/magic",
-      name: "user Collection",
-      component: () => import("@/pages/user/magic/index.vue"),
-    },
-    {
       path: "/cart",
       name: "Cart",
       component: () => import("@/pages/cart.vue"),
@@ -57,14 +52,19 @@ const router = createRouter({
       component: () => import("@/pages/wishlist.vue"),
     },
     {
-      path: "/magic/admin/ventas",
-      name: "Ventas magic",
-      component: () => import("@/pages/magic/admin/ventas.vue"),
+      path: "/admin",
+      name: "admin",
+      component: () => import("@/pages/admin/index.vue"),
     },
     {
-      path: "/magic/admin/",
-      name: "ADmin magic",
-      component: () => import("@/pages/magic/admin/index.vue"),
+      path: "/admin/magic/ventas",
+      name: "Magic ventas",
+      component: () => import("@/pages/admin/magic/ventas.vue"),
+    },
+    {
+      path: "/admin/magic/collection",
+      name: "Magic collection",
+      component: () => import("@/pages/admin/magic/collection.vue"),
     },
     {
       path: "/:pathMatch(.*)*",

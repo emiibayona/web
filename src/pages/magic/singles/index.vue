@@ -2,7 +2,7 @@
     <div class="singles-wrapper" id="singles-wrapper">
         <div class="filter-wrapper">
             <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
-                class="w-[230px] flex-1 sticky top-[82px]" />
+                ref="filtersComponent" class="w-[230px] flex-1 " />
         </div>
         <div class="cards-wrapper">
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div>
-            <Cart class="sticky top-[82px] min-h-[50vh]" />
+            <Cart class="h-[75vh]" />
         </div>
 
     </div>
@@ -46,7 +46,7 @@ const { add } = useCarts(GAMES.MAGIC);
 const { add: addWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
 
 const { fetchCollection, collection, collectionMapped, fetching } = useCollection();
-
+const filtersComponent = ref(null)
 const cardFilters = ref({});
 const params = ref({ page: 1 });
 
@@ -108,6 +108,11 @@ async function changeTab(tab) {
 watch(page, async () => await initCollection())
 onMounted(async () => {
     window.addEventListener("resize", handleResize);
+    document.addEventListener('keydown', ({ key }) => {
+        if (key === "Escape") {
+            filtersComponent?.value?.clear('outside');
+        }
+    });
     await initCollection();
 });
 onUnmounted(() => {
@@ -122,18 +127,28 @@ onUnmounted(() => {
     width: 100%;
     position: relative;
     display: grid;
-    grid-template-columns: 230px auto 270px;
-    min-height: fill-available;
-
 
     @include breakpoint(nm) {
-        // background-color: red;
         grid-template-columns: 230px auto 170px;
+    }
+
+    @include breakpoint(hd) {
+        // background-color: red;
+        grid-template-columns: 230px auto 200px;
+    }
+
+    @include breakpoint(hd2) {
+        // background-color: red;
+        grid-template-columns: 230px auto 270px;
     }
 
     .filter-wrapper {
         // width: 230px;
         width: 100%;
+        height: 75vh;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
 
     }
 
@@ -146,6 +161,11 @@ onUnmounted(() => {
             width: 100%;
 
             .list {
+                padding-top: 30px;
+                height: 75vh;
+                width: 100%;
+                overflow-y: auto;
+                overflow-x: hidden;
                 @include grid($columns: 1, $gap: 32px);
                 width: 100%;
                 justify-items: center;

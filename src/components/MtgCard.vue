@@ -1,8 +1,11 @@
 <template>
-    <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble }]">
+    <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]">
         <div class="card relative" :class="[{ 'in-shop': shop }]">
-            <div class="quantity">
-                {{ card.quantity }}
+            <div class="quantity" @click="showEdit">
+                <span v-show="shop || !editQty">{{ card.quantity }}</span>
+                <InputField v-show="!shop && editQty" v-model="qty" placeholder="" @input="updateCard" only-enter
+                    :debounce="0" type="text" :id="`input-${card.cardId}`" ref="inputFieldRef"
+                    class="py-0 rounded-[4px]" @keyup.esc="showEdit(false)" />
             </div>
             <div v-if="card.treatment === 'foil'" class="absolute top-0 left-0 w-full h-full rainbow-bg z-10">
             </div>
@@ -34,16 +37,25 @@
 </template>
 
 <script setup>
+import useClickOutside from '@/composables/useClickOutside';
 import axios from 'axios';
-import { computed, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import InputField from './atomic/InputField.vue';
 
 const props = defineProps({
     card: { type: Object, default: () => ({}) },
     shop: { type: Boolean, default: false },
+    flipDisable: { type: Boolean, default: false },
 })
 
 const emits = defineEmits(["add-to-cart"]);
 const price = ref(null);
+const qty = ref(null);
+const editQty = ref(false);
+const inputFieldRef = ref(null);
+
+const { setListener } = useClickOutside({ templateRef: "qtyInput", target: open, clicked: false });
+
 const cardName = computed(() => props.card.name.toLowerCase().split("//")[0].trim().replaceAll(",", ""))
 const ckUrl = computed(() => {
     return `https://www.cardkingdom.com/catalog/view?filter[search]=mtg_advanced&filter[name]=${cardName.value}${props?.card?.treatment === 'foil' ? '&filter[tab]=mtg_foil' : ''}`
@@ -59,6 +71,27 @@ const addCard = () => {
 const addWishlist = () => {
     emits("add-to-wishlist", { item: props.card });
 }
+const showEdit = (val = true) => {
+    if (props.shop) return;
+    editQty.value = val;
+}
+const updateCard = () => {
+    if (qty.value === props.card.quantity) {
+        editQty.value = false;
+        document.getElementById(`input-${props.card.id}`).focus = false;
+    } else {
+        console.log("Value: ", qty.value)
+    }
+}
+watch(editQty, async () => {
+    await nextTick();
+
+    if (inputFieldRef.value?.inputElement) {
+        inputFieldRef.value.inputElement.focus();
+    }
+})
+onMounted(() => { qty.value = props.card.quantity; setListener(); })
+onBeforeUnmount(() => setListener())
 </script>
 
 <style lang="scss" scoped>
@@ -125,6 +158,11 @@ const addWishlist = () => {
         transform-style: preserve-3d;
         font-weight: bold;
         perspective: 1000px;
+
+        input {
+            height: 24px !important;
+            width: 30px !important;
+        }
     }
 }
 
@@ -132,7 +170,7 @@ const addWishlist = () => {
     &.hasDouble:hover {
         .card {
             &.in-shop {
-                transform: rotateY(180deg) translateY(-50px);
+                transform: rotateY(180deg) translateY(-30px);
             }
 
             &:not(.in-shop) {
@@ -151,7 +189,7 @@ const addWishlist = () => {
     &:not(.hasDouble):hover {
         .card {
             &.in-shop {
-                transform: rotateY(0) translateY(-50px);
+                transform: rotateY(0) translateY(-30px);
             }
 
             &:not(.in-shop) {
@@ -168,7 +206,7 @@ const addWishlist = () => {
 
         .shop {
             opacity: 1;
-            bottom: -30px;
+            bottom: -45px;
         }
     }
 }
