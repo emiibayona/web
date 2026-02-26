@@ -53,7 +53,7 @@
                     <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit"
                         :loading="onFetching" class="py-5" />
                 </div>
-                <div v-else class="flex flex-row items-center justify-center w-full h-screen overflow-hidden">
+                <div v-else class="flex flex-row items-center justify-center w-full overflow-hidden">
                     <Loader />
                 </div>
             </div>
