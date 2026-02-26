@@ -167,7 +167,6 @@ async function uploadCards() {
         if (binderTyped.value && !binderTypedExisting) {
             binder = await createBinder({ body: { name: binderTyped.value }, collectionId: collection.value.collectionId })
         } else {
-            debugger;
             binder = binderTypedExisting || binderSelected?.value;
         }
 
@@ -197,6 +196,7 @@ async function uploadCards() {
 
 async function updateAmountCard(va) {
     await updateCards(collection?.value?.collectionId, [va])
+    await initCollection();
 }
 
 watch(
