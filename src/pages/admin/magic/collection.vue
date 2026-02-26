@@ -50,7 +50,7 @@
                 <div v-if="!onFetching" class="cards-wrapper_inner gap-8">
                     <div class="list ">
                         <MtgCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable
-                            @update="updateAmountCard" />
+                            @update="updateAmountCard" :updating="uploading" />
                     </div>
                     <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit"
                         :loading="onFetching" class="py-5" />
@@ -195,8 +195,10 @@ async function uploadCards() {
 }
 
 async function updateAmountCard(va) {
+    uploading.value = true;
     await updateCards(collection?.value?.collectionId, [va])
     await initCollection();
+    uploading.value = false;
 }
 
 watch(

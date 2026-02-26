@@ -2,9 +2,10 @@
     <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]">
         <div class="card relative" :class="[{ 'in-shop': shop }]">
             <div class="quantity" @click="showEdit">
-                <span v-show="shop || !editQty">{{ card.quantity }}</span>
-                <InputField v-show="!shop && editQty" v-model="qty" placeholder="" @input="updateCard" only-enter
-                    :debounce="0" :min="0" type="number" :id="`input-${card.cardId}`" ref="inputFieldRef"
+                <Loader v-if="updating" class="w-1/2 h-1/2" />
+                <span v-show="!updating && (shop || !editQty)">{{ card.quantity }}</span>
+                <InputField v-show="!updating && (!shop && editQty)" v-model="qty" placeholder="" @input="updateCard"
+                    only-enter :debounce="0" :min="0" type="number" :id="`input-${card.cardId}`" ref="inputFieldRef"
                     class="py-0 rounded-[4px]" @keyup.esc="showEdit(false)" />
             </div>
             <div v-if="card.treatment === 'foil'" class="absolute top-0 left-0 w-full h-full rainbow-bg z-10">
@@ -40,11 +41,13 @@
 import axios from 'axios';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import InputField from '@/components/atomic/InputField.vue';
+import Loader from './atomic/Loader.vue';
 
 const props = defineProps({
     card: { type: Object, default: () => ({}) },
     shop: { type: Boolean, default: false },
     flipDisable: { type: Boolean, default: false },
+    updating: { type: Boolean, default: false }
 })
 
 const emits = defineEmits(["add-to-cart", "add-to-wishlist", 'update']);
