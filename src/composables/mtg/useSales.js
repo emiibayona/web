@@ -51,13 +51,13 @@ const useSales = () => {
     const result = await store.createOrder({
       ...form,
       game,
-      cart: parseCart(game, values),
+      cards: parseCart(game, values),
     });
     return result;
   };
 
   const confirmOrder = async (sale, forceClose = false) => {
-    return await store.confirmOrder({ ...sale, forceClose });
+    return await store.confirmOrder({ ...sale, cards: sale.cart, forceClose });
   };
 
   return {

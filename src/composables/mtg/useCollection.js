@@ -59,7 +59,8 @@ const useCollection = () => {
     return await store.addCardsToCollection(form);
   }
 
-  async function removeCards(arr) {
+  async function updateCards(colId, arr) {
+    const res = await store.updateCards(colId, arr);
     console.log("Removing card from collection as array");
   }
 
@@ -73,7 +74,7 @@ const useCollection = () => {
     collection,
     binders,
     addCards,
-    removeCards,
+    updateCards,
   };
 };
 

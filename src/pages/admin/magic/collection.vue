@@ -26,6 +26,7 @@
                 </div>
             </Modal>
 
+            <AdminLogin />
 
             <div class="singles-wrapper" id="singles-wrapper">
                 <div class="filter-wrapper border-r-2 border-black">
@@ -48,7 +49,8 @@
 
                 <div v-if="!onFetching" class="cards-wrapper_inner gap-8">
                     <div class="list ">
-                        <MtgCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable />
+                        <MtgCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable
+                            @update="updateAmountCard" />
                     </div>
                     <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit"
                         :loading="onFetching" class="py-5" />
@@ -62,6 +64,7 @@
 </template>
 
 <script setup>
+import AdminLogin from '@/components/admin/AdminLogin.vue';
 import Button from '@/components/atomic/Button.vue';
 import Dropdown from '@/components/atomic/Dropdown.vue';
 import InputField from '@/components/atomic/InputField.vue';
@@ -75,7 +78,7 @@ import { useToast } from "primevue/usetoast";
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const toast = useToast();
-const { fetchCollection, collection, collectionMapped, onFetching, binders, fetchBinders, createBinder, addCards } = useCollection();
+const { fetchCollection, collection, collectionMapped, onFetching, binders, fetchBinders, createBinder, addCards, updateCards } = useCollection();
 
 const loading = ref(false);
 const uploading = ref(false);
@@ -191,6 +194,11 @@ async function uploadCards() {
         console.error(error)
     }
 }
+
+async function updateAmountCard(va) {
+    await updateCards(collection?.value?.collectionId, [va])
+}
+
 watch(
     searched,
     async () => {

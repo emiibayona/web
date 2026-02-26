@@ -117,6 +117,7 @@ onMounted(async () => {
 });
 onUnmounted(() => {
     window.removeEventListener("resize", handleResize);
+    document.removeEventListener('keydown')
 });
 
 </script>

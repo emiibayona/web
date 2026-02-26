@@ -15,6 +15,7 @@
                             @input="loadSales" only-enter :debounce="0" />
                         <!-- </form> -->
                     </div>
+                    <Loader v-if="fetching" />
                     <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 w-full">
                         <!-- {{ sale }} -->
                         <Compressor :icon="false" speedy :id="`compressor-${index}`">
@@ -22,9 +23,9 @@
                                 <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
                                     :class="[tabs[activeTab].bg]">
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
                                         sale.contact
                                             }}</span> <span
@@ -32,7 +33,7 @@
                                             @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
                                                 class="w-4 h-4" /></span></span>
                                     <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{
                                         Date(sale.createdAt)
                                             }}</span></span>
@@ -57,7 +58,7 @@
                                         </div>
                                         <div class="flex flex-row items-center gap-2 max-w-[60px]"
                                             v-if="tabs[activeTab].value !== 'complete' && !card.added">
-                                            <InputField v-model="card.sold" :placeholder="0" type="number"
+                                            <InputField v-model="card.sold" placeholder="0" type="number"
                                                 class="max-w-[40px] max-h-[20px] mr-4" :debounce="0"
                                                 :max="parseInt(card.quantity)" :min="0" />
 
@@ -102,6 +103,7 @@ import { capitalizeFirstLetter } from '@/utils/utils';
 import useWhatsapp from '@/composables/useWhatsapp';
 import AdminLogin from '@/components/admin/AdminLogin.vue';
 import useUser from '@/composables/useUser';
+import Loader from '@/components/atomic/Loader.vue';
 
 
 const toast = useToast();
@@ -109,6 +111,7 @@ const { adminIsLoggedIn } = useUser();
 const { fetchSales, sales, fetchSalesResumen, confirmOrder } = useSales();
 const { openWhatsApp } = useWhatsapp()
 const loading = ref(false);
+const fetching = ref(true);
 const searchOrder = ref("");
 
 const localSales = ref([])
@@ -118,7 +121,7 @@ const getCount = (status) => orderResumen.value?.find(x => x.status === status)?
 
 const activeTab = ref(0);
 const tabs = computed(() => ([{ index: 0, value: 'pending', name: "Pendientes", bg: "bg-gt-dark-300", button: "Confirmar venta", count: getCount("pending") },
-{ index: 1, value: 'incomplete', name: "Sin completar", bg: "bg-red-900", button: "Confirmar venta", count: getCount("incomplete") },
+{ index: 1, value: 'incomplete', name: "Sin completar", bg: "bg-red-400", button: "Confirmar venta", count: getCount("incomplete") },
 { index: 2, value: 'complete', name: "Completadas", bg: "bg-green-900", button: null, count: getCount("complete") }]))
 
 const confirmButtonActive = (row) => row.filter(x => !x.added).some(x => x.sold)
@@ -133,12 +136,14 @@ async function init() {
     await loadSales();
 }
 async function loadSales() {
+    fetching.value = true;
     await fetchSales({ status: tabs.value[activeTab.value]?.value, search: searchOrder.value });
+    fetching.value = false;
 }
 async function confirmLocalOrder(params, forceClose = false) {
     loading.value = true;
     const result = await confirmOrder(params, forceClose)
-    if (result) {
+    if (result.status !== 500) {
         toast.add({
             severity: "success",
             life: 2000,
@@ -150,7 +155,7 @@ async function confirmLocalOrder(params, forceClose = false) {
             await init();
             document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
         }, 1000);
-    }
+    } else loading.value = false;
 }
 
 
@@ -159,6 +164,9 @@ watch([activeTab], async () => {
 })
 watch(sales, () => {
     localSales.value = sales.value?.map((sal) => ({ ...sal, cart: JSON.parse(sal.cart).map(x => ({ ...x, sold: x.sold || 0 })) }))
+})
+onMounted(async () => {
+    orderResumen.value = await fetchSalesResumen();
 })
 </script>
 

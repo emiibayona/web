@@ -26,6 +26,14 @@ export const useCollectionStore = defineStore("collection", () => {
     }
   }
 
+  async function updateCards(colId, arr) {
+    try {
+      return await CollectionService.updateCards(colId, arr);
+    } catch (error) {
+      console.error("Error updating amount of cards", error);
+    }
+  }
+
   // BINDERS
   async function fetchBinders(collectionId) {
     try {
@@ -51,5 +59,6 @@ export const useCollectionStore = defineStore("collection", () => {
     createBinders,
     fetchBinders,
     fetchCollection,
+    updateCards,
   };
 });

@@ -29,13 +29,16 @@ const { adminUser } = useUser();
 const activeTab = ref(0);
 
 const tabs = computed(() => {
-    const games = Object.values(GAMES).filter(x => x === "magic").map((x, index) => ({
-        index,
-        game: x,
-        name: x,
-        pages: [{ path: "admin/magic/ventas", button: "Ventas" }, { path: "admin/magic/collection", button: "Colleccion" },]
-
-    }))
+    const games = Object.values(GAMES).filter(x => x === "magic").map((x, index) => {
+        const pages = [{ path: "admin/magic/ventas", button: "Ventas" }, { path: "admin/magic/collection", button: "Colección" }]
+        return {
+            index,
+            game: x,
+            name: x,
+            pages,
+            count: pages.length
+        }
+    })
     return games;
 })
 

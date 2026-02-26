@@ -4,7 +4,7 @@
             <div class="quantity" @click="showEdit">
                 <span v-show="shop || !editQty">{{ card.quantity }}</span>
                 <InputField v-show="!shop && editQty" v-model="qty" placeholder="" @input="updateCard" only-enter
-                    :debounce="0" type="text" :id="`input-${card.cardId}`" ref="inputFieldRef"
+                    :debounce="0" :min="0" type="number" :id="`input-${card.cardId}`" ref="inputFieldRef"
                     class="py-0 rounded-[4px]" @keyup.esc="showEdit(false)" />
             </div>
             <div v-if="card.treatment === 'foil'" class="absolute top-0 left-0 w-full h-full rainbow-bg z-10">
@@ -27,8 +27,8 @@
             </div>
             <a :href="ckUrl" target="_blank" class="text-sm text-gray-300 underline hover:scale-110 duration-300">Ver
                 versiones en CardKingdom</a>
-            <span v-if="!price" class="text-white font-bold hover:scale-125 duration-300" @click="checkPrice">Check
-                price</span>
+            <span v-if="!price" class="text-white font-bold hover:scale-125 duration-300" @click="checkPrice">Ver precio
+                aprox</span>
             <div v-else class="flex flex-col justify-center items-center gap-2">
                 <span class="text-white font-bold">{{ price }}</span>
             </div>
@@ -37,10 +37,9 @@
 </template>
 
 <script setup>
-import useClickOutside from '@/composables/useClickOutside';
 import axios from 'axios';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import InputField from './atomic/InputField.vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import InputField from '@/components/atomic/InputField.vue';
 
 const props = defineProps({
     card: { type: Object, default: () => ({}) },
@@ -48,13 +47,12 @@ const props = defineProps({
     flipDisable: { type: Boolean, default: false },
 })
 
-const emits = defineEmits(["add-to-cart"]);
+const emits = defineEmits(["add-to-cart", "add-to-wishlist", 'update']);
 const price = ref(null);
 const qty = ref(null);
 const editQty = ref(false);
 const inputFieldRef = ref(null);
 
-const { setListener } = useClickOutside({ templateRef: "qtyInput", target: open, clicked: false });
 
 const cardName = computed(() => props.card.name.toLowerCase().split("//")[0].trim().replaceAll(",", ""))
 const ckUrl = computed(() => {
@@ -78,9 +76,8 @@ const showEdit = (val = true) => {
 const updateCard = () => {
     if (qty.value === props.card.quantity) {
         editQty.value = false;
-        document.getElementById(`input-${props.card.id}`).focus = false;
     } else {
-        console.log("Value: ", qty.value)
+        emits("update", { ...props.card, amount: qty.value })
     }
 }
 watch(editQty, async () => {
@@ -90,8 +87,16 @@ watch(editQty, async () => {
         inputFieldRef.value.inputElement.focus();
     }
 })
-onMounted(() => { qty.value = props.card.quantity; setListener(); })
-onBeforeUnmount(() => setListener())
+const lowKey = ({ key }) => {
+    if (key === "Escape") {
+        updateCard();
+    }
+}
+onMounted(() => {
+    qty.value = props.card.quantity;
+    document.addEventListener('keydown', lowKey);
+})
+onUnmounted(() => document.removeEventListener('keydown', lowKey))
 </script>
 
 <style lang="scss" scoped>
