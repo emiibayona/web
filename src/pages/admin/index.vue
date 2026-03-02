@@ -1,5 +1,5 @@
 <template>
-    <div v-if="adminUser">
+    <div v-if="adminIsLoggedIn">
         <h1 class="text-2xl font-bold mb-5">Panel de Admin</h1>
 
         <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
@@ -25,7 +25,7 @@ import AdminPages from '@/components/admin/AdminPages.vue';
 
 const router = useRouter();
 
-const { adminUser } = useUser();
+const { adminIsLoggedIn } = useUser();
 const activeTab = ref(0);
 
 const tabs = computed(() => {

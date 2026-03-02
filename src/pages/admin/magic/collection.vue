@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="flex flex-col">
+        <AdminLogin />
+        <div v-if="adminIsLoggedIn" class="flex flex-col">
             <Modal v-model="showAddModal" title="Agregar a la coleccion" :close-disabled="uploading">
                 <div class="w-full flex flex-col gap-5">
                     <div class="bg-gt-dark-500 h-16 w-full flex flex-row items-center justify-center">
@@ -26,12 +27,12 @@
                 </div>
             </Modal>
 
-            <AdminLogin />
+
 
             <div class="singles-wrapper" id="singles-wrapper">
                 <div class="filter-wrapper border-r-2 border-black">
                     <div class="flex flex-row gap-5 mb-2 items-center sticky top-0 bg-site ">
-                        <h1 class="font-bold">Mi Collection</h1>
+                        <h1 class="font-bold">Mi Colleción</h1>
                         <Button size="xsmall" @click="openAddCardsModal(true)">
                             + Agregar cartas
                         </Button>
@@ -74,12 +75,13 @@ import FiltersComponent from '@/components/mtg/FiltersComponent.vue';
 import MtgCard from '@/components/MtgCard.vue';
 import Pagination from '@/components/Pagination.vue';
 import useCollection from '@/composables/mtg/useCollection';
+import useUser from '@/composables/useUser';
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const toast = useToast();
 const { fetchCollection, collection, collectionMapped, onFetching, binders, fetchBinders, createBinder, addCards, updateCards } = useCollection();
-
+const { adminIsLoggedIn } = useUser();
 const loading = ref(false);
 const uploading = ref(false);
 const showAddModal = ref(false);
@@ -164,8 +166,8 @@ async function uploadCards() {
         }
         let binder = null;
         const binderTypedExisting = binders.value.find(x => x.name === binderTyped.value)
-        if (binderTyped.value && !binderTypedExisting) {
-            binder = await createBinder({ body: { name: binderTyped.value }, collectionId: collection.value.collectionId })
+        if (binderTyped.value && !binderTypedExisting || !binders.value.length) {
+            binder = await createBinder({ body: { name: binderTyped.value || "default" }, collectionId: collection.value.collectionId })
         } else {
             binder = binderTypedExisting || binderSelected?.value;
         }
