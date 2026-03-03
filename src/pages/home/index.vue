@@ -4,10 +4,10 @@
     </div>
     <main>
         <div class="flex flex-col w-full justify-around bg-main">
-            <div class="flex flex-col w-full">
+            <!-- <div class="flex flex-col w-full">
                 <span class="text-xl">NEWS</span>
                 <HeaderCarousel class="pb-4" />
-            </div>
+            </div> -->
             <!-- <NavList class="hidden md:flex space-x-4 justify-around items-center" :data="data" /> -->
 
             <!-- <hr class="mask-x-from-70% mask-x-to-70%" /> -->
