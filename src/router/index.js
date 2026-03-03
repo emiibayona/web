@@ -63,7 +63,7 @@ const router = createRouter({
     },
     {
       path: "/admin/magic/sellado",
-      name: "Magic ventas",
+      name: "Magic sellado",
       component: () => import("@/pages/admin/magic/sellado.vue"),
     },
     {
