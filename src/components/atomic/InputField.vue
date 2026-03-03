@@ -10,7 +10,7 @@
 
         <input :type="type" :placeholder="placeholder" :value="modelValue" @input="onInput"
             @keydown.enter.prevent="onEnter"
-            class="flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent"
+            class="no-spinners flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent w-full"
             :aria-label="ariaLabel" ref="inputRef" v-bind="$attrs" />
     </div>
 </template>
@@ -67,3 +67,14 @@ defineExpose({
     inputElement: inputRef
 });
 </script>
+<style lang="scss" scoped>
+.no-spinners {
+    -moz-appearance: textfield;
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+</style>

@@ -49,7 +49,8 @@
                 </div>
 
                 <div v-if="!onFetching" class="cards-wrapper_inner gap-8">
-                    <div class="list ">
+                    <Empty v-if="!collectionMapped.length" />
+                    <div class="list">
                         <MtgCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable
                             @update="updateAmountCard" :updating="uploading" />
                     </div>
@@ -68,6 +69,7 @@
 import AdminLogin from '@/components/admin/AdminLogin.vue';
 import Button from '@/components/atomic/Button.vue';
 import Dropdown from '@/components/atomic/Dropdown.vue';
+import Empty from '@/components/atomic/Empty.vue';
 import InputField from '@/components/atomic/InputField.vue';
 import Loader from '@/components/atomic/Loader.vue';
 import Modal from '@/components/atomic/Modal.vue';

@@ -8,13 +8,14 @@
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
 
             <div v-if="!fetching" class="cards-wrapper_inner gap-8">
+                <Empty v-if="!collectionMapped.length" />
                 <div class="list ">
                     <MtgCard v-for="(card, index) in collectionMapped" :id="index" :index="index" :card="card" shop
                         @add-to-cart="add" @add-to-wishlist="addWishlist" />
                 </div>
                 <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit" :loading="fetching" />
             </div>
-            <div v-else class="flex flex-row items-center justify-center w-full overflow-hidden">
+            <div v-else class="flex flex-row items-center justify-center w-full overflow-hidden mt-10">
                 <Loader />
             </div>
         </div>
@@ -38,6 +39,7 @@ import useCarts from '@/composables/useCart';
 import { GAMES, RECIPIENTS_LISTS } from '@/utils/constants';
 import Loader from "@/components/atomic/Loader.vue";
 import Tabs from "@/components/atomic/Tabs.vue";
+import Empty from "@/components/atomic/Empty.vue";
 
 const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, value: 'foil', name: "foil" }])
 const activeTab = ref(0);

@@ -12,7 +12,7 @@ const useWhatsapp = () => {
   ) {
     if (window && phone) {
       window.open(
-        `https://wa.me/${parsePhone(phone)}?text=${encodeURIComponent(header + "\n\n" + content)}`,
+        `https://wa.me/${parsePhone(phone)}?text=${encodeURIComponent(header + "\n" + content)}`,
         "_blank",
       );
     }

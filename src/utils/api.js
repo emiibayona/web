@@ -38,4 +38,13 @@ export default {
       throw error;
     }
   },
+  delete: async (path, data) => {
+    try {
+      const response = await axios.delete(ApiURL + path, data);
+      return response.data;
+    } catch (error) {
+      console.error("DELETE request error:", error);
+      throw error;
+    }
+  },
 };

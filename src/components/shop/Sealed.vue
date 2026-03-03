@@ -1,18 +1,19 @@
 <template>
-    <div class="sealed-wrap">
+    <div class="sealed-item hover:drop-shadow-lg">
         <div class="sealed-img">
             <img :src="value.image" />
         </div>
-        <div class="sealed-wrap-info">
+        <div class="sealed-item-info">
             <div class="titles">
                 <span class="title">{{ value.name }}</span>
                 <p class="description">{{ value.description }}</p>
             </div>
-            <div class="flex flex-col items-center gap-3">
-                <span v-if="value.stock" class="font-bold">Stock: <span class="font-normal"> {{ value.stock
-                        }}</span></span>
-                <span class="font-bold">Price: <span class="font-normal"> {{ value.price }}</span></span>
-                <Button :disabled="isSoldOut" :outlined="isSoldOut" @click="addToCart">{{ isSoldOut ? 'Agotado' :
+            <div class="flex flex-col flex-start gap-2">
+                <span v-if="value.stock" class="font-bold">Disponibles: <span class="font-normal"> {{ value.stock
+                }}</span></span>
+                <span class="font-bold">Precio: <span class="font-normal"> {{ value.price }}</span></span>
+                <Button v-if="!edit" :disabled="isSoldOut" :outlined="isSoldOut" @click="addToCart">{{ isSoldOut ?
+                    'Agotado' :
                     "Comprar"
                 }}</Button>
             </div>
@@ -23,53 +24,60 @@
 <script setup>
 import { computed } from 'vue';
 import Button from '../atomic/Button.vue';
-import useCarts from '@/composables/useCart';
-import { GAMES } from '@/utils/constants';
+import useWhatsapp from '@/composables/useWhatsapp';
 const props = defineProps({
     value: {
         type: Object,
         required: true
-    }
+    },
+    edit: { type: Boolean, default: false },
+    show: { type: Boolean, default: false }
 });
 
-const { add } = useCarts(GAMES.MAGIC)
+const { openWhatsApp } = useWhatsapp()
 const isSoldOut = computed(() => !props.value.stock || props.value.soldOut)
 const addToCart = () => {
-    add({ item: props.value, quantity: 1, sealed: true })
+    if (props.show) return;
+    openWhatsApp("Hola, me gustaria comprar el/los siguiente/s sellado/s", `${props.value.name}`)
 }
 </script>
 
 <style lang="scss" scoped>
-.sealed-wrap {
+.sealed-item {
     @include flex(row, flex-start, flex-start);
     gap: 12px;
-    border-bottom: 2px solid black;
-    padding: 8px 4px;
+    padding: 12px;
+    // border-bottom: 2px solid black;
     // min-height: 150px;
     // max-height: 250px;
-    height: clamp(150px, 170px, 250px);
+    height: clamp(150px, 250px, 250px);
+    // width: 500px;
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.4);
+
+    &:hover {}
 
     .sealed-img {
-        height: 150px;
-        width: auto;
+        height: 100%;
+        width: 25%;
+        align-self: center;
 
         img {
-
+            height: 100%;
             object-fit: contain;
         }
 
     }
 
     &-info {
-        width: 100%;
-        min-height: 150px;
-        max-height: 250px;
+        width: 75%;
+        height: 100%;
         @include flex(row, space-between, flex-end);
 
         .titles {
-            min-height: 150px;
-            max-height: 250px;
-            max-width: 50%;
+            height: 100%;
+            width: 70%;
             @include flex(column, flex-start, flex-start);
             gap: 8px;
 
@@ -79,7 +87,11 @@ const addToCart = () => {
             }
 
             .description {
+                width: 100%;
                 font-size: small;
+                overflow-y: auto;
+                scrollbar-width: none;
+                cursor: row-resize;
             }
         }
     }

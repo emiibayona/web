@@ -64,7 +64,7 @@ import { ref, watch } from 'vue';
 import useCarts from '@/composables/useCart';
 import MiniCartCard from './MiniCartCard.vue';
 import { GAMES, RECIPIENTS_LISTS } from '@/utils/constants';
-import { capitalizeFirstLetter } from '@/utils/utils';
+import { capitalizeFirstLetter, fieldIsEmpty } from '@/utils/utils';
 import Button from '@/components/atomic/Button.vue';
 import useWhatsapp from '@/composables/useWhatsapp';
 import Modal from '@/components/atomic/Modal.vue';
@@ -85,7 +85,7 @@ const showOrderConfirmed = ref(false)
 // const name = ref('')
 const contactPhone = ref(import.meta.env.VITE_PHONE_CONTACT)
 
-const fieldIsEmpty = (field) => field === '' || field === null;
+// const fieldIsEmpty = (field) => field === '' || field === null;
 
 function openConfirmationModal(cart) {
     currentCart.value = cart;

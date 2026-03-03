@@ -30,7 +30,7 @@ const activeTab = ref(0);
 
 const tabs = computed(() => {
     const games = Object.values(GAMES).filter(x => x === "magic").map((x, index) => {
-        const pages = [{ path: "admin/magic/ventas", button: "Ventas" }, { path: "admin/magic/collection", button: "Colección" }]
+        const pages = [{ path: "admin/magic/collection", button: "Colección" }, { path: "admin/magic/ventas", button: "Ventas de singles" }, { path: "admin/magic/sellado", button: "Panel de Sellados" }]
         return {
             index,
             game: x,

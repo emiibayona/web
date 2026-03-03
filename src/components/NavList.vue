@@ -6,13 +6,12 @@
     <div class="absolute top-4 right-4 flex flex-row gap-4 cursor-pointer">
       <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
         :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
-      <a class="icon-wrapper" href="/cart" :class="[{ 'active': listsLength.cart || route.path.includes('cart') }]">
-        <!-- <span v-if="listsLength?.cart">{{ listsLength.cart }}</span> -->
+      <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
+        <span v-if="listsLength?.cart"></span>
         <img class="icon" src="/images/cart.png" alt="Logo" />
       </a>
-      <a class="icon-wrapper" href="/wishlist"
-        :class="[{ 'active': listsLength.wishlist || route.path.includes('wishlist') }]">
-        <!-- <span v-if="listsLength?.wishlist">{{ listsLength.wishlist }}</span> -->
+      <a class="icon-wrapper" href="/wishlist" :class="[{ 'active': route.path.includes('wishlist') }]">
+        <span v-if="listsLength?.wishlist"></span>
         <img class="icon" src="/images/wishlist.png" alt="Logo" />
       </a>
     </div>
@@ -52,7 +51,9 @@ const data = computed(() =>
   }
 
   &.active {
-    transform: scale(1.3);
+    img {
+      transform: scale(1.3);
+    }
   }
 
   &:hover:not(.active) {
@@ -69,7 +70,7 @@ const data = computed(() =>
 
   span {
     position: absolute;
-    top: -8px;
+    top: -4px;
     right: -8px;
     background-color: red;
     color: white;
@@ -80,8 +81,8 @@ const data = computed(() =>
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 20px;
-    height: 20px;
+    min-width: 15px;
+    height: 15px;
     z-index: 11;
   }
 

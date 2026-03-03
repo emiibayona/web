@@ -1,7 +1,7 @@
 <template>
     <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]">
         <div class="card relative" :class="[{ 'in-shop': shop }]">
-            <div class="quantity" @click="showEdit">
+            <div class="quantity" :class="{ 'edit': !updating && (!shop && editQty) }" @click="showEdit">
                 <Loader v-if="updating" class="w-1/2 h-1/2" />
                 <span v-show="!updating && (shop || !editQty)">{{ card.quantity }}</span>
                 <InputField v-show="!updating && (!shop && editQty)" v-model="qty" placeholder="" @input="updateCard"
@@ -156,7 +156,8 @@ onUnmounted(() => document.removeEventListener('keydown', lowKey))
         align-items: center;
         border-radius: 4px;
         height: 24px;
-        width: 30px;
+        min-width: 30px;
+        max-width: fit-content;
         background-color: rgb(211, 211, 211, 0.5);
         top: 40px;
         right: 30px;
@@ -166,6 +167,14 @@ onUnmounted(() => document.removeEventListener('keydown', lowKey))
         transform-style: preserve-3d;
         font-weight: bold;
         perspective: 1000px;
+
+        &.edit {
+            width: 50px;
+        }
+
+        span {
+            padding: 8px;
+        }
 
         input {
             height: 24px !important;

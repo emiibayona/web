@@ -62,6 +62,11 @@ const router = createRouter({
       component: () => import("@/pages/admin/magic/ventas.vue"),
     },
     {
+      path: "/admin/magic/sellado",
+      name: "Magic ventas",
+      component: () => import("@/pages/admin/magic/sellado.vue"),
+    },
+    {
       path: "/admin/magic/collection",
       name: "Magic collection",
       component: () => import("@/pages/admin/magic/collection.vue"),

@@ -1,9 +1,11 @@
 <template>
     <div>
-        <div class="grid grid-cols-2 gap-10">
-            <Sealed
-                v-for="(value, index) in [...(sealed?.rows || []), ...(sealed?.rows || []), ...(sealed?.rows || [])]"
-                :key="index" :value="value" />
+        <div v-if="loading" class="w-full mt-10">
+            <Loader />
+        </div>
+        <Empty v-if="!sealed?.rows.length && !loadingSealed" />
+        <div v-else class="grid grid-cols-3 gap-10">
+            <Sealed v-for="(value, index) in sealed?.rows" class="" :key="index" :value="value" edit />
         </div>
     </div>
 </template>
@@ -14,7 +16,7 @@ import useShop from '@/composables/useShop';
 import { GAMES } from '@/utils/constants';
 import { onMounted } from 'vue';
 
-const { sealed, fetchSealedProducts } = useShop(GAMES.MAGIC);
+const { sealed, fetchSealedProducts, loading } = useShop(GAMES.MAGIC);
 
 onMounted(async () => {
     await fetchSealedProducts();
