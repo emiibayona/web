@@ -46,7 +46,7 @@ export const useCollectionStore = defineStore("collection", () => {
   async function createBinders(params) {
     try {
       if (!params.collectionId) throw "collectionId required";
-      await CollectionService.createBinders(params);
+      return await CollectionService.createBinders(params);
     } catch (error) {
       console.error("Error creating binder", error);
     }

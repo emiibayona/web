@@ -46,10 +46,10 @@ const useCollection = () => {
   }
   async function createBinder(params) {
     try {
-      debugger;
       if (!params.body.name) throw "Name required";
-      await store.createBinders(params);
+      const res = await store.createBinders(params);
       await fetchBinders(params.collectionId);
+      return res;
     } catch (error) {
       console.error("Composable error - creating binder", error);
     }
