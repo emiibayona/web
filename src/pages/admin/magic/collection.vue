@@ -27,8 +27,6 @@
                 </div>
             </Modal>
 
-
-
             <div class="singles-wrapper" id="singles-wrapper">
                 <div class="filter-wrapper border-r-2 border-black">
                     <div class="flex flex-row gap-5 mb-2 items-center sticky top-0 bg-site ">
@@ -38,10 +36,10 @@
                         </Button>
                     </div>
                     <div class="filter-wrapper-list">
-                        <FiltersComponent @apply-filters="initCollection" ref="filtersComponent"
-                            @clean="searched = null" class="w-[230px] flex-1">
+                        <FiltersComponent with-apply @apply-filters="initCollection" ref="filtersComponent"
+                            @clean="searched = null" :limit="limit" class="w-[230px] flex-1">
                             <template #search>
-                                <InputField v-if="!loading" placeholder="Search singles..." @input="searched = $event"
+                                <InputField v-show="!loading" placeholder="Search singles..." @input="searched = $event"
                                     :model-value="searched" />
                             </template>
                         </FiltersComponent>
@@ -134,6 +132,7 @@ async function initCollection(addParams = null, filt = null) {
     if (searched.value) {
 
     }
+
     params.value = {
         page: page.value,
         offset: (page.value - 1) * limit.value,
@@ -200,19 +199,11 @@ async function uploadCards() {
 
 async function updateAmountCard(va) {
     uploading.value = true;
-    await updateCards(collection?.value?.collectionId, [va])
-    await initCollection();
+    await updateCards(collection?.value?.collectionId, [va]);
+    filtersComponent?.value?.apply("external");
     uploading.value = false;
 }
 
-watch(
-    searched,
-    async () => {
-        if (onFetching.value) return;
-        await initCollection();
-    },
-    { deep: true },
-);
 watch(page, async () => {
     await initCollection()
 })

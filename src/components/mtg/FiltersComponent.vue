@@ -77,8 +77,8 @@ async function clear(cal = "inside") {
     searched.value = "";
     expansionSelected.value = null;
 }
-async function applyIt() {
-    if (!shouldActiveApplyFilter.value) return;
+async function applyIt(cal = "inside") {
+    if (cal === 'inside' && !shouldActiveApplyFilter.value) return;
     setStates({
         active: filters?.value?.activeFilters || {},
         searched: searched.value,
@@ -104,7 +104,7 @@ watch(() => [filters?.value?.activeFilters, expansionSelected.value, searched.va
     } else if (!props.withApply) { applyIt(); }
 }, { deep: true })
 onMounted(async () => { if (!sets.value.length) await fetchSets() })
-defineExpose({ toggle: () => collapsed.value = !collapsed.value, clear })
+defineExpose({ toggle: () => collapsed.value = !collapsed.value, clear, apply: (val) => applyIt(val) })
 </script>
 
 <style lang="scss" scoped></style>
