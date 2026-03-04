@@ -17,6 +17,13 @@ export const useCollectionStore = defineStore("collection", () => {
       console.error("Error fetching collection:", error);
     }
   }
+  async function getListToCart(body) {
+    try {
+      return await CollectionService.listToCart(body);
+    } catch (error) {
+      console.error("Error fetching collection:", error);
+    }
+  }
 
   async function addCardsToCollection(params) {
     try {
@@ -60,5 +67,6 @@ export const useCollectionStore = defineStore("collection", () => {
     fetchBinders,
     fetchCollection,
     updateCards,
+    getListToCart,
   };
 });

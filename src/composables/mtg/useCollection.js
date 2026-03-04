@@ -64,6 +64,10 @@ const useCollection = () => {
     console.log("Removing card from collection as array");
   }
 
+  async function getListToCart(list) {
+    return await store.getListToCart(list);
+  }
+
   return {
     fetching,
     onFetching,
@@ -75,6 +79,7 @@ const useCollection = () => {
     binders,
     addCards,
     updateCards,
+    getListToCart,
   };
 };
 

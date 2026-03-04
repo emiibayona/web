@@ -1,28 +1,38 @@
 <template>
-    <div class="singles-wrapper" id="singles-wrapper">
-        <div class="filter-wrapper">
-            <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
-                ref="filtersComponent" class="w-[230px] flex-1 " />
-        </div>
-        <div class="cards-wrapper">
-            <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
+    <div>
 
-            <div v-if="!fetching" class="cards-wrapper_inner gap-8">
-                <Empty v-if="!collectionMapped.length" />
-                <div class="list ">
-                    <MtgCard v-for="(card, index) in collectionMapped" :id="index" :index="index" :card="card" shop
-                        @add-to-cart="add" @add-to-wishlist="addWishlist" />
+
+        <div class="singles-wrapper" id="singles-wrapper">
+            <div class="filter-wrapper">
+                <Button class="absolute right-0" size="xsmall" @click="toggleModal(true)">Desde lista</Button>
+                <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
+                    ref="filtersComponent" class="w-[230px] flex-1 " />
+            </div>
+            <div class="cards-wrapper">
+                <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
+
+                <div v-if="!fetching" class="cards-wrapper_inner gap-8">
+                    <Empty v-if="!collectionMapped.length" />
+                    <div class="list">
+                        <MtgCard v-for="(card, index) in collectionMapped" :id="index" :index="index" :card="card" shop
+                            @add-to-cart="add" @add-to-wishlist="addWishlist" />
+                    </div>
+                    <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit"
+                        :loading="fetching" />
                 </div>
-                <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit" :loading="fetching" />
+                <div v-else class="flex flex-row items-center justify-center w-full overflow-hidden mt-10">
+                    <Loader />
+                </div>
             </div>
-            <div v-else class="flex flex-row items-center justify-center w-full overflow-hidden mt-10">
-                <Loader />
+            <div>
+                <Cart class="h-[75vh]" />
             </div>
         </div>
-        <div>
-            <Cart class="h-[75vh]" />
-        </div>
-
+        <Modal v-model="showModal" title="Agregar cartas desde lista" @update:modelValue="toggleModal">
+            <Textarea v-model="toCart" @keyup.enter="" placeholder="Ingrese su lista copiada de Moxfield UNICAMENTE"
+                class="h-[100px]"></Textarea>
+            <Button @click="addToCart" :loading="addingToCart" class="mt-5" :disabled="toCart === ''">Agregar</Button>
+        </Modal>
     </div>
 </template>
 <script setup>
@@ -40,14 +50,21 @@ import { GAMES, RECIPIENTS_LISTS } from '@/utils/constants';
 import Loader from "@/components/atomic/Loader.vue";
 import Tabs from "@/components/atomic/Tabs.vue";
 import Empty from "@/components/atomic/Empty.vue";
+import Button from "@/components/atomic/Button.vue";
+import Modal from "@/components/atomic/Modal.vue";
+import Textarea from "@/components/atomic/Textarea.vue";
+import { parseList } from "@/utils/utils";
 
 const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, value: 'foil', name: "foil" }])
 const activeTab = ref(0);
+const toCart = ref("");
+const showModal = ref(false);
+const addingToCart = ref(false);
 
 const { add } = useCarts(GAMES.MAGIC);
 const { add: addWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
 
-const { fetchCollection, collection, collectionMapped, fetching } = useCollection();
+const { fetchCollection, collection, collectionMapped, fetching, getListToCart } = useCollection();
 const filtersComponent = ref(null)
 const cardFilters = ref({});
 const params = ref({ page: 1 });
@@ -79,6 +96,28 @@ const handleResize = () => {
     height.value = window.innerHeight;
 };
 
+const toggleModal = (val) => {
+    showModal.value = val;
+    toCart.value = "";
+}
+async function addToCart() {
+    try {
+        addingToCart.value = true;
+        const list = parseList(toCart.value);
+        const result = await getListToCart(list);
+        for (let index = 0; index < result.length; index++) {
+            const element = result[index];
+            const ele2 = list[index];
+            add({ item: element, quantity: ele2.quantity, alert: index + 1 === result.length })
+        }
+
+        toggleModal(false);
+        addingToCart.value = false;
+    } catch (error) {
+        console.error(error);
+        addingToCart.value = false;
+    }
+}
 
 async function initCollection(addParams = null, filt = null) {
     if (fetching.value) return;
@@ -148,6 +187,7 @@ onUnmounted(() => {
         width: 100%;
         overflow-y: auto;
         overflow-x: hidden;
+        // position: relative;
 
     }
 

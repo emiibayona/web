@@ -7,6 +7,12 @@ export default {
       .then((res) => res)
       .catch((error) => error.response);
   },
+  listToCart: async function (body) {
+    return api
+      .post(`collections/to-cart/list`, body)
+      .then((res) => res)
+      .catch((error) => error.response);
+  },
   addCards: async function name(params) {
     return api
       .post(`collections/add`, params)

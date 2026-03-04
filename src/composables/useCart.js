@@ -91,7 +91,7 @@ const useCarts = (
     };
   };
 
-  const add = ({ item, quantity = 1, sealed = false }) => {
+  const add = ({ item, quantity = 1, sealed = false, alert = true }) => {
     let toastOpt = {
       severity: "success",
       summary: "Agregada!",
@@ -142,7 +142,7 @@ const useCarts = (
       });
     }
 
-    if (toastOpt) {
+    if (toastOpt && alert) {
       toast.add(toastOpt);
     }
   };
