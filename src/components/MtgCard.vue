@@ -13,8 +13,13 @@
             <img :src="card.image.faceUp" class="front" />
             <img :src="card.image.faceDown" class="back" />
         </div>
-        <!-- class="absolute bottom-0 left-[100px] w-full h-[200px] bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center gap-2 cursor-pointer" -->
         <div v-if="shop" class="shop">
+            <div class="quantity_tag hi-res px-2">
+                <span>
+                    Disponibles:
+                    {{ card.quantity }}
+                </span>
+            </div>
             <div class="flex flex-row gap-1">
                 <span
                     class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2"
@@ -105,27 +110,39 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
 </script>
 
 <style lang="scss" scoped>
+.quantity_tag {
+    border-radius: 4px;
+    height: 24px;
+    min-width: 30px;
+    max-width: fit-content;
+    font-weight: bold;
+    background-color: rgb(211, 211, 211, 0.7);
+    @include flex(row, center, center);
+
+    &.hi-res {
+        @include breakpoint(hd) {
+            display: none;
+        }
+    }
+}
+
 .flip-container {
     background-color: transparent;
     perspective: 1000px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    // width: 230px;
-    // height: 320px;
-    aspect-ratio: 23 / 32;
-    width: 230px;
-    object-fit: cover;
-    /* Si dentro hay una imagen */
+    @include flex(column, flex-start, center);
 
     @include breakpoint(nm) {
-        // width: 230px;
-        // height: 320px;
-        width: calc(100vw / 2.5);
+        width: 90%;
+        @include flex(row, flex-start, flex-start);
+        gap: 10px;
     }
 
+    @include breakpoint(hd) {
+        aspect-ratio: 23 / 32;
+        width: 230px;
+        object-fit: cover;
+    }
 }
 
 .shop {
@@ -135,6 +152,8 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
     height: 100px;
     background-color: rgba(0, 0, 0, 0.4);
     opacity: 0;
+
+
     transition: all 0.7s;
     animation-fill-mode: forwards;
     display: flex;
@@ -145,6 +164,13 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
     border-radius: 6px;
     cursor: pointer;
     z-index: 20;
+
+    @include breakpoint(nm) {
+        position: unset;
+        height: 100%;
+        opacity: 100;
+        gap: 6px;
+    }
 }
 
 .card {
@@ -157,24 +183,26 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
 
     perspective: 1000px;
 
+    @include breakpoint(nm) {
+        aspect-ratio: 23 / 32;
+        width: calc(100vw / 2.5);
+        @include flex(row, flex-start, flex-start);
+    }
+
     .quantity {
         position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 4px;
-        height: 24px;
-        min-width: 30px;
-        max-width: fit-content;
-        background-color: rgb(211, 211, 211, 0.5);
+        @extend .quantity_tag;
         top: 40px;
         right: 30px;
         z-index: 20;
         cursor: default;
         transition: opacity 0.7s;
         transform-style: preserve-3d;
-        font-weight: bold;
         perspective: 1000px;
+
+        @include breakpoint(nm) {
+            display: none;
+        }
 
         &.edit {
             width: 50px;
@@ -196,6 +224,10 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
         .card {
             &.in-shop {
                 transform: rotateY(180deg) translateY(-30px);
+
+                @include breakpoint(nm) {
+                    transform: rotateY(180deg);
+                }
             }
 
             &:not(.in-shop) {
@@ -206,7 +238,6 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
             .quantity {
                 transform: rotateY(-180deg);
                 left: 30px;
-                // opacity: 1;
             }
         }
     }
@@ -215,6 +246,10 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
         .card {
             &.in-shop {
                 transform: rotateY(0) translateY(-30px);
+
+                @include breakpoint(nm) {
+                    transform: rotateY(0);
+                }
             }
 
             &:not(.in-shop) {
@@ -232,6 +267,10 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
         .shop {
             opacity: 1;
             bottom: -45px;
+
+            @include breakpoint(nm) {
+                bottom: 0px;
+            }
         }
     }
 }
