@@ -1,5 +1,5 @@
 <template>
-    <div v-if="adminIsLoggedIn">
+    <div v-if="adminIsLoggedIn" class="px-8">
         <h1 class="text-2xl font-bold mb-5">Panel de Admin</h1>
 
         <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">

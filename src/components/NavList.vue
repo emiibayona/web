@@ -6,7 +6,7 @@
     hd:gap-5
     hd2:gap-24
     ">
-    <li @click="!atHome ? router.go(-1) : {}" class="font-bold cursor-pointer w-[20px]"><span v-show="!atHome">{{ "<" }}</span>
+    <li @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-[20px]"><span v-show="!atHome">{{ "<" }}</span>
     </li>
 
     <li v-for="(item, index) in data" :key="index">

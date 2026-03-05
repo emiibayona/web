@@ -47,7 +47,7 @@ const close = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999999999;
+    z-index: 100001;
 }
 
 .modal-content {

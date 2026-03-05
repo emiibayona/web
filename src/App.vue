@@ -4,7 +4,7 @@
     <NavList />
     <router-view class="bg-site px-2 nm:px-8">
     </router-view>
-    <Toast position="bottom-right" />
+    <Toast position="bottom-right" :base-z-index="999999" />
     <!-- <Footer></Footer> -->
   </div>
 
