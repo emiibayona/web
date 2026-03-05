@@ -212,13 +212,18 @@ onUnmounted(() => {
         top: 10%;
 
         transition: all 0.5s ease-out;
+        border: 2px solid black;
+
+        display: none;
+
+        @include breakpoint (nm) {
+            display: block;
+        }
 
         &.left {
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
             left: -2px;
-
-            filter: drop-shadow(4px 2px 2px #000);
 
             &.active {
                 left: 230px;
@@ -230,7 +235,7 @@ onUnmounted(() => {
             border-top-left-radius: 4px;
             border-bottom-left-radius: 4px;
             right: -2px;
-            filter: drop-shadow(-4px 2px 2px #000);
+            border: 1px solid black;
 
 
             &.active {
@@ -245,7 +250,9 @@ onUnmounted(() => {
         height: 75vh;
         width: 100%;
         overflow-y: auto;
+        scrollbar-width: none;
         overflow-x: hidden;
+
 
         // position: relative;
         @include breakpoint(nm) {
@@ -278,10 +285,8 @@ onUnmounted(() => {
             @include flex(column, flex-start, center);
             width: 100%;
             position: relative;
-            // padding-bottom: 5vh;
 
             .pagination {
-                // position: absolute;
                 bottom: 0;
                 padding: 10px 0;
                 width: -webkit-fill-available;
@@ -295,9 +300,10 @@ onUnmounted(() => {
                 @include grid($columns: 1, $gap: 32px);
                 width: 100%;
                 justify-items: center;
+                scrollbar-width: thin;
 
                 @include breakpoint(nm) {
-                    @include grid($columns: 2, $gap: 32px);
+                    @include grid($columns: 1, $gap: 32px);
                     height: 100vh;
                     overflow-y: auto;
                     scrollbar-width: none;

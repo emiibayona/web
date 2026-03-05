@@ -3,7 +3,6 @@
     flex flex-row
     justify-center items-center space-x-4  py-5 px-20 z-20 bg-site 
     whitespace-nowrap 
-    nm:h-full
     hd:gap-5
     hd2:gap-24
     ">
