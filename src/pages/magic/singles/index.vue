@@ -6,9 +6,11 @@
                 <div><span>Cart</span></div>
             </div> -->
             <Button class="absolute right-0" size="xsmall" @click="toggleModal(true)">Agregar desde lista</Button>
-            <span class="tag left" :class="[{ 'active': leftWingIsActive }]"
+            <span class="tag left"
+                :class="[{ 'active': leftWingIsActive }, { 'opacity-30 hover:opacity-100': rightWingIsActive }]"
                 @click="toggleWings('left', !wings.left)">Filtros</span>
-            <span class="tag right" :class="[{ 'active': rightWingIsActive }]"
+            <span class="tag right"
+                :class="[{ 'active': rightWingIsActive }, { 'opacity-30 hover:opacity-100': leftWingIsActive }]"
                 @click="toggleWings('right', !wings.right)">Carro</span>
             <div class="filter-wrapper" :class="[{
                 'active': leftWingIsActive
@@ -209,12 +211,13 @@ onUnmounted(() => {
         width: min-content;
         padding: 8px 2px;
         @include bg-site();
-        top: 10%;
+        top: 7%;
 
         transition: all 0.5s ease-out;
-        border: 2px solid black;
 
         display: none;
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
 
         @include breakpoint (nm) {
             display: block;
@@ -224,6 +227,8 @@ onUnmounted(() => {
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
             left: -2px;
+            border-right: 2px solid black;
+            top: 13%;
 
             &.active {
                 left: 230px;
@@ -235,7 +240,8 @@ onUnmounted(() => {
             border-top-left-radius: 4px;
             border-bottom-left-radius: 4px;
             right: -2px;
-            border: 1px solid black;
+
+            border-left: 2px solid black;
 
 
             &.active {
@@ -266,7 +272,6 @@ onUnmounted(() => {
 
             &.active {
                 width: 230px;
-                // left: 100%;
                 z-index: 10000;
             }
         }
@@ -348,7 +353,6 @@ onUnmounted(() => {
 
             &.active {
                 width: calc(100% - 10%);
-                // right: 100%;
                 z-index: 10000;
             }
 
