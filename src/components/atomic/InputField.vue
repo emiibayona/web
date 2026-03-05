@@ -11,7 +11,7 @@
         <input :type="type" :placeholder="placeholder" :value="modelValue" @input="onInput"
             @keydown.enter.prevent="onEnter"
             class="no-spinners flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent w-full"
-            :aria-label="ariaLabel" ref="inputRef" v-bind="$attrs" />
+            :aria-label="placeholder" ref="inputRef" v-bind="$attrs" />
     </div>
 </template>
 

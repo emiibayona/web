@@ -1,14 +1,16 @@
 <template>
     <div v-for="(cart, index) in values" :key="`${cart.name}-${index}`">
-        <div v-if="cart.count" class="flex flex-col border-b-2 border-black px-10" :class="[{ 'pb-4': wishlist }]">
+        <div class="flex flex-col  px-10"
+            :class="[{ 'pb-4': wishlist }, { 'py-4': !cart.count }, { 'border-b-2 border-black': index + 1 !== values.length }]">
             <span class="font-bold mb-2 text-xl">{{ capi(cart.name) }} (<span class="font-normal">{{ cart.count
-            }}</span>)</span>
-            <div class="flex flex-col gap-2 pl-2">
+                    }}</span>)</span>
+            <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'h-[300px]': cart.count }]">
                 <MiniCartCard v-for="(item, index_2) in cart.values" :key="`${cart.name}-${index}-${index_2}`"
                     :item="item" @add="add" @remove="remove" edit :from-wishlist="wishlist" />
             </div>
-            <Button v-if="!wishlist" class="self-end my-5" size="small" @click="openConfirmationModal(cart)">{{
-                `Comprar carrito de
+            <Button v-if="!wishlist && cart.count" class="self-end my-5" size="small"
+                @click="openConfirmationModal(cart)">{{
+                    `Comprar carrito de
                 ${capi(cart.name)}`
                 }}</Button>
         </div>

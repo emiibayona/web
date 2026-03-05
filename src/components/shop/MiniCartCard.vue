@@ -26,6 +26,10 @@
                     <!-- EDIT MODE -->
                     <div v-if="edit && !fromWishlist" class="flex items-center space-x-2">
                         <div class="flex flex-row gap-1">
+                            <span class="flex flex-col items-center text-xs pr-2">
+                                <span>Max.</span>
+                                {{ value.maxQty }}
+                            </span>
                             <Button v-if="value.maxQty > value.qty"
                                 @click="$emit('add', { item: { ...item, set: value.set.code }, quantity: 1 })"
                                 size="fit">+1</Button>

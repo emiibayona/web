@@ -97,9 +97,11 @@ const lowKey = ({ key }) => {
 }
 onMounted(() => {
     qty.value = props.card.quantity;
-    document.addEventListener('keydown', lowKey);
+    if (props.edit) {
+        document.addEventListener('keydown', lowKey);
+    }
 })
-onUnmounted(() => document.removeEventListener('keydown', lowKey))
+onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lowKey) } })
 </script>
 
 <style lang="scss" scoped>
