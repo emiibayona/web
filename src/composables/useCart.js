@@ -5,10 +5,14 @@ import { useToast } from "primevue/usetoast";
 import useSets from "./mtg/useSets";
 
 const cart = ref(
-  Object.values(GAMES).reduce((acc, game) => ({ ...acc, [game]: [] }), {}),
+  Object.values(GAMES)
+    .filter((x) => x === GAMES.MAGIC)
+    .reduce((acc, game) => ({ ...acc, [game]: [] }), {}),
 );
 const wishlist = ref(
-  Object.values(GAMES).reduce((acc, game) => ({ ...acc, [game]: [] }), {}),
+  Object.values(GAMES)
+    .filter((x) => x === GAMES.MAGIC)
+    .reduce((acc, game) => ({ ...acc, [game]: [] }), {}),
 );
 
 const useCarts = (
@@ -45,25 +49,29 @@ const useCarts = (
     [];
 
   const getAllCarts = () => {
-    return Object.entries(GAMES).map(([name, value]) => {
-      const values = getCart(value);
-      return {
-        name: value,
-        values,
-        count: calculateTotal(values),
-      };
-    });
+    return Object.entries(GAMES)
+      .filter((x) => x[1] === GAMES.MAGIC)
+      .map(([name, value]) => {
+        const values = getCart(value);
+        return {
+          name: value,
+          values,
+          count: calculateTotal(values),
+        };
+      });
   };
 
   const getAllWishlists = () => {
-    return Object.entries(GAMES).map(([name, value]) => {
-      const values = getWishlist(value);
-      return {
-        name: value,
-        values,
-        count: calculateTotal(values),
-      };
-    });
+    return Object.entries(GAMES)
+      .filter((x) => x[1] === GAMES.MAGIC)
+      .map(([name, value]) => {
+        const values = getWishlist(value);
+        return {
+          name: value,
+          values,
+          count: calculateTotal(values),
+        };
+      });
   };
 
   const allGamesCarts = ref(getAllCarts());

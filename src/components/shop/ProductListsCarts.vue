@@ -1,9 +1,9 @@
 <template>
     <div v-for="(cart, index) in values" :key="`${cart.name}-${index}`">
-        <div class="flex flex-col  px-10"
+        <div class="flex flex-col px-2 nm:px-10"
             :class="[{ 'pb-4': wishlist }, { 'py-4': !cart.count }, { 'border-b-2 border-black': index + 1 !== values.length }]">
             <span class="font-bold mb-2 text-xl">{{ capi(cart.name) }} (<span class="font-normal">{{ cart.count
-                    }}</span>)</span>
+            }}</span>)</span>
             <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'h-[300px]': cart.count }]">
                 <MiniCartCard v-for="(item, index_2) in cart.values" :key="`${cart.name}-${index}-${index_2}`"
                     :item="item" @add="add" @remove="remove" edit :from-wishlist="wishlist" />

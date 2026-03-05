@@ -5,7 +5,7 @@
                 <div><span>Filters</span></div>
                 <div><span>Cart</span></div>
             </div> -->
-            <Button class="absolute right-0" size="xsmall" @click="toggleModal(true)">Desde lista</Button>
+            <Button class="absolute right-0" size="xsmall" @click="toggleModal(true)">Agregar desde lista</Button>
             <span class="tag left" :class="[{ 'active': leftWingIsActive }]"
                 @click="toggleWings('left', !wings.left)">Filtros</span>
             <span class="tag right" :class="[{ 'active': rightWingIsActive }]"

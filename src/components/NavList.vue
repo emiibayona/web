@@ -6,12 +6,16 @@
     hd:gap-5
     hd2:gap-24
     ">
+    <li @click="!atHome ? router.go(-1) : {}" class="font-bold cursor-pointer w-[20px]"><span v-show="!atHome">{{ "<" }}</span>
+    </li>
+
     <li v-for="(item, index) in data" :key="index">
       <NavLink :nav="item.path" :active="item.active" :item="item">
         <span class="hidden nm:block">{{ item.name }}</span>
         <span class="block nm:hidden">{{ item.name.slice(0, 2) }}</span>
       </NavLink>
     </li>
+    <!-- <li>{{ ">" }}</li> -->
     <div class="absolute
     top-2 right-0
     nm:top-4 nm:right-4
@@ -32,7 +36,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import NavLink from "./NavLink.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { NAVIGATION } from "@/utils/constants";
 import { GAMES } from '@/utils/constants';
 import useCarts from '@/composables/useCart';
@@ -46,6 +50,8 @@ const listsLength = computed(() => ({
 }));
 
 const route = useRoute();
+const router = useRouter();
+const atHome = computed(() => route.path === '/')
 
 const data = computed(() =>
   Object.values(NAVIGATION).map(x => ({ ...x, active: x.home ? route.path === x.path : route.path.includes(x.path) })))
