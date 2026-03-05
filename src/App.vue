@@ -5,6 +5,7 @@
     <router-view class="bg-site px-2 nm:px-8">
     </router-view>
     <Toast position="bottom-right" :base-z-index="999999" />
+    <Analytics />
     <!-- <Footer></Footer> -->
   </div>
 
@@ -14,6 +15,7 @@ import { computed, onBeforeMount } from 'vue';
 import Footer from './components/atomic/Footer.vue';
 import NavList from './components/NavList.vue';
 import Toast from 'primevue/toast';
+import { Analytics } from '@vercel/analytics/vue';
 import useDevices from '@/composables/useDevices';
 const devices = useDevices();
 onBeforeMount(() => {
