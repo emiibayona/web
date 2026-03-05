@@ -14,6 +14,9 @@
 import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue';
 import { useAttrs } from 'vue'
 import useClickOutside from '@/composables/useClickOutside';
+import useDevices from '@/composables/useDevices';
+
+const devices = useDevices();
 
 const attrs = useAttrs()
 defineProps({
@@ -24,15 +27,16 @@ defineProps({
 const expanded = ref(false)
 const toggle = () => {
     expanded.value = !expanded.value
-    setTimeout(() => {
-        if (expanded.value && attrs.id) {
-            document.getElementById(attrs.id)?.scrollIntoView({ behavior: "smooth" })
-        }
-    }, 500);
+    if (devices.width.value > 999) {
+        setTimeout(() => {
+            if (expanded.value && attrs.id) {
+                document.getElementById(attrs.id)?.scrollIntoView({ behavior: "smooth" })
+            }
+        }, 500);
+    }
 };
 const { setListener } = useClickOutside({ templateRef: attrs.id, target: open, clicked: false });
 onMounted(() => setListener())
-// onUnmounted(() => )
 onBeforeUnmount(() => { setListener(); expanded.value = false; })
 defineExpose({ toggle });
 

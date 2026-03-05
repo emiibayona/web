@@ -1,5 +1,8 @@
 <template>
-  <div class="group flex flex-col space-y-1 font-bold text-lg ">
+  <div class="group flex flex-col space-y-1 font-bold 
+  nm:text-xs
+  hd:text-lg
+  ">
     <a :href="href" class="py-1 block link">
       <slot></slot>
     </a>
@@ -11,6 +14,9 @@
 <script setup>
 import { ref } from "vue";
 const props = defineProps({
+  item: {
+    type: Object, default: () => { }
+  },
   nav: {
     required: false,
     default: "",

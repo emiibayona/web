@@ -1,9 +1,22 @@
 <template>
-  <ul class="relative">
+  <ul class="relative 
+    flex flex-row
+    justify-center items-center space-x-4  py-5 px-20 z-20 bg-site 
+    whitespace-nowrap 
+    nm:h-full
+    hd:gap-5
+    hd2:gap-24
+    ">
     <li v-for="(item, index) in data" :key="index">
-      <NavLink :nav="item.path" :active="item.active">{{ item.name }}</NavLink>
+      <NavLink :nav="item.path" :active="item.active" :item="item">
+        <span class="hidden nm:block">{{ item.name }}</span>
+        <span class="block nm:hidden">{{ item.name.slice(0, 2) }}</span>
+      </NavLink>
     </li>
-    <div class="absolute top-4 right-4 flex flex-row gap-4 cursor-pointer">
+    <div class="absolute
+    top-2 right-0
+    nm:top-4 nm:right-4
+    flex flex-row gap-4 cursor-pointer">
       <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
         :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
       <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
@@ -46,8 +59,15 @@ const data = computed(() =>
   cursor: pointer;
 
   .icon {
-    width: 30px;
-    height: 30px;
+    @include breakpoint(nm) {
+      width: 15px;
+      height: 15px;
+    }
+
+    @include breakpoint(hd) {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   &.active {
@@ -70,7 +90,7 @@ const data = computed(() =>
 
   span {
     position: absolute;
-    top: -4px;
+
     right: -8px;
     background-color: red;
     color: white;
@@ -81,9 +101,22 @@ const data = computed(() =>
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 15px;
-    height: 15px;
     z-index: 11;
+
+    @include breakpoint(nm) {
+      min-width: 8px;
+      height: 8px;
+      top: -2px;
+      right: -4px;
+      padding: 4px 4px;
+    }
+
+    @include breakpoint(hd) {
+      min-width: 15px;
+      height: 15px;
+      top: -4px;
+      padding: 2px 6px;
+    }
   }
 
 }

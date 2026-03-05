@@ -1,6 +1,6 @@
 <template>
 
-    <div class="grid grid-cols-2 gap-4 min-h-[calc(100vh-250px)]">
+    <div class="grid grid-cols-1 nm:grid-cols-2 gap-4 nm:min-h-[calc(100vh-250px)]">
         <AnimatedBanner big text="Singles" bg="https://assets-prd.ignimgs.com/2023/07/13/mtg-lotr-1-1689261247953.jpg"
             path="singles" />
         <AnimatedBanner big text="Sealed"

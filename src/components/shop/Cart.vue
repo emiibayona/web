@@ -1,5 +1,5 @@
 <template>
-    <div class="border-l-2 border-black cart">
+    <div class="nm:border-l-2 nm:border-black cart">
 
         <h2 class="text-2xl font-semibold mb-4">Cart (<span>{{ totalCart }}</span>)</h2>
 

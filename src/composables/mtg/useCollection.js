@@ -11,7 +11,10 @@ const useCollection = () => {
   const binders = computed(() => store.binders);
   const onFetching = computed(() => fetching.value);
 
-  async function fetchCollection(params, user) {
+  async function fetchCollection(
+    params,
+    user = localStorage.getItem("seller"),
+  ) {
     fetching.value = true;
 
     await store.fetchCollection(params, user);

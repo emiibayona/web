@@ -106,16 +106,22 @@ onUnmounted(() => document.removeEventListener('keydown', lowKey))
 .flip-container {
     background-color: transparent;
     perspective: 1000px;
-    width: 230px;
-    height: 320px;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    // width: 230px;
+    // height: 320px;
+    aspect-ratio: 23 / 32;
+    width: 230px;
+    object-fit: cover;
+    /* Si dentro hay una imagen */
+
     @include breakpoint(nm) {
-        width: 230px;
-        height: 320px;
+        // width: 230px;
+        // height: 320px;
+        width: calc(100vw / 2.5);
     }
 
 }

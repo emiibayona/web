@@ -1,9 +1,8 @@
 <template>
 
-  <div class="px-8 h-full">
-    <NavList
-      class="flex flex-col nm:flex-row justify-center space-x-4 items-center py-5 px-20 z-20 bg-site hd:gap-5 hd2:gap-24" />
-    <router-view>
+  <div class="h-full bg-site">
+    <NavList />
+    <router-view class="bg-site px-2 nm:px-8">
     </router-view>
     <Toast position="bottom-right" />
     <!-- <Footer></Footer> -->
