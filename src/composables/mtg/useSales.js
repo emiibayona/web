@@ -51,7 +51,7 @@ const useSales = () => {
     const result = await store.createOrder({
       ...form,
       game,
-      cards: parseCart(game, values),
+      cart: parseCart(game, values),
     });
     return result;
   };

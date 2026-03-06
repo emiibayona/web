@@ -8,6 +8,7 @@
                 <span v-if="!countDisable" class="font-bold ml-2">(<span class="font-normal">{{ tab.count || 0
                         }}</span>)</span>
             </div>
+            <slot name="helper"></slot>
         </div>
         <!-- <div> -->
         <slot></slot>

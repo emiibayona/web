@@ -3,7 +3,7 @@
         <div class="flex flex-col px-2 nm:px-10"
             :class="[{ 'pb-4': wishlist }, { 'py-4': !cart.count }, { 'border-b-2 border-black': index + 1 !== values.length }]">
             <span class="font-bold mb-2 text-xl">{{ capi(cart.name) }} (<span class="font-normal">{{ cart.count
-                    }}</span>)</span>
+            }}</span>)</span>
             <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'h-[300px]': cart.count }]">
                 <MiniCartCard v-for="(item, index_2) in cart.values" :key="`${cart.name}-${index}-${index_2}`"
                     :item="item" @add="add" @remove="remove" @remove-wishlist="removeWishlist" edit
@@ -16,7 +16,7 @@
                 }}</Button>
         </div>
         <Modal v-model="showModal" :title="!showOrderConfirmed ? 'Confirmar carrito' : 'Carrito enviado'"
-            :close-disabled="showOrderConfirmed">
+            :close-disabled="loading || showOrderConfirmed">
             <form @submit.prevent="" v-if="!showOrderConfirmed">
                 <div>
                     <span> Ingresa tu nombre <span v-if="fieldIsEmpty(information.name)"
@@ -54,7 +54,7 @@
                     <span class="font-bold">{{
                         contactPhone }}</span>
                 </p>
-                <Button @click="() => { showModal = false; showOrderConfirmed = false }" size="small"
+                <Button @click="() => { showModal = false; showOrderConfirmed = false; router.push('/') }" size="small"
                     class="self-end">Entendido</button>
             </div>
 
@@ -74,6 +74,7 @@ import Modal from '@/components/atomic/Modal.vue';
 import InputField from '@/components/atomic/InputField.vue';
 import Textarea from '@/components/atomic/Textarea.vue';
 import useSales from '@/composables/mtg/useSales';
+import { useRouter } from 'vue-router';
 
 defineProps({ values: { type: Array, default: () => [] }, wishlist: { type: Boolean, default: false } })
 const { add, remove, cleanCart } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
@@ -86,10 +87,9 @@ const showModal = ref(false);
 const information = ref({ name: '', contact: '', comments: '' })
 const loading = ref(false)
 const showOrderConfirmed = ref(false)
-// const name = ref('')
 const contactPhone = ref(import.meta.env.VITE_PHONE_CONTACT)
+const router = useRouter();
 
-// const fieldIsEmpty = (field) => field === '' || field === null;
 
 function openConfirmationModal(cart) {
     currentCart.value = cart;
@@ -99,12 +99,14 @@ function openConfirmationModal(cart) {
 async function orderConfirmed() {
     loading.value = true;
     const res = await createOrder({ ...currentCart.value, form: information.value });
-    setTimeout(() => {
-        showOrderConfirmed.value = true;
-        loading.value = false;
-        openWhatsApp("Hola, realice una compra por la web, te envio la informacion", `Código de compra: *${res.id}* \n\nGracias!`)
-        cleanCart();
-    }, 2000)
+    if (res.status !== 500) {
+        setTimeout(() => {
+            showOrderConfirmed.value = true;
+            loading.value = false;
+            openWhatsApp("Hola, realice una compra por la web, te envio la informacion", `Código de compra: *${res.id}* \n\nGracias!`)
+            cleanCart();
+        }, 2000)
+    }
 }
 
 watch(showModal, () => {

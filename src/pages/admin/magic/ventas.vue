@@ -8,14 +8,14 @@
 
         <div v-if="adminIsLoggedIn">
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
+                <template #helper>
+                    <InputField class="mb-1 ml-5" v-model="searchOrder"
+                        placeholder="Busca por id, nombre de persona o numero" @input="loadSales" only-enter
+                        :debounce="0" />
+                </template>
                 <div class="tab-content">
-                    <div class="w-full pb-2 sticky top-0 bg-site">
-                        <!-- <form @submit.prevent=""> -->
-                        <InputField v-model="searchOrder" placeholder="Busca por id, nombre de persona o numero"
-                            @input="loadSales" only-enter :debounce="0" />
-                        <!-- </form> -->
-                    </div>
-                    <Loader v-if="fetching" />
+                    <Empty v-if="!fetching && !localSales?.length" class="self-center" />
+                    <Loader v-if="fetching" class="self-center mt-10" />
                     <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 w-full">
                         <!-- {{ sale }} -->
                         <Compressor :icon="false" speedy :id="`compressor-${index}`">
@@ -23,9 +23,9 @@
                                 <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
                                     :class="[tabs[activeTab].bg]">
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
                                         sale.contact
                                             }}</span> <span
@@ -33,21 +33,72 @@
                                             @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
                                                 class="w-4 h-4" /></span></span>
                                     <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{
                                         Date(sale.createdAt)
                                             }}</span></span>
                                 </div>
                             </template>
                             <template #content>
-                                <!-- <div v-if="index === activeAccordeon"> -->
-                                <div class="content rounded-md bg-opacity-50" :class=[tabs[activeTab].bg]>
-                                    <div v-for="(card, index_2) in sale.cart" class="content-cards p-4 "
+                                <!-- :class=[tabs[activeTab].bg] -->
+                                <div class="content rounded-md bg-opacity-50 mt-2">
+                                    <div v-for="(card, index_2) in sale.cart" class="content-cards p-4 bg-opacity-50"
+                                        :class="[`bg-${card.sold || parseInt(card.sold) === parseInt(card.quantity) ? 'green-600' : 'red-600'}`]"
                                         :key="`card-${index_2}`">
 
-                                        <img v-if="tabs[activeTab].value !== 'complete'" :src="card.image"
-                                            class="h-[200px] w-auto" />
-                                        <div class="flex flex-col gap-2 justify-center">
+                                        <div v-if="tabs[activeTab].value !== 'complete'" class="h-[150px] relative">
+                                            <img :src="card.image" class="h-[150px] w-min object-contain" />
+                                            <div v-if="card.treatment === 'foil'"
+                                                class="absolute top-0 left-0 w-full h-full rainbow-bg z-10">
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col gap-1">
+                                            <div class="flex flex-col">
+                                                <!-- INFO -->
+                                                <span class="font-bold">{{ `Cantidad solicitada: ` }}<span
+                                                        class="font-normal">{{ card.quantity }}</span></span>
+                                                <span class="font-bold">{{ `${card.name.split('//')[0]} | ` }}<span
+                                                        class="font-normal">{{ card?.set?.name }}</span></span>
+                                                <span class="font-bold">{{
+                                                    `Tratamiento: ` }}<span class="font-normal">{{ capi(card.treatment
+                                                        === "" ?
+                                                        "normal"
+                                                        :
+                                                        card.treatment) }}</span></span>
+                                            </div>
+                                            <div v-if="!soldIsBoolean(card.sold) && ['incomplete', 'pending'].includes(sale.status)"
+                                                class=" flex flex-row gap-2 border-t-2 border-black w-full
+                                                justify-between h-full items-center">
+                                                <!-- SELECTOR -->
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="font-bold text-lg">{{ `Agregadas para entrega: `
+                                                    }}<span class="font-normal">{{ card.sold }}</span></span>
+                                                    <!-- TODO: Change por X and TICK -->
+
+                                                    <span class=" flex flex-row gap-2 font-bold text-lg">{{ `Estado: `
+                                                    }}<span class="font-normal"> <img
+                                                                :src="`/images/${parseInt(card.sold) === parseInt(card.quantity) ? 'check-mark' : 'letter-x'}.png`"
+                                                                class="w-6 h-6" /></span></span>
+
+                                                </div>
+                                                <div class="flex flex-col gap-1 mt-2" v-if="!loading">
+                                                    <img src="/images/add.png" @click="changeSoldQty(card, 1)"
+                                                        class="w-10 h-10 hover:cursor-pointer hover:scale-125 transition-transform duration-500" />
+                                                    <img src="/images/minus.png" @click="changeSoldQty(card, -1)"
+                                                        class="w-10 h-10 hover:cursor-pointer hover:scale-125 transition-transform duration-500" />
+                                                </div>
+                                                <Loader v-else />
+                                            </div>
+                                            <div v-else class="pt-5">
+                                                <span v-if="card.sold" class="text-2xl font-bold">Carta vendida.</span>
+                                                <span v-if="!card.sold" class="text-2xl font-bold">Carta no
+                                                    vendida.</span>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="flex flex-col gap-2 justify-center">
                                             <span>{{ `${card.quantity}x | ${card.name.split('//')[0]}` }}</span>
                                             <span class="ml-6">{{ `Tratamiento: ${capi(card.treatment === "" ? "normal"
                                                 :
@@ -69,7 +120,7 @@
                                         <div class="flex flex-row items-center gap-2" v-else>
                                             <span>Pedidas {{ card.quantity }}</span>|
                                             <span>Vendidas {{ card.sold }}</span>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                     <div class="flex flex-row justify-end p-4 gap-2 col-span-full w-full">
@@ -104,6 +155,7 @@ import useWhatsapp from '@/composables/useWhatsapp';
 import AdminLogin from '@/components/admin/AdminLogin.vue';
 import useUser from '@/composables/useUser';
 import Loader from '@/components/atomic/Loader.vue';
+import Empty from '@/components/atomic/Empty.vue';
 
 
 const toast = useToast();
@@ -125,7 +177,7 @@ const tabs = computed(() => ([{ index: 0, value: 'pending', name: "Pendientes", 
 { index: 2, value: 'complete', name: "Completadas", bg: "bg-green-900", button: null, count: getCount("complete") }]))
 
 const confirmButtonActive = (row) => row.filter(x => !x.added).some(x => x.sold)
-
+const soldIsBoolean = (field) => typeof field === 'boolean'
 const capi = (str) => capitalizeFirstLetter(str);
 
 function goWpp(phone) {
@@ -139,6 +191,12 @@ async function loadSales() {
     fetching.value = true;
     await fetchSales({ status: tabs.value[activeTab.value]?.value, search: searchOrder.value });
     fetching.value = false;
+}
+function changeSoldQty(card, qty) {
+    // parseInt(card.sold) === parseInt(card.quantity)
+    if (card.sold === 0 && qty === -1) return;
+    if (card.sold === card.quantity && qty === 1) return;
+    card.sold += qty;
 }
 async function confirmLocalOrder(params, forceClose = false) {
     loading.value = true;
@@ -180,7 +238,7 @@ onMounted(async () => {
 
 
     @include breakpoint(hd1) {
-        height: 400px;
+        height: 450px;
     }
 
     @include breakpoint(fhd) {
@@ -194,14 +252,14 @@ onMounted(async () => {
 }
 
 .content {
-    @include grid($columns: 3, $gap: 10px);
+    @include grid($columns: 2, $gap: 10px);
     width: 100%;
     justify-items: start;
 
     &-cards {
         width: 100%;
-        @include grid($columns: 3, $gap: 10px);
-        grid-template-columns: max-content auto 150px;
+        @include grid($columns: 2, $gap: 15px);
+        grid-template-columns: max-content auto;
         border-bottom: 1px solid black;
     }
 

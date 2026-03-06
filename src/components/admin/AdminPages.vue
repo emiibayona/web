@@ -1,5 +1,5 @@
 <template>
-    <div class="w-1/2">
+    <div class="w-[75%]">
         <div class="pages">
             <!-- <div v-for="(page, index) in pages" class="" :key="`${page.game}-${index}`">
                 {{ page }}
@@ -30,8 +30,6 @@ function goTo(path) {
 
 <style lang="scss" scoped>
 .pages {
-
-    @include grid(2, 200px, 40px);
-
+    @include grid(3, 150px, 40px);
 }
 </style>

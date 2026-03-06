@@ -46,7 +46,8 @@ async function login() {
             toast.removeAllGroups();
             toast.add({
                 severity: "success",
-                summary: "Contraseña exitosa, redirigiendo",
+                summary: "Contraseña exitosa",
+                detail: "...redirigiendo",
                 life: 1800,
             })
             setTimeout(() => {
@@ -55,12 +56,14 @@ async function login() {
                 logInfo.value = { logged: true, time: new Date() };
                 setAdmin(logInfo.value);
                 emit('post-login')
+                localStorage.setItem("admin-browser", true)
             }, 2000);
         } else {
             toast.removeAllGroups();
             toast.add({
                 severity: "error",
-                summary: "Contraseña erronea, vuelva a intentarlo",
+                summary: "Contraseña erronea",
+                detail: "...vuelva a intentarlo",
                 life: 2000,
             })
             password.value = null;

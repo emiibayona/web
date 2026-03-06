@@ -1,23 +1,24 @@
 <template>
   <ul class="relative 
-    flex flex-row justify-center items-center space-x-4 px-10 py-5 z-20 bg-site whitespace-nowrap w-full overflow-auto
-    nm:px-20 nm:py-3
+    flex flex-row justify-center items-center space-x-4 px-10 z-20 bg-site whitespace-nowrap w-full overflow-auto
+    nm:px-20 
     hd:gap-5 hd:overflow-none 
-    hd2:gap-24
-    ">
+    hd2:gap-24" :class="[{ 'py-0': atAdmin }, { 'py-5 nm:py-3': !atAdmin }]">
     <li v-if="!atHome" @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-5 h-5"><img
         class="rotate-90 hover:cursor-pointer hover:scale-110 hover:drop-shadow-lg w-5 h-5" src="/images/arrow.svg" />
     </li>
 
     <li v-for="(item, index) in data" :key="index" :id="`navLink-${index}`">
-      <NavLink :nav="item.path" :active="item.active" :item="item" class="min-w-min max-w-[100px] nm:max-w-[200px] px-1"
-        :class="[{ 'w-[500px]': item.logo }, { 'w-min': !item.logo }]">
-        <img v-if="item.logo" class="nm:h-[100px] w-auto object-contain justify-self-center" :src="item.logo" />
+      <NavLink :nav="item.path" :active="item.active" :item="item" class=" px-1"
+        :class="[{ 'w-[500px]': item.logo }, { 'w-min': !item.logo }, { 'max-w-[100px]': atAdmin }, { 'min-w-min max-w-[100px] nm:max-w-[200px]': !atAdmin }]">
+        <img v-if="item.logo" class="w-auto object-contain justify-self-center"
+          :class="[{ 'h-[50px]': atAdmin }, { 'nm:h-[100px]': !atAdmin }]" :src="item.logo" />
         <span v-else class="block justify-self-center">{{ item.name }}</span>
       </NavLink>
     </li>
     <!-- <li>{{ ">" }}</li> -->
   </ul>
+  <Button v-if="isAdmin && !atAdmin" class="absolute top-2 left-2 z-50">Admin panel</Button>
   <div class="absolute
   top-2 right-2
   nm:top-4 nm:right-4
@@ -41,6 +42,7 @@ import { useRoute, useRouter } from "vue-router";
 import { NAVIGATION } from "@/utils/constants";
 import { GAMES } from '@/utils/constants';
 import useCarts from '@/composables/useCart';
+import Button from "./atomic/Button.vue";
 
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({
@@ -51,6 +53,8 @@ const listsLength = computed(() => ({
 const route = useRoute();
 const router = useRouter();
 const atHome = computed(() => route.path === '/')
+const atAdmin = computed(() => route.path.includes('admin'))
+const isAdmin = computed(() => localStorage.getItem("admin-browser"))
 
 const data = computed(() =>
   Object.values(NAVIGATION).map(x => ({ ...x, active: x.home ? route.path === x.path : route.path.includes(x.path) })))
