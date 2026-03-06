@@ -4,7 +4,7 @@
     <NavList />
     <router-view class="bg-site px-2 nm:px-8">
     </router-view>
-    <Toast position="bottom-right" :base-z-index="999999" />
+    <Toast :position="devices.width.value > 1080 ? 'bottom-right' : 'top-center'" :base-z-index="999999" />
     <Analytics />
     <!-- <Footer></Footer> -->
   </div>
@@ -23,3 +23,4 @@ onBeforeMount(() => {
   localStorage.setItem("seller", import.meta.env.VITE_SELLER_EMAIL);
 })
 </script>
+<style lang="scss" scoped></style>

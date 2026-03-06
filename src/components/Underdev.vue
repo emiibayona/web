@@ -1,15 +1,15 @@
 <template>
     <div class="w-full flex flex-col gap-10 items-center mt-20">
-        <h1 class="font-black text-3xl text-center">
+        <h1 class="font-black text-2xl nm:text-3xl text-center">
             ¡¡¡ Sección en construcción, pronto traeremos mas novedades !!!
         </h1>
-        <span class="text-3xl">Pero mientras tanto....</span>
-        <div class="flex flex-row gap-20">
+        <span class="font-bold text-xl nm:text-2xl">Pero mientras tanto....</span>
+        <div class="flex flex-col nm:flex-row gap-10 nm:gap-20">
             <a href="https://www.instagram.com/geartowntcg/" target="_blank"
                 class="flex flex-row items-center gap-2 animated"><img src="/images/instagram.png"
-                    class="w-16 h-16" /><span class="font-bold">Vísitanos en nuestro Instagram</span></a>
-            <span class="flex flex-row items-center gap-2 animated" @click="toWpp"><img
-                    src="/images/whatsapp.png" class="w-16 h-16" /><span class="font-bold">Contactanos por
+                    class="w-16 h-16" /><span class="">Vísitanos en nuestro Instagram</span></a>
+            <span class="flex flex-row items-center gap-2 animated" @click="toWpp"><img src="/images/whatsapp.png"
+                    class="w-16 h-16" /><span class="">Contactanos por
                     whatsapp</span></span>
         </div>
     </div>

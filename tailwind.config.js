@@ -60,7 +60,8 @@ module.exports = {
       },
     },
     screens: {
-      nm: "1000px",
+      mini:"600px",
+      nm: "1279px",
       hd: "1280px",
       hd1: "1366px",
       hd2: "1660px",

@@ -32,7 +32,7 @@
                     </div>
                     <Button @click="saveSealed" :disabled="saveDisabled" :loading="uploading">{{ formulario.id ?
                         'Guardar' : 'Agregar'
-                        }}</Button>
+                    }}</Button>
 
                 </form>
                 <div class="border-l-2 border-black pl-2 w-[600px] ">
@@ -132,6 +132,7 @@ const saveSealed = async (edit = false) => {
             await fetchSealedProducts();
             showModal.value = false;
             uploading.value = false;
+            toast.removeAllGroups();
             return toast.add({
                 severity: "success",
                 summary: "Guardado",
@@ -140,6 +141,7 @@ const saveSealed = async (edit = false) => {
             })
         } else {
             if (!imageUrl) {
+                toast.removeAllGroups();
                 uploading.value = false;
                 return toast.add({
                     severity: "error",
@@ -153,6 +155,7 @@ const saveSealed = async (edit = false) => {
                 await fetchSealedProducts();
                 showModal.value = false;
                 uploading.value = false;
+                toast.removeAllGroups();
                 return toast.add({
                     severity: "success",
                     summary: "Creado",
@@ -176,6 +179,7 @@ const deleteSeal = async (seal, confirmed = false) => {
         await deleteProduct(deleting.value);
         await fetchSealedProducts();
         deleting.value = null;
+        toast.removeAllGroups();
         return toast.add({
             severity: "success",
             summary: "Borrado",
@@ -193,15 +197,11 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .sealed-wrap {
-    // grid grid-cols-4 gap-10
-    // @include breakpoint(nm) {
-    //     @include grid($columns: 2, $gap: 40px);
-    // }
 
-    // @include breakpoint(hd) {
-    //     @include grid($columns: 2, $gap: 40px);
+    @include breakpoint(nm) {
+        @include grid($columns: 1, $gap: 40px);
+    }
 
-    // }
     @include breakpoint(hd2) {
         @include grid($columns: 2, $gap: 40px);
     }

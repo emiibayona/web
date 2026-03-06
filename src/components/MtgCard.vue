@@ -1,5 +1,5 @@
 <template>
-    <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]">
+    <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]" :id="`card-${id}`">
         <div class="card relative" :class="[{ 'in-shop': shop }]">
             <div class="quantity" :class="{ 'edit': !updating && (!shop && editQty) }" @click="showEdit">
                 <Loader v-if="updating" class="w-1/2 h-1/2" />
@@ -22,10 +22,10 @@
             </div>
             <div class="flex flex-row gap-1">
                 <span
-                    class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2"
+                    class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2 border-r-2 border-white hover:border-none pr-1"
                     @click="addCard">+1
                     Carrito</span>
-                <span class="text-white font-bold drop-shadow-md">|</span>
+                <!-- <span class="text-white font-bold drop-shadow-md">|</span> -->
                 <span
                     class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2"
                     @click="addWishlist">+1
@@ -52,7 +52,8 @@ const props = defineProps({
     card: { type: Object, default: () => ({}) },
     shop: { type: Boolean, default: false },
     flipDisable: { type: Boolean, default: false },
-    updating: { type: Boolean, default: false }
+    updating: { type: Boolean, default: false },
+    id: { type: [String, Number], default: () => null }
 })
 
 const emits = defineEmits(["add-to-cart", "add-to-wishlist", 'update']);
@@ -60,7 +61,7 @@ const price = ref(null);
 const qty = ref(null);
 const editQty = ref(false);
 const inputFieldRef = ref(null);
-
+let touchTimeout;
 
 const cardName = computed(() => props.card.name.toLowerCase().split("//")[0].trim().replaceAll(",", ""))
 const ckUrl = computed(() => {
@@ -100,11 +101,29 @@ const lowKey = ({ key }) => {
         updateCard();
     }
 }
+
 onMounted(() => {
     qty.value = props.card.quantity;
     if (props.edit) {
         document.addEventListener('keydown', lowKey);
     }
+
+    const card = document.getElementById(`card-${props.id}`);
+    card.addEventListener('touchstart', () => {
+        touchTimeout = setTimeout(() => {
+            card.classList.add('active');
+        }, 100);
+    }, { passive: true });
+
+    card.addEventListener('touchmove', () => {
+        clearTimeout(touchTimeout);
+        card.classList.remove('active');
+    });
+
+    card.addEventListener('touchend', () => {
+        clearTimeout(touchTimeout);
+        card.classList.remove('active');
+    });
 })
 onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lowKey) } })
 </script>
@@ -136,6 +155,7 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
         width: 90%;
         @include flex(row, flex-start, flex-start);
         gap: 10px;
+        max-height: calc(100vh / 3);
     }
 
     @include breakpoint(hd) {
@@ -171,6 +191,8 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
         opacity: 100;
         gap: 6px;
     }
+
+    text-align: center;
 }
 
 .card {
@@ -182,11 +204,11 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
     transform-style: preserve-3d;
 
     perspective: 1000px;
+    aspect-ratio: 23 / 32;
 
     @include breakpoint(nm) {
-        aspect-ratio: 23 / 32;
-        width: calc(100vw / 2.5);
         @include flex(row, flex-start, flex-start);
+        // pointer-events: none;
     }
 
     .quantity {
@@ -220,56 +242,82 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
 }
 
 .flip-container {
-    &.hasDouble:hover {
-        .card {
-            &.in-shop {
-                transform: rotateY(180deg) translateY(-30px);
+    @media (hover: hover) {
+        &.hasDouble:hover {
+            .card {
+                &.in-shop {
+                    transform: rotateY(180deg) translateY(-30px);
 
-                @include breakpoint(nm) {
+                    @include breakpoint(nm) {
+                        transform: rotateY(180deg);
+                    }
+                }
+
+                &:not(.in-shop) {
                     transform: rotateY(180deg);
+
+                }
+
+                .quantity {
+                    transform: rotateY(-180deg);
+                    left: 30px;
                 }
             }
-
-            &:not(.in-shop) {
-                transform: rotateY(180deg);
-
-            }
-
-            .quantity {
-                transform: rotateY(-180deg);
-                left: 30px;
-            }
         }
-    }
 
-    &:not(.hasDouble):hover {
-        .card {
-            &.in-shop {
-                transform: rotateY(0) translateY(-30px);
+        &:not(.hasDouble):hover {
+            .card {
+                &.in-shop {
+                    transform: rotateY(0) translateY(-30px);
 
-                @include breakpoint(nm) {
+                    @include breakpoint(nm) {
+                        transform: rotateY(0);
+                    }
+                }
+
+                &:not(.in-shop) {
                     transform: rotateY(0);
                 }
             }
+        }
 
-            &:not(.in-shop) {
-                transform: rotateY(0);
+        &:hover {
+            .card {
+                box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+                border-radius: 10px;
+            }
+
+            .shop {
+                opacity: 1;
+                bottom: -45px;
+
+                @include breakpoint(nm) {
+                    bottom: 0px;
+                }
             }
         }
     }
 
-    &:hover {
-        .card {
-            box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-        }
+    &.active {
+        &.hasDouble:hover {
+            .card {
+                &.in-shop {
+                    transform: rotateY(180deg) translateY(-30px);
 
-        .shop {
-            opacity: 1;
-            bottom: -45px;
+                    @include breakpoint(nm) {
+                        transform: rotateY(180deg);
+                    }
+                }
 
-            @include breakpoint(nm) {
-                bottom: 0px;
+                &:not(.in-shop) {
+                    transform: rotateY(180deg);
+
+                }
+
+                .quantity {
+                    transform: rotateY(-180deg);
+                    left: 30px;
+                }
             }
         }
     }
@@ -285,6 +333,7 @@ onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lo
     align-items: center;
     justify-content: center;
     font-size: 5rem;
+    // border-radius: 24px;
 }
 
 .back {

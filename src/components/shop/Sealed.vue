@@ -8,14 +8,14 @@
                 <span class="title">{{ value.name }}</span>
                 <p class="description">{{ value.description }}</p>
             </div>
-            <div class="flex flex-col flex-start gap-2">
+            <div class="info">
                 <span v-if="value.stock" class="font-bold">Disponibles: <span class="font-normal"> {{ value.stock
-                }}</span></span>
+                        }}</span></span>
                 <span class="font-bold">Precio: <span class="font-normal"> {{ value.price }}</span></span>
                 <Button v-if="!edit" :disabled="isSoldOut" :outlined="isSoldOut" @click="addToCart">{{ isSoldOut ?
                     'Agotado' :
                     "Comprar"
-                }}</Button>
+                    }}</Button>
             </div>
         </div>
     </div>
@@ -56,6 +56,12 @@ const addToCart = () => {
 
     background: rgba(0, 0, 0, 0.4);
 
+    @include breakpoint(nm) {
+        @include flex(column, space-between, flex-start, 16px);
+        height: auto;
+        width: 100%;
+    }
+
     &:hover {}
 
     .sealed-img {
@@ -75,6 +81,10 @@ const addToCart = () => {
         height: 100%;
         @include flex(row, space-between, flex-end);
 
+        @include breakpoint(nm) {
+            width: 100%;
+        }
+
         .titles {
             height: 100%;
             width: 70%;
@@ -93,6 +103,11 @@ const addToCart = () => {
                 scrollbar-width: none;
                 cursor: row-resize;
             }
+        }
+
+        .info {
+            @include flex(column, flex-start, flex-start, 8px);
+            min-width: max-content;
         }
     }
 }

@@ -158,6 +158,7 @@ async function uploadCards() {
         const elem = document?.getElementById("csvpicker");
         if (!elem.files.length) {
             uploading.value = false;
+            toast.removeAllGroups();
             return toast.add({
                 severity: "error",
                 summary: "Error",
@@ -182,6 +183,7 @@ async function uploadCards() {
         form.append("user", localStorage.getItem("seller"))
 
         const result = await addCards(form);
+        toast.removeAllGroups();
         toast.add({
             severity: "success",
             summary: "Cartas agregadas",

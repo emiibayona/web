@@ -4,8 +4,8 @@
             <Loader />
         </div>
         <Empty v-if="!sealed?.rows.length && !loadingSealed" />
-        <div v-else class="grid grid-cols-3 gap-10">
-            <Sealed v-for="(value, index) in sealed?.rows" class="" :key="index" :value="value" edit />
+        <div v-else class="grid grid-cols-1 nm:grid-cols-3  gap-10">
+            <Sealed v-for="(value, index) in sealed?.rows" class="" :key="index" :value="value" />
         </div>
     </div>
 </template>

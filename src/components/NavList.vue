@@ -1,48 +1,46 @@
 <template>
   <ul class="relative 
-    flex flex-row
-    justify-center items-center space-x-4 px-10 py-5 nm:py-3
-    nm:px-20 z-20 bg-site 
-    whitespace-nowrap 
-    hd:gap-5
+    flex flex-row justify-center items-center space-x-4 px-10 py-5 z-20 bg-site whitespace-nowrap w-full overflow-auto
+    nm:px-20 nm:py-3
+    hd:gap-5 hd:overflow-none 
     hd2:gap-24
     ">
-    <li @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-[20px]"><span v-show="!atHome">{{ "<" }}</span>
+    <li v-if="!atHome" @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-5 h-5"><img
+        class="rotate-90 hover:cursor-pointer hover:scale-110 hover:drop-shadow-lg w-5 h-5" src="/images/arrow.svg" />
     </li>
 
-    <li v-for="(item, index) in data" :key="index">
-      <NavLink :nav="item.path" :active="item.active" :item="item" class="min-w-min max-w-[100px] nm:max-w-[200px] px-1">
-        <img v-if="item.logo" class="nm:h-[100px] w-auto object-contain" :src="item.logo" />
-        <span v-else class="block">{{ item.name }}</span>
+    <li v-for="(item, index) in data" :key="index" :id="`navLink-${index}`">
+      <NavLink :nav="item.path" :active="item.active" :item="item" class="min-w-min max-w-[100px] nm:max-w-[200px] px-1"
+        :class="[{ 'w-[500px]': item.logo }, { 'w-min': !item.logo }]">
+        <img v-if="item.logo" class="nm:h-[100px] w-auto object-contain justify-self-center" :src="item.logo" />
+        <span v-else class="block justify-self-center">{{ item.name }}</span>
       </NavLink>
     </li>
     <!-- <li>{{ ">" }}</li> -->
-    <div class="absolute
-    top-2 right-0
-    nm:top-4 nm:right-4
-    flex flex-row gap-4 cursor-pointer">
-      <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
-        :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
-      <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
-        <span v-if="listsLength?.cart"></span>
-        <img class="icon" src="/images/cart.png" alt="Logo" />
-      </a>
-      <a class="icon-wrapper" href="/wishlist" :class="[{ 'active': route.path.includes('wishlist') }]">
-        <span v-if="listsLength?.wishlist"></span>
-        <img class="icon" src="/images/wishlist.png" alt="Logo" />
-      </a>
-    </div>
   </ul>
+  <div class="absolute
+  top-2 right-2
+  nm:top-4 nm:right-4
+  flex flex-row gap-4 cursor-pointer">
+    <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
+      :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
+    <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
+      <span v-if="listsLength?.cart"></span>
+      <img class="icon" src="/images/cart.png" alt="Logo" />
+    </a>
+    <a class="icon-wrapper" href="/wishlist" :class="[{ 'active': route.path.includes('wishlist') }]">
+      <span v-if="listsLength?.wishlist"></span>
+      <img class="icon" src="/images/wishlist.png" alt="Logo" />
+    </a>
+  </div>
 </template>
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import NavLink from "./NavLink.vue";
 import { useRoute, useRouter } from "vue-router";
 import { NAVIGATION } from "@/utils/constants";
 import { GAMES } from '@/utils/constants';
 import useCarts from '@/composables/useCart';
-
-// const listsLength = ref({});
 
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({
@@ -57,6 +55,13 @@ const atHome = computed(() => route.path === '/')
 const data = computed(() =>
   Object.values(NAVIGATION).map(x => ({ ...x, active: x.home ? route.path === x.path : route.path.includes(x.path) })))
 
+watch(data, () => {
+  const index = data.value.findIndex(x => x.active);
+  document.getElementById(`navLink-${index}`)?.scrollIntoView({
+    block: 'center',
+    inline: 'center'
+  })
+})
 </script>
 <style scoped lang="scss">
 .icon-wrapper {
@@ -66,8 +71,8 @@ const data = computed(() =>
 
   .icon {
     @include breakpoint(nm) {
-      width: 15px;
-      height: 15px;
+      width: 20px;
+      height: 20px;
     }
 
     @include breakpoint(hd) {

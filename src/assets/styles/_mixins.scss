@@ -27,11 +27,11 @@
 */
 @mixin breakpoint($size) {
   @if $size == nm {
-    @media (max-width: 999px) {
+    @media (max-width: 1080px) {
       @content;
     }
   } @else if $size == hd {
-    @media (min-width: 1000px) {
+    @media (min-width: 1081px) {
       @content;
     }
   } @else if $size == hd1 {

@@ -144,6 +144,7 @@ async function confirmLocalOrder(params, forceClose = false) {
     loading.value = true;
     const result = await confirmOrder(params, forceClose)
     if (result.status !== 500) {
+        toast.removeAllGroups();
         toast.add({
             severity: "success",
             life: 2000,

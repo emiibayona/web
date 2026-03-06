@@ -151,6 +151,7 @@ const useCarts = (
     }
 
     if (toastOpt && alert) {
+      toast.removeAllGroups();
       toast.add(toastOpt);
     }
   };
@@ -193,6 +194,7 @@ const useCarts = (
     }
 
     if (toastOpt) {
+      toast.removeAllGroups();
       toast.add(toastOpt);
     }
   };

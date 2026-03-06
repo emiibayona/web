@@ -43,6 +43,7 @@ async function login() {
     setTimeout(async () => {
         if (passwordIsEmpty.value) return;
         if (checkAdminPassword(password.value)) {
+            toast.removeAllGroups();
             toast.add({
                 severity: "success",
                 summary: "Contraseña exitosa, redirigiendo",
@@ -56,6 +57,7 @@ async function login() {
                 emit('post-login')
             }, 2000);
         } else {
+            toast.removeAllGroups();
             toast.add({
                 severity: "error",
                 summary: "Contraseña erronea, vuelva a intentarlo",

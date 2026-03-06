@@ -41,7 +41,14 @@
                         <Button v-if="edit"
                             @click="$emit('remove', { item: { ...item, set: value.set.code }, all: true })" size="fit"
                             color="#D9B14F">
-                            <img src="/images/trash.png" />
+                            <img src="/images/trash.png" class="trash-icon" />
+                        </Button>
+                    </div>
+                    <div v-else>
+                        <Button v-if="fromWishlist"
+                            @click="$emit('remove-wishlist', { item: { ...item, set: value.set.code }, all: true })"
+                            size="fit" color="#D9B14F">
+                            <img src="/images/trash.png" class="trash-icon" />
                         </Button>
                     </div>
                 </div>
@@ -54,7 +61,7 @@
 import { computed } from 'vue';
 import Button from '../atomic/Button.vue';
 
-defineEmits(["remove", "add"])
+defineEmits(["remove", "add", "remove-wishlist"])
 const props = defineProps({
     edit: { type: Boolean, default: false },
     fromWishlist: { type: Boolean, default: false },
@@ -63,4 +70,8 @@ const props = defineProps({
 const itemName = computed(() => props.item.name.split("//")[0])
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.trash-icon {
+    height: -webkit-fill-available;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-col gap-10 items-center mt-20">
-        <h1 class="font-black text-5xl">
+        <h1 class="font-black text-xl nm:text-5xl">
             Ups, pagina no encontrada !!!
         </h1>
         <a href="/" target="" class="flex flex-row items-center gap-2 animate-bounce animated">

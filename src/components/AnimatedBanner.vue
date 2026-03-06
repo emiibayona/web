@@ -116,6 +116,12 @@ const cleanedPath = computed(() => {
             height: 70%;
             width: auto;
             max-width: 200px;
+
+            @include breakpoint(nm) {
+
+                max-width: 100px;
+            }
+
             object-fit: contain;
         }
 
