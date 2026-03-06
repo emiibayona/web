@@ -104,6 +104,9 @@ const useCarts = (
       severity: "success",
       summary: "Agregada!",
       detail: `Carta agregada correctamente al ${receptorBox.value}.`,
+      data: {
+        image: item?.card?.image_uris?.small || item?.card?.image_uris?.normal,
+      },
       life: 2000,
     };
     const recipient = getCurrentRecipient();
