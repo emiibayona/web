@@ -1,7 +1,8 @@
 <template>
   <ul class="relative 
     flex flex-row
-    justify-center items-center space-x-4  py-5 px-20 z-20 bg-site 
+    justify-center items-center space-x-4 px-10 py-5 nm:py-3
+    nm:px-20 z-20 bg-site 
     whitespace-nowrap 
     hd:gap-5
     hd2:gap-24
@@ -10,9 +11,9 @@
     </li>
 
     <li v-for="(item, index) in data" :key="index">
-      <NavLink :nav="item.path" :active="item.active" :item="item">
-        <span class="hidden nm:block">{{ item.name }}</span>
-        <span class="block nm:hidden">{{ item.name.slice(0, 2) }}</span>
+      <NavLink :nav="item.path" :active="item.active" :item="item" class="min-w-min max-w-[100px] nm:max-w-[200px] px-1">
+        <img v-if="item.logo" class="nm:h-[100px] w-auto object-contain" :src="item.logo" />
+        <span v-else class="block">{{ item.name }}</span>
       </NavLink>
     </li>
     <!-- <li>{{ ">" }}</li> -->

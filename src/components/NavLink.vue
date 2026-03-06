@@ -1,5 +1,5 @@
 <template>
-  <div class="group flex flex-col space-y-1 font-bold 
+  <div class="group flex flex-col font-bold 
   nm:text-xs
   hd:text-lg
   ">
@@ -26,7 +26,7 @@ const props = defineProps({
     default: false,
   },
 });
-const href = ref(`${window?.location?.origin}${props.nav}`);
+const href = ref(`${window?.location?.origin}${props.item.home ? '' : '/'}${props.nav}`);
 
 </script>
 <style scoped lang="scss">

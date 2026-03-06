@@ -1,6 +1,5 @@
 <template>
-    <div class="ab-wrapper" :class="{ big }"
-        @click="path ? router.push(route.fullPath + (route.fullPath.endsWith('/') ? '' : '/') + path) : null">
+    <div class="ab-wrapper" :class="{ big }" @click="path ? router.push(cleanedPath) : null">
         <div class="content">
             <span v-if="text">{{ text }}</span>
             <img v-if="img" class="img-logo" :src="img" alt="Right Image" />
@@ -12,8 +11,9 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
-defineProps({
+const props = defineProps({
     text: {
         type: String,
         default: null,
@@ -38,6 +38,11 @@ defineProps({
 });
 const route = useRoute();
 const router = useRouter();
+
+const cleanedPath = computed(() => {
+    if (!props.path) return props.path;
+    return route.fullPath + (route.fullPath.endsWith('/') || props.path.endsWith('/') ? '' : '/') + props.path
+})
 </script>
 
 <style lang="scss" scoped>

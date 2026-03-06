@@ -12,6 +12,7 @@
             <span class="tag right"
                 :class="[{ 'active': rightWingIsActive }, { 'opacity-30 hover:opacity-100': leftWingIsActive }]"
                 @click="toggleWings('right', !wings.right)">Carro</span>
+
             <div class="filter-wrapper" :class="[{
                 'active': leftWingIsActive
             }]">
@@ -189,6 +190,7 @@ onUnmounted(() => {
     position: relative;
     display: grid;
     scrollbar-width: none;
+    height: 100vh;
 
     @include breakpoint(nm) {
         // grid-template-columns: 230px auto 170px;
@@ -260,12 +262,15 @@ onUnmounted(() => {
         overflow-x: hidden;
 
 
+
         // position: relative;
         @include breakpoint(nm) {
-            height: 100%;
+            height: 100vh;
             position: absolute;
             z-index: 9999;
             @include bg-site();
+            // background-color: red;
+            ;
             left: 0;
             width: 0%;
             transition: all 0.5s ease-out;
@@ -295,6 +300,11 @@ onUnmounted(() => {
                 bottom: 0;
                 padding: 10px 0;
                 width: -webkit-fill-available;
+            }
+
+            @include breakpoint(nm) {
+                max-height: 93%;
+
             }
 
             .list {
@@ -348,7 +358,7 @@ onUnmounted(() => {
             width: 0%;
             right: 0;
             transition: all 0.5s ease-out;
-            height: 100%;
+            height: 100vh;
             overflow-y: auto;
 
             &.active {
