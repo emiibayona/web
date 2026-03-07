@@ -57,7 +57,10 @@ const useSales = () => {
   };
 
   const confirmOrder = async (sale, forceClose = false) => {
-    return await store.confirmOrder({ ...sale, cards: sale.cart, forceClose });
+    let localSale = JSON.parse(JSON.stringify(sale));
+    localSale.cards = [...localSale.cart];
+    delete localSale.cart;
+    return await store.confirmOrder({ ...localSale, forceClose });
   };
 
   return {

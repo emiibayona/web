@@ -1,10 +1,6 @@
 <template>
     <div>
         <div class="singles-wrapper" id="singles-wrapper">
-            <!-- <div class="buttons-wrapper">
-                <div><span>Filters</span></div>
-                <div><span>Cart</span></div>
-            </div> -->
             <Button class="absolute right-0" size="xsmall" @click="toggleModal(true)">Agregar desde lista</Button>
             <span class="tag left"
                 :class="[{ 'active': leftWingIsActive }, { 'opacity-30 hover:opacity-100': rightWingIsActive }]"
@@ -45,6 +41,15 @@
                 class="h-[100px]"></Textarea>
             <Button @click="addToCart" :loading="addingToCart" class="mt-5" :disabled="toCart === ''">Agregar</Button>
         </Modal>
+        <Modal v-model="showNotAdded" title="Cartas no agregadas, no disponibles" @update:modelValue="toggleNotAdded">
+            <div class="flex flex-col gap-2 h-[300px] overflow-y-scroll">
+                <div v-for="(card, index) in listNotAdded" :key="`card-not-added-${index}`">
+                    <span>{{ Object.values(card).join(' ') }}</span>
+                </div>
+            </div>
+
+            <Button @click="toggleNotAdded" class="mt-5 self-end">Cerrar</Button>
+        </Modal>
     </div>
 </template>
 <script setup>
@@ -73,7 +78,9 @@ const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, val
 const activeTab = ref(0);
 const toCart = ref("");
 const showModal = ref(false);
+const showNotAdded = ref(false);
 const addingToCart = ref(false);
+const listNotAdded = ref([])
 
 const wings = ref({ left: false, right: false })
 const { add } = useCarts(GAMES.MAGIC);
@@ -111,6 +118,7 @@ const toggleModal = (val) => {
     showModal.value = val;
     toCart.value = "";
 }
+const toggleNotAdded = () => { showNotAdded.value = false; listNotAdded.value = [] }
 const toggleWings = (wing, value) => {
     Object.keys(wings.value).forEach(x => {
         wings.value[x] = false;
@@ -125,13 +133,23 @@ async function addToCart() {
         addingToCart.value = true;
         const list = parseList(toCart.value);
         const result = await getListToCart(list);
-        for (let index = 0; index < result.length; index++) {
-            const element = result[index];
-            const ele2 = list[index];
-            add({ item: element, quantity: ele2.quantity, alert: index + 1 === result.length })
+        for (let index = 0; index < list.length; index++) {
+            const eleWantToAdd = list[index];
+            const element = result.find(x =>
+                x.collector_number === eleWantToAdd.collector_number &&
+                x.name === eleWantToAdd.name &&
+                x.set === eleWantToAdd.set &&
+                x.treatment === eleWantToAdd.treatment)
+            if (element) {
+                add({ item: element, quantity: Math.max(element.quantity, eleWantToAdd.quantity), alert: index + 1 === list.length })
+            } else {
+                listNotAdded.value.push(eleWantToAdd)
+            }
         }
-
         toggleModal(false);
+        if (listNotAdded.value && list) {
+            showNotAdded.value = true;
+        }
         addingToCart.value = false;
     } catch (error) {
         console.error(error);

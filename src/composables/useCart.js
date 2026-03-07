@@ -203,8 +203,7 @@ const useCarts = (
   };
 
   const cleanCart = () => {
-    const recipient = getCurrentRecipient();
-    recipient = recipient.splice(0);
+    getCurrentRecipient().splice(0);
   };
 
   function calculateTotal(arr) {

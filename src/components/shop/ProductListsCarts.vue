@@ -3,11 +3,20 @@
         <div class="flex flex-col px-2 nm:px-10"
             :class="[{ 'pb-4': wishlist }, { 'py-4': !cart.count }, { 'border-b-2 border-black': index + 1 !== values.length }]">
             <span class="font-bold mb-2 text-xl">{{ capi(cart.name) }} (<span class="font-normal">{{ cart.count
-            }}</span>)</span>
+                    }}</span>) <Button v-if="cart.count" size="xsmall" @click="clean">Remover todo</Button></span>
             <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'h-[300px]': cart.count }]">
                 <MiniCartCard v-for="(item, index_2) in cart.values" :key="`${cart.name}-${index}-${index_2}`"
                     :item="item" @add="add" @remove="remove" @remove-wishlist="removeWishlist" edit
                     :from-wishlist="wishlist" />
+                <div v-if="!cart.values.length" class="font-bold mt-5 ml-5">
+                    <span>
+                        {{ `No hay nada en tu ${wishlist ? 'wishlist' : 'carrito'}, ` }}
+                        <span class="text-blue-700 underline decoration-blue-700 cursor-pointer"
+                            @click="router.push(`/${cart.name}/singles`)">
+                            ve por tus cartas ...
+                        </span>
+                    </span>
+                </div>
             </div>
             <Button v-if="!wishlist && cart.count" class="self-end my-5" size="small"
                 @click="openConfirmationModal(cart)">{{
@@ -76,9 +85,9 @@ import Textarea from '@/components/atomic/Textarea.vue';
 import useSales from '@/composables/mtg/useSales';
 import { useRouter } from 'vue-router';
 
-defineProps({ values: { type: Array, default: () => [] }, wishlist: { type: Boolean, default: false } })
+const props = defineProps({ values: { type: Array, default: () => [] }, wishlist: { type: Boolean, default: false } })
 const { add, remove, cleanCart } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
-const { remove: removeWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
+const { remove: removeWishlist, cleanCart: cleanWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
 const capi = (str) => capitalizeFirstLetter(str);
 const { openWhatsApp } = useWhatsapp();
 const { createOrder } = useSales();
@@ -95,7 +104,13 @@ function openConfirmationModal(cart) {
     currentCart.value = cart;
     showModal.value = true;
 }
-
+function clean() {
+    if (props.wishlist) {
+        cleanWishlist();
+    } else {
+        cleanCart();
+    }
+}
 async function orderConfirmed() {
     loading.value = true;
     const res = await createOrder({ ...currentCart.value, form: information.value });
@@ -104,9 +119,9 @@ async function orderConfirmed() {
             showOrderConfirmed.value = true;
             loading.value = false;
             openWhatsApp("Hola, realice una compra por la web, te envio la informacion", `Código de compra: *${res.id}* \n\nGracias!`)
-            cleanCart();
+            // cleanCart();
         }, 2000)
-    }
+    } else loading.value = false;
 }
 
 watch(showModal, () => {

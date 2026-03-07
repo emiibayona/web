@@ -23,9 +23,9 @@
                                 <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
                                     :class="[tabs[activeTab].bg]">
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
                                         sale.contact
                                             }}</span> <span
@@ -33,10 +33,7 @@
                                             @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
                                                 class="w-4 h-4" /></span></span>
                                     <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                            }}</span></span>
-                                    <span class="font-bold">Orden de compra: <span class="font-normal"> {{
-                                        Date(sale.createdAt)
-                                            }}</span></span>
+                                    }}</span></span>
                                 </div>
                             </template>
                             <template #content>
@@ -73,11 +70,9 @@
                                                 <!-- SELECTOR -->
                                                 <div class="flex flex-col gap-1">
                                                     <span class="font-bold text-lg">{{ `Agregadas para entrega: `
-                                                    }}<span class="font-normal">{{ card.sold }}</span></span>
-                                                    <!-- TODO: Change por X and TICK -->
-
+                                                        }}<span class="font-normal">{{ card.sold }}</span></span>
                                                     <span class=" flex flex-row gap-2 font-bold text-lg">{{ `Estado: `
-                                                    }}<span class="font-normal"> <img
+                                                        }}<span class="font-normal"> <img
                                                                 :src="`/images/${parseInt(card.sold) === parseInt(card.quantity) ? 'check-mark' : 'letter-x'}.png`"
                                                                 class="w-6 h-6" /></span></span>
 
@@ -97,36 +92,17 @@
 
                                             </div>
                                         </div>
-
-                                        <!-- <div class="flex flex-col gap-2 justify-center">
-                                            <span>{{ `${card.quantity}x | ${card.name.split('//')[0]}` }}</span>
-                                            <span class="ml-6">{{ `Tratamiento: ${capi(card.treatment === "" ? "normal"
-                                                :
-                                                card.treatment)}` }}</span>
-                                            <span class="ml-6">
-                                                {{ `SET: ${card?.set?.name}` }}
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-row items-center gap-2 max-w-[60px]"
-                                            v-if="tabs[activeTab].value !== 'complete' && !card.added">
-                                            <InputField v-model="card.sold" placeholder="0" type="number"
-                                                class="max-w-[40px] max-h-[20px] mr-4" :debounce="0"
-                                                :max="parseInt(card.quantity)" :min="0" />
-
-                                            <img :src="`/images/check${parseInt(card.sold) === parseInt(card.quantity) ? '' : '-progress'}.png`"
-                                                class="w-6 h-6"
-                                                :class="[`bg-${parseInt(card.sold) === parseInt(card.quantity) ? 'green-600' : 'red-600'}`]" />
-                                        </div>
-                                        <div class="flex flex-row items-center gap-2" v-else>
-                                            <span>Pedidas {{ card.quantity }}</span>|
-                                            <span>Vendidas {{ card.sold }}</span>
-                                        </div> -->
                                     </div>
 
                                     <div class="flex flex-row justify-end p-4 gap-2 col-span-full w-full">
+
                                         <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
                                             @click="confirmLocalOrder(sale, true)" :loading="loading">Cerrar
                                             orden</Button>
+                                        <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
+                                            @click="setAllLikeSold(sale)" :loading="loading">Agregar todo</Button>
+                                        <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
+                                            @click="setAllLikeSold(sale, true)" :loading="loading">Quitar todo</Button>
                                         <Button v-if="tabs[activeTab].button" size="small" :loading="loading"
                                             :disabled="!confirmButtonActive(sale.cart)" class="self-end"
                                             @click="confirmLocalOrder(sale)">{{
@@ -193,28 +169,39 @@ async function loadSales() {
     fetching.value = false;
 }
 function changeSoldQty(card, qty) {
-    // parseInt(card.sold) === parseInt(card.quantity)
     if (card.sold === 0 && qty === -1) return;
     if (card.sold === card.quantity && qty === 1) return;
     card.sold += qty;
 }
+function setAllLikeSold(sale, remove = false) {
+    if (remove) {
+        sale.cart.forEach(x => x.sold = 0);
+        return;
+    }
+    sale.cart.forEach(x => x.sold = x.quantity);
+}
 async function confirmLocalOrder(params, forceClose = false) {
-    loading.value = true;
-    const result = await confirmOrder(params, forceClose)
-    if (result.status !== 500) {
-        toast.removeAllGroups();
-        toast.add({
-            severity: "success",
-            life: 2000,
-            detail: "Moviendo orden a la lista correspondiente",
-            summary: forceClose ? "Orden cerrada correctamente" : result.every(x => x.added) ? "Orden completada correctamente" : "Orden completada parcialmente"
-        })
-        setTimeout(async () => {
-            loading.value = false;
-            await init();
-            document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
-        }, 1000);
-    } else loading.value = false;
+    try {
+        loading.value = true;
+        const result = await confirmOrder(params, forceClose)
+        if (result.status !== 500) {
+            toast.removeAllGroups();
+            toast.add({
+                severity: "success",
+                life: 2000,
+                detail: "Moviendo orden a la lista correspondiente",
+                summary: forceClose ? "Orden cerrada correctamente" : result.every(x => x.added) ? "Orden completada correctamente" : "Orden completada parcialmente"
+            })
+            setTimeout(async () => {
+                loading.value = false;
+                await init();
+                document.getElementById("tabs")?.scrollIntoView({ behavior: "smooth" })
+            }, 1000);
+        } else loading.value = false
+    } catch (error) {
+        loading.value = false
+        console.error(error)
+    };
 }
 
 
@@ -222,7 +209,7 @@ watch([activeTab], async () => {
     await loadSales()
 })
 watch(sales, () => {
-    localSales.value = sales.value?.map((sal) => ({ ...sal, cart: JSON.parse(sal.cart).map(x => ({ ...x, sold: x.sold || 0 })) }))
+    localSales.value = sales.value?.map((sal) => ({ ...sal, cart: (typeof sal.cart === 'string' ? JSON.parse(sal.cart) : sal.cart).map(x => ({ ...x, sold: x.sold || 0 })) }))
 })
 onMounted(async () => {
     orderResumen.value = await fetchSalesResumen();

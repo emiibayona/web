@@ -18,7 +18,8 @@
     </li>
     <!-- <li>{{ ">" }}</li> -->
   </ul>
-  <Button v-if="isAdmin && !atAdmin" class="absolute top-2 left-2 z-50">Admin panel</Button>
+  <Button v-if="isAdmin && !atAdmin" class="absolute top-2 left-2 z-50" @click="router.push('/admin')">Admin
+    panel</Button>
   <div class="absolute
   top-2 right-2
   nm:top-4 nm:right-4

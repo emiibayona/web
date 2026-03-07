@@ -7,6 +7,7 @@ import Aura from "@primeuix/themes/aura";
 
 import "./assets/main.css";
 import router from "./router";
+import VueClipboard from "vue-clipboard2";
 const images = import.meta.glob(
   "@/assets/images/**/*.{png,jpg,jpeg,svg,webp}",
   { eager: true },
@@ -23,6 +24,7 @@ createApp(App)
       },
     },
   })
+  .use(VueClipboard)
   .mount("#app");
 
 // app;
