@@ -1,7 +1,7 @@
 <template>
-    <div class="w-full flex flex-col gap-10 items-center mt-20">
+    <div class="w-full flex flex-col gap-10 items-center mt-20 nm:gap-5">
         <h1 class="font-black text-2xl nm:text-3xl text-center">
-            ¡¡¡ Sección en construcción, pronto traeremos mas novedades !!!
+            ¡¡¡Pronto traeremos más novedades!!!
         </h1>
         <span class="font-bold text-xl nm:text-2xl">Pero mientras tanto....</span>
         <div class="flex flex-col nm:flex-row gap-10 nm:gap-20">
@@ -9,8 +9,8 @@
                 class="flex flex-row items-center gap-2 animated"><img src="/images/instagram.png"
                     class="w-16 h-16" /><span class="">Vísitanos en nuestro Instagram</span></a>
             <span class="flex flex-row items-center gap-2 animated" @click="toWpp"><img src="/images/whatsapp.png"
-                    class="w-16 h-16" /><span class="">Contactanos por
-                    whatsapp</span></span>
+                    class="w-16 h-16" /><span class="">Contáctanos por
+                    Whatsapp</span></span>
         </div>
     </div>
 </template>

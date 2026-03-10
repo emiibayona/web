@@ -2,6 +2,7 @@ export const GAMES = Object.freeze({
   MAGIC: "magic",
   POKEMON: "pokemon",
   YUGIOH: "yugioh",
+  RIFTBOUND: "riftbound",
 });
 
 export const NAVIGATION = Object.freeze({
@@ -27,14 +28,13 @@ export const NAVIGATION = Object.freeze({
     logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/pokemon.png",
     bg: "https://champions.pokemon.com/_images/global/header/header-lg.jpg",
   },
-  DIGIMON: {
-    path: "digimon",
-    name: "Digimon",
-    value: "digimon",
+  RIFTBOUND: {
+    path: "riftbound",
+    name: "Riftbound",
+    value: "riftbound",
     logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/digimon.png",
     bg: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkfPGewkn2AAbB5M98NlrAXvwykPbajfv7St2X3yWBZVg_z4TmkllnTHZgEnuB6hb8CUAineeD2kN8-eJrN8fXbhTcTX3SjYjMiC5wl6IFlQlwAWBwDrMfbauf-AybR71tT9gTO3wYsG8O/d/Digimon+Data+squad+savers.jpg",
   },
-  // ABOUT: { path: "/about", name: "Nosotros" },
 });
 
 export const RECIPIENTS_LISTS = Object.freeze({

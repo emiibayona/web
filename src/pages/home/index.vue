@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 bg-header min-h-[300px] px-4">
+    <div class="bg-header px-4">
         <!-- <HeaderVue></HeaderVue> -->
     </div>
     <main>
@@ -32,14 +32,21 @@ const data = computed(() => Object.values(NAVIGATION).filter(x => !x.home));
 
 <style scoped lang="scss">
 .bg-header {
-    // height: 200px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
 
-    // animation: opening 2s ease-in-out;
-    // animation-fill-mode: both;
     background-image: url("/public/images/banner.gif");
+    margin-left: -18px;
+
+    @include breakpoint(nm) {
+        height: 200px;
+        background-size: cover;
+    }
+
+    @include breakpoint(hd) {
+        height: 300px;
+    }
 }
 
 @keyframes opening {

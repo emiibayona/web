@@ -23,9 +23,9 @@
                                 <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
                                     :class="[tabs[activeTab].bg]">
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
                                         sale.contact
                                             }}</span> <span
@@ -33,14 +33,15 @@
                                             @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
                                                 class="w-4 h-4" /></span></span>
                                     <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                    }}</span></span>
+                                            }}</span></span>
                                 </div>
                             </template>
                             <template #content>
                                 <!-- :class=[tabs[activeTab].bg] -->
                                 <div class="content rounded-md bg-opacity-50 mt-2">
+                                    <!-- :class="[`bg-${card.sold || parseInt(card.sold) === parseInt(card.quantity) ? 'green-600' : 'red-600'}`]" -->
                                     <div v-for="(card, index_2) in sale.cart" class="content-cards p-4 bg-opacity-50"
-                                        :class="[`bg-${card.sold || parseInt(card.sold) === parseInt(card.quantity) ? 'green-600' : 'red-600'}`]"
+                                        :class="[`bg-${card.sold || parseInt(card.sold) === parseInt(card.quantity) ? 'sold' : 'not-sold'}`]"
                                         :key="`card-${index_2}`">
 
                                         <div v-if="tabs[activeTab].value !== 'complete'" class="h-[150px] relative">
@@ -70,9 +71,9 @@
                                                 <!-- SELECTOR -->
                                                 <div class="flex flex-col gap-1">
                                                     <span class="font-bold text-lg">{{ `Agregadas para entrega: `
-                                                        }}<span class="font-normal">{{ card.sold }}</span></span>
+                                                    }}<span class="font-normal">{{ card.sold }}</span></span>
                                                     <span class=" flex flex-row gap-2 font-bold text-lg">{{ `Estado: `
-                                                        }}<span class="font-normal"> <img
+                                                    }}<span class="font-normal"> <img
                                                                 :src="`/images/${parseInt(card.sold) === parseInt(card.quantity) ? 'check-mark' : 'letter-x'}.png`"
                                                                 class="w-6 h-6" /></span></span>
 
@@ -149,8 +150,8 @@ const getCount = (status) => orderResumen.value?.find(x => x.status === status)?
 
 const activeTab = ref(0);
 const tabs = computed(() => ([{ index: 0, value: 'pending', name: "Pendientes", bg: "bg-gt-dark-300", button: "Confirmar venta", count: getCount("pending") },
-{ index: 1, value: 'incomplete', name: "Sin completar", bg: "bg-red-400", button: "Confirmar venta", count: getCount("incomplete") },
-{ index: 2, value: 'complete', name: "Completadas", bg: "bg-green-900", button: null, count: getCount("complete") }]))
+{ index: 1, value: 'incomplete', name: "Sin completar", bg: "bg-gt-dark-300", button: "Confirmar venta", count: getCount("incomplete") },
+{ index: 2, value: 'complete', name: "Completadas", bg: "bg-gt-dark-300", button: null, count: getCount("complete") }]))
 
 const confirmButtonActive = (row) => row.filter(x => !x.added).some(x => x.sold)
 const soldIsBoolean = (field) => typeof field === 'boolean'
@@ -250,5 +251,23 @@ onMounted(async () => {
         border-bottom: 1px solid black;
     }
 
+}
+
+.bg {
+    &-sold {
+        // bg-green-500
+        // background-color: var(--color-green-500); /* oklch(72.3% 0.219 149.579) */
+        // bg-green-600
+        // background-color: var(--color-green-600); /* oklch(62.7% 0.194 149.214) */
+        background: oklch(72.887% 0.21192 147.841 / 0.58);
+    }
+
+    &-not-sold {
+        background-color: oklch(63.78% 0.23729 25.422 / 0.64);
+        // bg-red-500
+        /* oklch(63.7% 0.237 25.331) */
+        // bg-red-600
+        /* oklch(57.7% 0.245 27.325) */
+    }
 }
 </style>

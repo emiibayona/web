@@ -208,7 +208,7 @@ onUnmounted(() => {
     position: relative;
     display: grid;
     scrollbar-width: none;
-    height: 100vh;
+    // height: 100vh;
 
     @include breakpoint(nm) {
         // grid-template-columns: 230px auto 170px;
@@ -369,6 +369,9 @@ onUnmounted(() => {
     }
 
     .cart-wrapper {
+        height: 80vh;
+        overflow-y: auto;
+
         @include breakpoint(nm) {
             position: absolute;
             z-index: 99999;

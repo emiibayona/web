@@ -28,9 +28,17 @@ const router = useRouter();
 const { adminIsLoggedIn } = useUser();
 const activeTab = ref(0);
 
+const info = {
+    magic: [{ path: "admin/magic/collection", button: "Colección" },
+    { path: "admin/magic/ventas", button: "Ventas de singles" },
+    { path: "admin/sellado?game=magic", button: "Panel de Sellados" }],
+    pokemon: [{ path: "admin/sellado?game=pokemon", button: "Panel de Sellados" }],
+    yugioh: [{ path: "admin/sellado?game=yugioh", button: "Panel de Sellados" }],
+    riftbound: [{ path: "admin/sellado?game=riftbound", button: "Panel de Sellados" }]
+}
 const tabs = computed(() => {
-    const games = Object.values(GAMES).filter(x => x === "magic").map((x, index) => {
-        const pages = [{ path: "admin/magic/collection", button: "Colección" }, { path: "admin/magic/ventas", button: "Ventas de singles" }, { path: "admin/magic/sellado", button: "Panel de Sellados" }]
+    const games = Object.values(GAMES).map((x, index) => {
+        const pages = info[x] || []
         return {
             index,
             game: x,
@@ -50,24 +58,8 @@ function goHome() {
 
 <style lang="scss" scoped>
 .tab-content {
-
-    // overflow-y: auto;
     @include flex(row, center, flex-start);
     gap: 10px;
     width: 100%;
-
-
-    // @include breakpoint(hd1) {
-    //     height: 400px;
-    // }
-
-    // @include breakpoint(fhd) {
-    //     height: 600px;
-    // }
-
-    // @include breakpoint(fhd3) {
-    //     height: 900px;
-    // }
-
 }
 </style>

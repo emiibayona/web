@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DecorationUpperBar class="mb-4" :logo="NAVIGATION.MAGIC.logo" :game="NAVIGATION.MAGIC.value" />
+        <DecorationUpperBar class="mb-4" :logo="NAVIGATION.YUGIOH.logo" :game="NAVIGATION.YUGIOH.value" />
         <div v-if="loading" class="w-full mt-10">
             <Loader />
         </div>
@@ -18,7 +18,7 @@ import useShop from '@/composables/useShop';
 import { GAMES, NAVIGATION } from '@/utils/constants';
 import { onMounted } from 'vue';
 
-const { sealed, fetchSealedProducts, loading } = useShop(GAMES.MAGIC);
+const { sealed, fetchSealedProducts, loading } = useShop(GAMES.YUGIOH);
 
 onMounted(async () => {
     await fetchSealedProducts();

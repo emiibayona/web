@@ -1,6 +1,5 @@
 <template>
     <div>
-        <DecorationUpperBar class="mb-4" :logo="NAVIGATION.MAGIC.logo" :game="NAVIGATION.MAGIC.value" />
         <div v-if="loading" class="w-full mt-10">
             <Loader />
         </div>
@@ -12,13 +11,12 @@
 </template>
 
 <script setup>
-import DecorationUpperBar from '@/components/DecorationUpperBar.vue';
 import Sealed from '@/components/shop/Sealed.vue';
 import useShop from '@/composables/useShop';
-import { GAMES, NAVIGATION } from '@/utils/constants';
+import { GAMES } from '@/utils/constants';
 import { onMounted } from 'vue';
 
-const { sealed, fetchSealedProducts, loading } = useShop(GAMES.MAGIC);
+const { sealed, fetchSealedProducts, loading } = useShop(GAMES.RIFTBOUND);
 
 onMounted(async () => {
     await fetchSealedProducts();

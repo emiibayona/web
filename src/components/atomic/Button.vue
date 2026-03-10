@@ -21,7 +21,7 @@ defineProps({
     size: {
         type: String,
         default: 'md',
-        validator: (value) => ['xxsmall', 'xsmall', 'small', 'md', 'lg', 'block', 'fit'].includes(value)
+        validator: (value) => ['xxsmall', 'xsmall', 'small', 'md', 'lg', 'block', 'fit', 'block-xy'].includes(value)
     },
     color: {
         type: String,

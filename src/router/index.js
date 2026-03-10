@@ -17,14 +17,24 @@ const router = createRouter({
       component: () => import("@/pages/yugioh/index.vue"),
     },
     {
+      path: "/yugioh/sealed",
+      name: "yugioh sellado",
+      component: () => import("@/pages/yugioh/sealed/index.vue"),
+    },
+    {
       path: "/pokemon",
       name: "pokemon",
       component: () => import("@/pages/pokemon/index.vue"),
     },
     {
-      path: "/digimon",
-      name: "digimon",
-      component: () => import("@/pages/digimon/index.vue"),
+      path: "/riftbound",
+      name: "riftbound",
+      component: () => import("@/pages/riftbound/index.vue"),
+    },
+    {
+      path: "/riftbound/sealed",
+      name: "riftbound sellado",
+      component: () => import("@/pages/riftbound/sealed/index.vue"),
     },
     {
       path: "/about",
@@ -55,6 +65,11 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("@/pages/admin/index.vue"),
+    },
+    {
+      path: "/admin/sellado",
+      name: "admin sellado",
+      component: () => import("@/pages/admin/sellado.vue"),
     },
     {
       path: "/admin/magic/ventas",

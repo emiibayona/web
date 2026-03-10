@@ -20,7 +20,8 @@
                             :class="[{ 'flex-row items-center flex-wrap gap-y-1 gap-x-2': row }, { 'flex-col items-start': !row }]">
                             <Checkbox v-for="(filter, index_2) in groupFilter[1]" :checked="filter.checked"
                                 :label="filter.label" :key="`${groupFilter[0]}-${index_2}-${cleaned}`"
-                                :id="`${groupFilter[0]}-${index_2}`" @update="val => applyFilter(val, filter)" />
+                                :disabled="fetching" :id="`${groupFilter[0]}-${index_2}`"
+                                @update="val => applyFilter(val, filter)" />
                         </div>
                     </template>
                 </Compressor>
@@ -53,8 +54,10 @@ import useFilters from '@/composables/useFilters';
 import { GAMES } from '@/utils/constants.js';
 import Compressor from '../atomic/Compressor.vue';
 
-defineProps({
-    row: { type: Boolean, default: false }, collapsed: { type: Boolean, default: false }
+const props = defineProps({
+    row: { type: Boolean, default: false },
+    collapsed: { type: Boolean, default: false },
+    fetching: { type: Boolean, default: false }
 })
 
 const { magicFilters } = useFilters(GAMES.MAGIC);
@@ -64,6 +67,7 @@ const cleaned = ref(0);
 const init = () => { filtersMapped.value = Object.entries(JSON.parse(JSON.stringify(magicFilters.value))) };
 
 const clean = () => {
+    if (props.fetching) return;
     cleaned.value++;
     init();
 };
@@ -88,6 +92,7 @@ watch(filtersMapped, () => {
 }, { deep: true });
 
 function applyFilter(val, filter) {
+    if (props.fetching) return;
     filter.checked = val;
 }
 

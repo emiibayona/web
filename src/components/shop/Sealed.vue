@@ -10,12 +10,12 @@
             </div>
             <div class="info">
                 <span v-if="value.stock" class="font-bold">Disponibles: <span class="font-normal"> {{ value.stock
-                        }}</span></span>
+                }}</span></span>
                 <span class="font-bold">Precio: <span class="font-normal"> {{ value.price }}</span></span>
                 <Button v-if="!edit" :disabled="isSoldOut" :outlined="isSoldOut" @click="addToCart">{{ isSoldOut ?
                     'Agotado' :
-                    "Comprar"
-                    }}</Button>
+                    "Contactar"
+                }}</Button>
             </div>
         </div>
     </div>
@@ -47,14 +47,11 @@ const addToCart = () => {
     @include flex(row, flex-start, flex-start);
     gap: 12px;
     padding: 12px;
-    // border-bottom: 2px solid black;
-    // min-height: 150px;
-    // max-height: 250px;
     height: clamp(150px, 250px, 250px);
-    // width: 500px;
     border-radius: 8px;
+    width: 100%;
 
-    background: rgba(0, 0, 0, 0.4);
+    background: #fff;
 
     @include breakpoint(nm) {
         @include flex(column, space-between, flex-start, 16px);
