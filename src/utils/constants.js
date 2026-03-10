@@ -12,28 +12,37 @@ export const NAVIGATION = Object.freeze({
     name: "Magic: The Gathering",
     value: "magic",
     logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/magic.png",
-    bg: "https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80",
+    bg: {
+      src: "https://images.ctfassets.net/s5n2t79q9icq/5Zat5j3qjx5diCvkurjKJG/6b3fa29fcd881e4080fd44a9db863bd4/fbnjsdoepqbueupnejiadvsd_1920x700.jpg?q=80",
+      position: "top",
+    },
   },
   YUGIOH: {
     path: "yugioh",
     name: "Yu-Gi-Oh!",
     value: "yugioh",
     logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/yugioh3.png",
-    bg: "https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/08/yugioh-1.jpg?w=1200&h=675&fit=crop",
+    bg: {
+      src: "https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/08/yugioh-1.jpg?w=1200&h=675&fit=crop",
+      position: "center",
+    },
   },
   POKEMON: {
     path: "pokemon",
     name: "Pokemon",
     value: "pokemon",
     logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/pokemon.png",
-    bg: "https://champions.pokemon.com/_images/global/header/header-lg.jpg",
+    bg: {
+      src: "https://champions.pokemon.com/_images/global/header/header-lg.jpg",
+      position: "top",
+    },
   },
   RIFTBOUND: {
     path: "riftbound",
     name: "Riftbound",
     value: "riftbound",
     logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/riftbound2.png",
-    bg: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkfPGewkn2AAbB5M98NlrAXvwykPbajfv7St2X3yWBZVg_z4TmkllnTHZgEnuB6hb8CUAineeD2kN8-eJrN8fXbhTcTX3SjYjMiC5wl6IFlQlwAWBwDrMfbauf-AybR71tT9gTO3wYsG8O/d/Digimon+Data+squad+savers.jpg",
+    bg: { src: "/images/riftbound/rift-banner.png", position: "top" },
   },
 });
 

@@ -1,11 +1,14 @@
 <template>
-    <div class="font-bold text-xl mt-20">
-        No hay resultados para esta pantalla o busqueda.
+    <div class="w-full flex flex-col justify-center items-center font-bold text-xl mt-20">
+        <span>
+            {{ title }}
+        </span>
+        <slot></slot>
     </div>
 </template>
 
 <script setup>
-
+defineProps({ title: { type: String, default: "No hay resultados para esta pantalla o busqueda." } })
 </script>
 
 <style lang="scss" scoped></style>

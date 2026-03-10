@@ -99,7 +99,7 @@ onMounted(() => {
             &:nth-child(1) {
                 z-index: 1;
                 --dest: 0px;
-                animation-delay: 0s;
+                animation-delay: 1s;
                 --dest-out: -calc(--dest * 4);
             }
 

@@ -12,7 +12,7 @@
             <div class="flex flex-col w-full">
                 <span class="text-xl font-bold pb-4">Nuestros juegos</span>
                 <div class="grid hd:grid-cols-2 gap-4 grid-cols-1">
-                    <AnimatedBanner v-for="(item, index) in data" :key="index" :img="item.logo" :bg="item.bg" big
+                    <AnimatedBanner v-for="(item, index) in data" :key="index" :img="item.logo" :bg="item.bg" size="big"
                         :path="item.path" />
 
                 </div>

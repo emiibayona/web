@@ -1,9 +1,9 @@
 <template>
     <div class="w-full flex flex-col gap-10 items-center mt-20 nm:gap-5">
-        <h1 class="font-black text-2xl nm:text-3xl text-center">
+        <h1 v-if="!onlyContact" class="font-black text-2xl nm:text-3xl text-center">
             ¡¡¡Pronto traeremos más novedades!!!
         </h1>
-        <span class="font-bold text-xl nm:text-2xl">Pero mientras tanto....</span>
+        <span v-if="!onlyContact" class="font-bold text-xl nm:text-2xl">Pero mientras tanto....</span>
         <div class="flex flex-col nm:flex-row gap-10 nm:gap-20">
             <a href="https://www.instagram.com/geartowntcg/" target="_blank"
                 class="flex flex-row items-center gap-2 animated"><img src="/images/instagram.png"
@@ -16,6 +16,7 @@
 </template>
 
 <script setup>
+defineProps({ onlyContact: { type: Boolean, default: false } })
 function toWpp() {
     window.open(`https://wa.me/${import.meta.env.VITE_CONTACT_PHONE}?text=Hola, vine a través de su web, quería hacer unas consultas!!!`, '_blank');
 }

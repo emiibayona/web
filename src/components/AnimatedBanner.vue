@@ -1,11 +1,12 @@
 <template>
-    <div class="ab-wrapper" :class="{ big }" @click="path ? router.push(cleanedPath) : null">
+    <div class="ab-wrapper" :class="[size]" @click="path ? router.push(cleanedPath) : null">
         <div class="content">
             <span v-if="text">{{ text }}</span>
             <img v-if="img" class="img-logo" :src="img" alt="Right Image" />
         </div>
         <!-- </div> -->
-        <div v-if="bg" class="bg-img" :style="{ backgroundImage: `url(${bg})` }"></div>
+        <div v-if="bg?.src" class="bg-img"
+            :style="{ backgroundImage: `url(${bg.src})`, backgroundPosition: `${bg.position || 'center'}` }"></div>
         <div class="bg-overlay"></div>
     </div>
 </template>
@@ -23,13 +24,14 @@ const props = defineProps({
         default: null,
     },
     bg: {
-        type: String,
+        type: Object,
         default:
-            "null",
+            { src: null, position: "center" },
     },
-    big: {
-        type: Boolean,
-        default: false,
+    size: {
+        type: String,
+        default: 'normal',
+        validator: (value) => ["normal", "big", "bigXl"].includes(value)
     },
     path: {
         type: String,
@@ -65,6 +67,10 @@ const cleanedPath = computed(() => {
 
     &.big {
         height: 200px;
+    }
+
+    &.bigXl {
+        height: 400px;
     }
 
     &:hover {
