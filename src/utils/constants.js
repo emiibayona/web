@@ -18,7 +18,7 @@ export const NAVIGATION = Object.freeze({
     path: "yugioh",
     name: "Yu-Gi-Oh!",
     value: "yugioh",
-    logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/yugioh.png",
+    logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/yugioh3.png",
     bg: "https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/08/yugioh-1.jpg?w=1200&h=675&fit=crop",
   },
   POKEMON: {
@@ -32,7 +32,7 @@ export const NAVIGATION = Object.freeze({
     path: "riftbound",
     name: "Riftbound",
     value: "riftbound",
-    logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/digimon.png",
+    logo: "https://cojhmla8jrdbluto.public.blob.vercel-storage.com/images/logos/riftbound2.png",
     bg: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkfPGewkn2AAbB5M98NlrAXvwykPbajfv7St2X3yWBZVg_z4TmkllnTHZgEnuB6hb8CUAineeD2kN8-eJrN8fXbhTcTX3SjYjMiC5wl6IFlQlwAWBwDrMfbauf-AybR71tT9gTO3wYsG8O/d/Digimon+Data+squad+savers.jpg",
   },
 });
