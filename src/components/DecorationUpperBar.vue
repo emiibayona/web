@@ -1,8 +1,7 @@
 <template>
     <div class="decoration-wrapper">
         <div class="images-wrapper">
-            <img v-for="src in [1, 2, 3]" :key="index" :src="`/public/images/${game}/${src}.png`"
-                class="images-content" />
+            <img v-for="src in [1, 2, 3]" :key="index" :src="`/images/${game}/${src}.png`" class="images-content" />
             <div v-if="logo" class="images-wrapper-logo">
                 <img :src="logo" class="image-logo" />
             </div>
@@ -55,6 +54,21 @@ onMounted(() => {
         // background: rgba(0, 0, 0, 0.8);
         background: #B88B3C;
         z-index: 0;
+        animation: barOpening 1s ease-out;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes barOpening {
+        0% {
+            width: 0%;
+            height: 0%;
+        }
+
+        100% {
+            width: 100%;
+            height: 20%;
+        }
+
     }
 
     .images-wrapper {
