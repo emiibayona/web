@@ -31,8 +31,17 @@ import { Analytics } from '@vercel/analytics/vue';
 import useDevices from '@/composables/useDevices';
 const devices = useDevices();
 onBeforeMount(() => {
-  localStorage.setItem("user", import.meta.env.VITE_SELLER_EMAIL);
-  localStorage.setItem("seller", import.meta.env.VITE_SELLER_EMAIL);
+  const seller = localStorage.getItem("seller")
+  const user = localStorage.getItem("user");
+
+  if (!seller) {
+    localStorage.setItem("seller", import.meta.env.VITE_SELLER_EMAIL);
+    console.info("Seller email set")
+  }
+  if (!user) {
+    console.info("User email set")
+    localStorage.setItem("user", import.meta.env.VITE_SELLER_EMAIL);
+  }
 })
 </script>
 <style lang="scss" scoped></style>
