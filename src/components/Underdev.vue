@@ -7,9 +7,9 @@
         <div class="flex flex-col nm:flex-row gap-10 nm:gap-20">
             <a href="https://www.instagram.com/geartowntcg/" target="_blank"
                 class="flex flex-row items-center gap-2 animated"><img src="/images/instagram.png"
-                    class="w-16 h-16" /><span class="">Vísitanos en nuestro Instagram</span></a>
+                    class="w-16 h-16" /><span class="text-lg">Vísitanos en nuestro Instagram</span></a>
             <span class="flex flex-row items-center gap-2 animated" @click="toWpp"><img src="/images/whatsapp.png"
-                    class="w-16 h-16" /><span class="">Contáctanos por
+                    class="w-16 h-16" /><span class="text-lg">Contáctanos por
                     Whatsapp</span></span>
         </div>
     </div>

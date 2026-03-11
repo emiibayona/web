@@ -1,5 +1,6 @@
 <template>
     <div>
+        <DecorationUpperBar class="mb-4" :logo="NAVIGATION.RIFTBOUND.logo" :game="NAVIGATION.RIFTBOUND.value" />
         <div v-if="loading" class="w-full mt-10">
             <Loader />
         </div>
@@ -15,10 +16,11 @@
 
 <script setup>
 import Empty from '@/components/atomic/Empty.vue';
+import DecorationUpperBar from '@/components/DecorationUpperBar.vue';
 import Sealed from '@/components/shop/Sealed.vue';
 import Underdev from '@/components/Underdev.vue';
 import useShop from '@/composables/useShop';
-import { GAMES } from '@/utils/constants';
+import { GAMES, NAVIGATION } from '@/utils/constants';
 import { onMounted } from 'vue';
 
 const { sealed, fetchSealedProducts, loading } = useShop(GAMES.RIFTBOUND);
