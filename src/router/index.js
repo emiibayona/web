@@ -27,6 +27,11 @@ const router = createRouter({
       component: () => import("@/pages/pokemon/index.vue"),
     },
     {
+      path: "/pokemon/sealed",
+      name: "pokemon sellado",
+      component: () => import("@/pages/pokemon/sealed/index.vue"),
+    },
+    {
       path: "/riftbound",
       name: "riftbound",
       component: () => import("@/pages/riftbound/index.vue"),

@@ -46,6 +46,10 @@ onMounted(() => {
     position: relative;
     overflow: hidden;
 
+    @include breakpoint(nm) {
+        height: 80px;
+    }
+
     .bar {
         width: 100%;
         height: 20%;
@@ -105,14 +109,14 @@ onMounted(() => {
 
             &:nth-child(2) {
                 z-index: 2;
-                --dest: 100px;
+                --dest: calc(100vw - 93vw);
                 animation-delay: 2s;
                 --dest-out: -calc(--dest * 4);
             }
 
             &:nth-child(3) {
                 z-index: 3;
-                --dest: 200px;
+                --dest: calc(100vw - 86vw);
                 --dest-out: ;
                 animation-delay: 4s;
                 --dest-out: -calc(--dest * 4);
