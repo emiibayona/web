@@ -36,9 +36,14 @@
                 <Cart class="h-[75vh] w-full" />
             </div>
         </div>
-        <Modal v-model="showModal" title="Agregar cartas desde lista" @update:modelValue="toggleModal">
-            <Textarea v-model="toCart" @keyup.enter="" placeholder="Ingrese su lista copiada de Moxfield UNICAMENTE"
-                class="h-[100px]"></Textarea>
+        <Modal v-model="showModal" title="Agregar cartas desde lista" @update:modelValue="toggleModal" >
+            <Textarea v-model="toCart" @keyup.enter="" 
+            placeholder="Lista exportada desde moxfield unicamente
+            Ejemplo:
+            1 Cloud of Faeries (DMR) 43 *F*
+            1 Devoted Druid (SPG) 138 *F*
+            1 Dust Bowl (EOS) 12
+            ...." class="h-[200px]"></Textarea>
             <Button @click="addToCart" :loading="addingToCart" class="mt-5" :disabled="toCart === ''">Agregar</Button>
         </Modal>
         <Modal v-model="showNotAdded" title="Cartas no agregadas, no disponibles" @update:modelValue="toggleNotAdded">

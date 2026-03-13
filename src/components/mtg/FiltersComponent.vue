@@ -1,11 +1,11 @@
 <template>
     <div class="flex flex-row relative"
         :class="[{ 'pb-2 border-b-2 border-black': row }, { 'min-h-[50vh] border-r-2 border-black': !row }]"
-        @keydown.enter.prevent="applyIt">
+        @keydown.enter.prevent="applyIt('inside')">
         <Filters ref="filters" :row="row" :collapsed="collapsed" :fetching="fetching">
             <template #search>
                 <div v-if="!collapsed" class="self-end mt-5 mb-3 w-full h-10">
-                    <InputField placeholder="Search singles..." @input="searched = $event" :model-value="searched"
+                    <InputField placeholder="Buscar singles..." @input="searched = $event" :model-value="searched"
                         :disabled="fetching" />
                 </div>
             </template>
@@ -72,6 +72,7 @@ const shouldClearDisabled = computed(() => {
 
 
 async function clear(cal = "inside") {
+    debugger;
     if (shouldClearDisabled.value) return;
     onClear.value = true;
     filters?.value.clean()
@@ -79,6 +80,7 @@ async function clear(cal = "inside") {
     expansionSelected.value = null;
 }
 async function applyIt(cal = "inside") {
+    debugger;
     if (cal === 'inside' && !shouldActiveApplyFilter.value) return;
     setStates({
         active: filters?.value?.activeFilters || {},
@@ -105,7 +107,7 @@ watch(() => [filters?.value?.activeFilters, expansionSelected.value, searched.va
     } else if (!props.withApply) { applyIt(); }
 }, { deep: true })
 onMounted(async () => { if (!sets.value.length) await fetchSets() })
-defineExpose({ toggle: () => collapsed.value = !collapsed.value, clear, apply: (val) => applyIt(val) })
+defineExpose({ toggle: () => collapsed.value = !collapsed.value, clear, apply: (val) => applyIt(val), shouldApply: shouldActiveApplyFilter.value })
 </script>
 
 <style lang="scss" scoped></style>

@@ -2,7 +2,7 @@
 
     <div class="flex w-full transition-all duration-300 ease-in-out h-8 max-h-[150px]"
         :class="[{ 'flex-row-reverse gap-10': row }, { 'flex-col pr-4 gap-1': !row }, { 'h-[150px]': !collapsed }, { 'justify-end': collapsed }, { 'justify-between': row && !collapsed }]">
-        <span v-if="!row" class="font-bold text-xl">Filters</span>
+        <span v-if="!row" class="font-bold text-xl">Filtros</span>
         <div v-if="!collapsed" class="flex flex-col justify-around gap-1"
             :class="[{ 'min-w-[300px]': row }, { '': !row }]">
             <slot name="search"></slot>

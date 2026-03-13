@@ -119,7 +119,7 @@ async function orderConfirmed() {
             showOrderConfirmed.value = true;
             loading.value = false;
             openWhatsApp("Hola, realice una compra por la web, te envio la informacion", `Código de compra: *${res.id}* \n\nGracias!`)
-            // cleanCart();
+            cleanCart();
         }, 2000)
     } else loading.value = false;
 }
