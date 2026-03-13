@@ -1,10 +1,10 @@
 <template>
     <div class="decoration-wrapper">
         <div class="images-wrapper">
-            <img v-for="src in [1, 2, 3]" :key="index" :src="`/images/${game}/${src}.png`" class="images-content" />
-            <div v-if="logo" class="images-wrapper-logo">
-                <img :src="logo" class="image-logo" />
+            <div class="images-wrapper-logo">
+                <img v-if="logo" :src="logo" class="image-logo" />
             </div>
+            <img v-for="src in [1, 2, 3]" :key="index" :src="`/images/${game}/${src}.png`" class="images-content" />
         </div>
         <div class="bar">
         </div>
@@ -69,7 +69,7 @@ onMounted(() => {
         z-index: 1;
         bottom: 0;
 
-        @include flex(row, center, center);
+        @include flex(row, center, flex-end);
         gap: 10px;
 
         &-logo {
@@ -79,6 +79,16 @@ onMounted(() => {
             animation: logoSlide 1.5s ease-out;
             opacity: 0;
             animation-fill-mode: forwards;
+
+            @include breakpoint(nm) {
+                justify-content: flex-end;
+                margin-right: 10px;
+            }
+
+            // @include breakpoint(hd) {
+            //     justify-content: flex-end;
+            //     margin-right: 10px;
+            // }
 
             .image-logo {
                 align-self: center;
@@ -100,27 +110,61 @@ onMounted(() => {
             animation: slideAndStay 10s ease-out;
 
 
-            &:nth-child(1) {
+            &:nth-child(2) {
                 z-index: 1;
                 --dest: 0px;
                 animation-delay: 1s;
                 --dest-out: -calc(--dest * 4);
             }
 
-            &:nth-child(2) {
+            &:nth-child(3) {
                 z-index: 2;
                 --dest: calc(100vw - 93vw);
                 animation-delay: 2s;
                 --dest-out: -calc(--dest * 4);
             }
 
-            &:nth-child(3) {
+            &:nth-child(4) {
                 z-index: 3;
                 --dest: calc(100vw - 86vw);
-                --dest-out: ;
                 animation-delay: 4s;
                 --dest-out: -calc(--dest * 4);
             }
+
+
+            @include breakpoint(nm) {
+                width: 80px;
+
+                &:nth-child(2) {
+                    --dest: 0px;
+                }
+
+                &:nth-child(3) {
+                    --dest: 15vw;
+                }
+
+                &:nth-child(4) {
+                    --dest: 30vw;
+                }
+            }
+
+            // @include breakpoint(hd) {
+            //     width: 80px;
+
+            //     &:nth-child(2) {
+            //         --dest: 0px;
+            //     }
+
+            //     &:nth-child(3) {
+            //         --dest: 15vw
+            //     }
+
+            //     &:nth-child(4) {
+            //         --dest: 30vw;
+            //     }
+            // }
+
+
         }
     }
 
