@@ -83,7 +83,9 @@ import useUser from '@/composables/useUser';
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import useDevices from "@/composables/useDevices";
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const devices = useDevices();
 const toast = useToast();
 const { fetchCollection, collection, collectionMapped, onFetching, binders, fetchBinders, createBinder, addCards, updateCards } = useCollection();
@@ -220,7 +222,10 @@ watch(binderToShow, () => {
 })
 onMounted(async () => {
     await fetchBinders(import.meta.env.VITE_SELLER_COLLECTION_ID);
-    await initCollection();
+    binderToShow.value = binders?.value?.find(x => x.id === route.query.binder) || null
+    if (!binderToShow.value) {
+        await initCollection();
+    }
 });
 
 </script>
@@ -295,8 +300,6 @@ onMounted(async () => {
             }
         }
     }
-
-    .cart-wrapper {}
 }
 
 .flip-container {

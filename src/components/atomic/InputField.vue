@@ -47,7 +47,6 @@ function scheduleSearch(value, type) {
 }
 
 function onInput(event) {
-    console.log(event);
     if (props.disabled) return
     const value = event.target.value
     emit('update:modelValue', props.type === 'number' ? parseInt(value) : value)

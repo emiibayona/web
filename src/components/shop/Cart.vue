@@ -7,15 +7,14 @@
             <MiniCartCard v-for="item in gameCart" :key="item.id" :item="item" />
         </ul>
 
-        <div v-if="cart?.length" class="w-full flex mt-4">
-            <button @click="console.log(items)"
-                class="ml-auto px-4 py-2 rounded-md font-medium shadow-sm bg-gt-moustard-500 hover:bg-gt-moustard-600 active:bg-gt-moustard-700 text-gray-800 transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-gt-moustard-300">
-                Confirmar compra
-            </button>
+        <div v-if="gameCart?.length" class="w-full flex mt-4">
+            <Button @click="$router.push('/cart')" size="xsmall">
+                Ir a carrito
+            </Button>
         </div>
 
-        <div v-if="gameCart?.length === 0" class="mt-6 text-center text-gray-500">
-            Your cart is empty.
+        <div v-if="!gameCart?.length" class="mt-6 text-center text-gray-500">
+            Carrito vacio.
         </div>
     </div>
 </template>
@@ -25,6 +24,7 @@ import useCarts from "@/composables/useCart";
 import { GAMES, RECIPIENTS_LISTS } from "@/utils/constants";
 import { computed, } from "vue";
 import MiniCartCard from "./MiniCartCard.vue";
+import Button from "@/components/atomic/Button.vue";
 
 defineProps({
     edit: { type: Boolean, default: false }
@@ -34,13 +34,6 @@ const { cart, } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
 
 const gameCart = computed(() => cart.value[GAMES.MAGIC] || []);
 const totalCart = computed(() => gameCart.value.reduce((prev, curr) => prev += curr.sets.reduce((prevSet, currSet) => prevSet += currSet.qty, 0), 0))
-// const formatCurrency = (v) => {
-//     if (!v) return null;
-//     return new Intl.NumberFormat(undefined, {
-//         style: "currency",
-//         currency: "USD",
-//     }).format(v);
-// };
 </script>
 
 <style scoped lang="scss">

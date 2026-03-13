@@ -25,9 +25,8 @@
             </div>
             <div class="cards-wrapper">
                 <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
-
-                <div v-if="!fetching" class="cards-wrapper_inner gap-8">
-                    <Empty v-if="!collectionMapped.length" />
+                <div v-if="!fetching && !mounting" class="cards-wrapper_inner gap-8">
+                    <Empty v-if="!collectionMapped.length && (!mounting || !fetching)" />
                     <div class="list">
                         <MtgCard v-for="(card, index) in collectionMapped" :id="index" :index="index" :card="card" shop
                             @add-to-cart="add" @add-to-wishlist="addWishlist" />
@@ -96,6 +95,7 @@ const showModal = ref(false);
 const showNotAdded = ref(false);
 const addingToCart = ref(false);
 const listNotAdded = ref([])
+const mounting = ref(true);
 
 const wings = ref({ left: false, right: false })
 const { add } = useCarts(GAMES.MAGIC);
@@ -216,10 +216,10 @@ onMounted(async () => {
             filtersComponent?.value?.clear('outside');
         }
     });
-    console.log(route.query)
     await fetchBinders(import.meta.env.VITE_SELLER_COLLECTION_ID);
     binderToShow.value = binders?.value?.find(x => x.id === route.query.binder) || null
     await initCollection();
+    mounting.value = false;
 });
 onUnmounted(() => {
     document.removeEventListener('keydown', () => { })

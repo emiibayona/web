@@ -92,6 +92,11 @@ const router = createRouter({
       component: () => import("@/pages/admin/magic/collection.vue"),
     },
     {
+      path: "/admin/magic/binders",
+      name: "Magic binders",
+      component: () => import("@/pages/admin/magic/binders.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "not-found",
       component: () => import("@/pages/NotFound.vue"),
