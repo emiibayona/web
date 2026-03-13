@@ -13,6 +13,10 @@
                 <Dropdown v-if="!collapsed" class="w-full" :model-value="expansionSelected" :items="mappedSets"
                     placeholder="Expansion" @update:model-value="(va) => expansionSelected = va" :loading="fetching" />
             </template>
+            <template #dropdown>
+                <slot name="binder">
+                </slot>
+            </template>
 
             <template #apply>
                 <div class="flex flex-row justify-between gap-2" :class="[{ '': row }, { 'mt-3': !row }]">
@@ -53,7 +57,7 @@ const searched = ref("");
 const expansionSelected = ref(null);
 const mappedSets = computed(() => sets?.value?.map(x => ({ label: x.name, value: x.code })))
 
-const initialStateValues = { active: {}, searched: "", expansionSelected: null };
+const initialStateValues = { active: {}, searched: "", expansionSelected: null, };
 const initialState = ref({ ...initialStateValues });
 const currentState = ref({ ...initialStateValues });
 const setStates = (ini = null) => {
@@ -72,7 +76,6 @@ const shouldClearDisabled = computed(() => {
 
 
 async function clear(cal = "inside") {
-    debugger;
     if (shouldClearDisabled.value) return;
     onClear.value = true;
     filters?.value.clean()
@@ -80,17 +83,17 @@ async function clear(cal = "inside") {
     expansionSelected.value = null;
 }
 async function applyIt(cal = "inside") {
-    debugger;
     if (cal === 'inside' && !shouldActiveApplyFilter.value) return;
     setStates({
         active: filters?.value?.activeFilters || {},
         searched: searched.value,
-        expansionSelected: expansionSelected.value
+        expansionSelected: expansionSelected.value,
     })
     emits("apply-filters", {
         page: 1,
         offset: 0,
-        limit: props.limit, name: searched.value || ''
+        limit: props.limit,
+        name: searched.value || '',
     }, { ...(filters?.value?.activeFilters || {}), set: expansionSelected.value || '' })
 }
 watch(() => [filters?.value?.activeFilters, expansionSelected.value, searched.value], () => {

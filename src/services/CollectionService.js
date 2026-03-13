@@ -33,9 +33,9 @@ export default {
       .then((res) => res)
       .catch((error) => error.response);
   },
-  createBinders: async function ({ collectionId, body }) {
+  createBinders: async function (body) {
     return api
-      .post(`collections/${collectionId}/binders`, body)
+      .post(`collections/${body.collectionId}/binders`, body)
       .then((res) => res)
       .catch((error) => error.response);
   },

@@ -11,7 +11,6 @@
                         <span class="text-xl mb-4">Binder:</span>
                         <span class="font-thin text-xs mb-2">Si no eliges un binder, se colocara en el default</span>
                         <div class="flex flex-row w-full gap-2">
-                            <!-- <span class="text-xl w-1/2">Default</span> -->
                             <InputField :modelValue="binderTyped" class="w-1/2" placeholder="Escribe un nombre"
                                 @input="val => binderTyped = val" type="text" />
                             <Dropdown class="w-1/2 hover:opacity-100"
@@ -41,6 +40,11 @@
                             <template #search>
                                 <InputField v-show="!loading" placeholder="Search singles..." @input="searched = $event"
                                     :model-value="searched" />
+                            </template>
+                            <template #binder>
+                                <Dropdown placeholder="Binder..." :items="bindersMapped" :model-value="binderToShow"
+                                    @update:model-value="(va) => binderToShow = va">
+                                </Dropdown>
                             </template>
                         </FiltersComponent>
                     </div>
@@ -78,7 +82,9 @@ import useCollection from '@/composables/mtg/useCollection';
 import useUser from '@/composables/useUser';
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import useDevices from "@/composables/useDevices";
 
+const devices = useDevices();
 const toast = useToast();
 const { fetchCollection, collection, collectionMapped, onFetching, binders, fetchBinders, createBinder, addCards, updateCards } = useCollection();
 const { adminIsLoggedIn } = useUser();
@@ -89,6 +95,7 @@ const showAddModal = ref(false);
 
 const bindersMapped = computed(() => binders?.value?.map(x => ({ value: x, label: x.name, })))
 const binderSelected = ref(null);
+const binderToShow = ref(null);
 const binderTyped = ref(null)
 
 const searched = ref("");
@@ -98,39 +105,27 @@ const params = ref({});
 const page = ref(1);
 
 const limit = computed(() => {
-    const wd = width?.value;
+    let val = 12;
+    const wd = devices.width.value;
     if (wd >= 2560) {
-        return 28
+        val = 30
     } else if (wd >= 1920) {
-        return 28
+        val = 25
     } else if (wd >= 1660) {
-        return 25
+        val = 24
     } else if (wd >= 1366) {
-        return 24
+        val = 21
     } else if (wd < 1366) {
-        return 18
-    } else {
-        return 12
+        val = 18
     }
+    return val;
 });
 
-// TODO: Move to composable, it's not working
-const width = ref(window.innerWidth);
-const height = ref(window.innerHeight);
-
-const handleResize = () => {
-    width.value = window.innerWidth;
-    height.value = window.innerHeight;
-};
 
 async function initCollection(addParams = null, filt = null) {
     if (onFetching.value) return;
     if (filt) {
         cardFilters.value = filt;
-    }
-    // console.log(addParams, filt, searched.value)
-    if (searched.value) {
-
     }
 
     params.value = {
@@ -140,6 +135,7 @@ async function initCollection(addParams = null, filt = null) {
         cardWhere: JSON.stringify(cardFilters.value || {}),
         cards: true,
         name: searched.value || null,
+        binder: binderToShow?.value?.id || null,
         ...(addParams || {}),
     };
 
@@ -168,8 +164,9 @@ async function uploadCards() {
         }
         let binder = null;
         const binderTypedExisting = binders.value.find(x => x.name === binderTyped.value)
-        if (binderTyped.value && !binderTypedExisting || !binders.value.length) {
-            binder = await createBinder({ body: { name: binderTyped.value || "default" }, collectionId: collection.value.collectionId })
+        debugger;
+        if (binderTyped.value && !binderTypedExisting) {
+            binder = await createBinder({ name: binderTyped.value || "default", collectionId: collection.value.collectionId })
         } else {
             binder = binderTypedExisting || binderSelected?.value;
         }
@@ -195,14 +192,17 @@ async function uploadCards() {
             openAddCardsModal(false);
         }, 1000);
     } catch (error) {
+        uploading.value = false;
         console.error(error)
     }
 }
 
 async function updateAmountCard(va) {
     uploading.value = true;
-    await updateCards(collection?.value?.collectionId, [va]);
-    filtersComponent?.value?.apply("external");
+    if (va.quantity !== va.amount) {
+        await updateCards(collection?.value?.collectionId, [va]);
+        filtersComponent?.value?.apply("external");
+    }
     uploading.value = false;
 }
 
@@ -215,14 +215,12 @@ watch(binderTyped, () => {
 watch(binderSelected, () => {
     binderTyped.value = binderSelected.value ? null : binderTyped.value;
 })
+watch(binderToShow, () => {
+    filtersComponent?.value?.apply("external")
+})
 onMounted(async () => {
-    window.addEventListener("resize", handleResize);
+    await fetchBinders(import.meta.env.VITE_SELLER_COLLECTION_ID);
     await initCollection();
-    await fetchBinders(collection?.value?.collectionId);
-
-});
-onUnmounted(() => {
-    window.removeEventListener("resize", handleResize);
 });
 
 </script>

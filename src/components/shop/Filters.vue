@@ -7,6 +7,7 @@
             :class="[{ 'min-w-[300px]': row }, { '': !row }]">
             <slot name="search"></slot>
             <slot name="expansions"></slot>
+            <slot name="dropdown"></slot>
         </div>
         <slot v-if="!row" name="apply"></slot>
         <div v-if="filtersMapped" class="flex"

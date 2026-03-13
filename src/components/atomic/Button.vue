@@ -6,7 +6,7 @@
             'btn--outlined': outlined,
             'btn--disabled': disabled || loading
         }
-    ]" :style="{ '--btn-color': color }" :disabled="disabled" v-bind="$attrs">
+    ]" :style="[{ '--btn-color': color }, { 'white-space': wrap }]" :disabled="disabled" v-bind="$attrs">
         <div class="btn-slot" v-if="!loading">
             <slot />
         </div>
@@ -22,6 +22,11 @@ defineProps({
         type: String,
         default: 'md',
         validator: (value) => ['xxsmall', 'xsmall', 'small', 'md', 'lg', 'block', 'fit', 'block-xy'].includes(value)
+    },
+    wrap: {
+        type: String,
+        default: 'nowrap',
+        validator: (value) => ['nowrap', 'normal'].includes(value)
     },
     color: {
         type: String,

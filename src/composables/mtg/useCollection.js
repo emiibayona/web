@@ -49,12 +49,12 @@ const useCollection = () => {
   }
   async function createBinder(params) {
     try {
-      if (!params.body.name) throw "Name required";
+      if (!params.name) throw "Name required";
       const res = await store.createBinders(params);
       await fetchBinders(params.collectionId);
       return res;
     } catch (error) {
-      console.error("Composable error - creating binder", error);
+      throw { message: "Composable error - creating binder", error };
     }
   }
 

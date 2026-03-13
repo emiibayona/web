@@ -18,7 +18,7 @@ const useSales = () => {
   };
 
   const parseCart = (game, values) => {
-    const cart = [];
+    let cart = [];
     switch (game) {
       case "magic":
         values?.forEach((x) => {

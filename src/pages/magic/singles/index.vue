@@ -13,7 +13,15 @@
                 'active': leftWingIsActive
             }]">
                 <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
-                    ref="filtersComponent" class="w-[230px] flex-1 " />
+                    ref="filtersComponent" class="w-[230px] flex-1 ">
+                    <template #binder>
+                        <Button v-if="binderActive" class="mt-3" @click="removeBinder" size="block-xy"
+                            wrap="normal">Mostrar
+                            todas las
+                            cartas
+                            disponibles</Button>
+                    </template>
+                </FiltersComponent>
             </div>
             <div class="cards-wrapper">
                 <Tabs :tabs="tabs" :active-tab="activeTab" @change="changeTab" count-disable />
@@ -36,9 +44,8 @@
                 <Cart class="h-[75vh] w-full" />
             </div>
         </div>
-        <Modal v-model="showModal" title="Agregar cartas desde lista" @update:modelValue="toggleModal" >
-            <Textarea v-model="toCart" @keyup.enter="" 
-            placeholder="Lista exportada desde moxfield unicamente
+        <Modal v-model="showModal" title="Agregar cartas desde lista" @update:modelValue="toggleModal">
+            <Textarea v-model="toCart" @keyup.enter="" placeholder="Lista exportada desde moxfield unicamente
             Ejemplo:
             1 Cloud of Faeries (DMR) 43 *F*
             1 Devoted Druid (SPG) 138 *F*
@@ -77,8 +84,11 @@ import Modal from "@/components/atomic/Modal.vue";
 import Textarea from "@/components/atomic/Textarea.vue";
 import { parseList } from "@/utils/utils";
 import useDevices from "@/composables/useDevices";
+import { useRoute, useRouter } from "vue-router";
 const devices = useDevices();
 
+const route = useRoute();
+const router = useRouter();
 const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, value: 'foil', name: "foil" }])
 const activeTab = ref(0);
 const toCart = ref("");
@@ -91,13 +101,16 @@ const wings = ref({ left: false, right: false })
 const { add } = useCarts(GAMES.MAGIC);
 const { add: addWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
 
-const { fetchCollection, collection, collectionMapped, fetching, getListToCart } = useCollection();
-const filtersComponent = ref(null)
+const { fetchCollection, collection, collectionMapped, fetching, getListToCart, binders,
+    fetchBinders } = useCollection();
+
+const binderToShow = ref(null);
+
 const cardFilters = ref({});
+const filtersComponent = ref(null)
 const params = ref({ page: 1 });
-
-
 const page = ref(1);
+
 const limit = computed(() => {
     let val = 12;
     const wd = devices.width.value;
@@ -117,7 +130,7 @@ const limit = computed(() => {
 
 const leftWingIsActive = computed(() => devices?.width?.value > 1000 ? false : wings.value.left)
 const rightWingIsActive = computed(() => devices?.width?.value > 1000 ? false : wings.value.right)
-
+const binderActive = computed(() => !!route.query.binder)
 
 const toggleModal = (val) => {
     showModal.value = val;
@@ -175,6 +188,7 @@ async function initCollection(addParams = null, filt = null) {
         treatment: addParams?.treatment || tabs.value[activeTab.value]?.value,
         cardWhere: JSON.stringify(cardFilters.value || {}),
         cards: true,
+        binder: binderToShow?.value?.id || null,
         ...(addParams || {}),
     };
 
@@ -189,6 +203,11 @@ async function changeTab(tab) {
     await initCollection({ ...params.value, page: 1, offset: 0, limit: limit, treatment: tab.value });
 }
 
+async function removeBinder() {
+    binderToShow.value = null;
+    router.replace({ query: {} });
+    await initCollection();
+}
 
 watch(page, async () => await initCollection())
 onMounted(async () => {
@@ -197,10 +216,12 @@ onMounted(async () => {
             filtersComponent?.value?.clear('outside');
         }
     });
+    console.log(route.query)
+    await fetchBinders(import.meta.env.VITE_SELLER_COLLECTION_ID);
+    binderToShow.value = binders?.value?.find(x => x.id === route.query.binder) || null
     await initCollection();
 });
 onUnmounted(() => {
-
     document.removeEventListener('keydown', () => { })
 });
 
@@ -208,15 +229,12 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .singles-wrapper {
-    // padding: 0 4px;
     width: 100%;
     position: relative;
     display: grid;
     scrollbar-width: none;
-    // height: 100vh;
 
     @include breakpoint(nm) {
-        // grid-template-columns: 230px auto 170px;
         grid-template-columns: 100%;
     }
 
