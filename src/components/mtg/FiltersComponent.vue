@@ -5,12 +5,13 @@
         <Filters ref="filters" :row="row" :collapsed="collapsed" :fetching="fetching">
             <template #search>
                 <div v-if="!collapsed" class="self-end mt-5 mb-3 w-full h-10">
-                    <InputField placeholder="Search singles..." @input="searched = $event" :model-value="searched" />
+                    <InputField placeholder="Search singles..." @input="searched = $event" :model-value="searched"
+                        :disabled="fetching" />
                 </div>
             </template>
             <template #expansions>
                 <Dropdown v-if="!collapsed" class="w-full" :model-value="expansionSelected" :items="mappedSets"
-                    placeholder="Expansion" @update:model-value="(va) => expansionSelected = va" />
+                    placeholder="Expansion" @update:model-value="(va) => expansionSelected = va" :loading="fetching" />
             </template>
 
             <template #apply>

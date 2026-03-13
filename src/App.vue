@@ -17,6 +17,7 @@
         </div>
       </template>
     </Toast>
+    <div id="overlay" class="overlay"></div>
     <Analytics />
     <!-- <Footer></Footer> -->
   </div>
@@ -44,4 +45,23 @@ onBeforeMount(() => {
   }
 })
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 998;
+}
+
+.overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+</style>

@@ -9,7 +9,7 @@
             <Underdev only-contact />
         </Empty>
         <div v-else class="grid grid-cols-1 nm:grid-cols-3  gap-10">
-            <Sealed v-for="(value, index) in sealed?.rows" class="" :key="index" :value="value" />
+            <Sealed v-for="(value, index) in sealed?.rows" class="" :key="index" :value="value" zoomeable />
         </div>
     </div>
 </template>

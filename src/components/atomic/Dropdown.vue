@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown" ref="root">
+    <div class="dropdown" ref="root" :class="{ loading }">
         <button class="toggle" @click="open = !open">
             <span class="truncate">{{ selectedLabel }}</span>
             <span v-if="!modelValue" class="caret">▾</span>
@@ -30,7 +30,8 @@ const props = defineProps({
     modelValue: [String, Number, Object],
     items: { type: Array, default: () => [] },
     grouped: Boolean,
-    placeholder: { type: String, default: 'Select' }
+    placeholder: { type: String, default: 'Select' },
+    loading: { type: Boolean, default: false }
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -74,6 +75,11 @@ onBeforeUnmount(() => setListener())
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     background: #FFEDB8;
+
+    &.loading {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
 }
 
 .toggle {

@@ -1,5 +1,6 @@
 <template>
-    <div class="flex items-center w-full max-w-md bg-white border border-gray-200 rounded-md px-3 py-2 shadow-sm">
+    <div class="flex items-center w-full max-w-md bg-white border border-gray-200 rounded-md px-3 py-2 shadow-sm"
+        :class="{ disabled }">
         <svg v-if="type === 'search'" class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="none"
             aria-hidden="true">
             <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -11,7 +12,7 @@
         <input :type="type" :placeholder="placeholder" :value="modelValue" @input="onInput"
             @keydown.enter.prevent="onEnter"
             class="no-spinners flex-1 outline-none text-sm text-gray-800 placeholder-gray-400 bg-transparent w-full"
-            :aria-label="placeholder" ref="inputRef" v-bind="$attrs" />
+            :aria-label="placeholder" ref="inputRef" v-bind="$attrs" :disabled="disabled" />
     </div>
 </template>
 
@@ -36,6 +37,7 @@ const inputRef = ref(null);
 const typesToIgnoreOnOnlyEnter = ['deleteContentBackward', "deleteContentForward", 'insertText', undefined];
 
 function scheduleSearch(value, type) {
+    if (props.disabled) return
     if (props.onlyEnter && typesToIgnoreOnOnlyEnter.includes(type)) return;
     if (timer.value) clearTimeout(timer.value)
     timer.value = setTimeout(() => {
@@ -45,12 +47,14 @@ function scheduleSearch(value, type) {
 }
 
 function onInput(event) {
+    if (props.disabled) return
     const value = event.target.value
     emit('update:modelValue', props.type === 'number' ? parseInt(value) : value)
     scheduleSearch(value, event.inputType)
 }
 
 function onEnter() {
+    if (props.disabled) return
     if (!props.onlyEnter) return;
     if (timer.value) {
         clearTimeout(timer.value)
@@ -68,6 +72,17 @@ defineExpose({
 });
 </script>
 <style lang="scss" scoped>
+.disabled {
+    input {
+        opacity: 0.5;
+    }
+
+    svg {
+        opacity: 0.5;
+
+    }
+}
+
 .no-spinners {
     -moz-appearance: textfield;
 }
