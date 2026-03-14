@@ -1,5 +1,5 @@
 <template>
-    <div class="nm:min-h-[calc(100vh-250px)]">
+    <div class="">
         <div class="bg-header px-4">
             <!-- <HeaderVue></HeaderVue> -->
         </div>
@@ -10,11 +10,11 @@
                     <HeaderCarousel class="pb-4" />
                 </div> -->
 
-            <div class="flex flex-col w-full">
+            <div class="flex flex-col w-full mb-4">
                 <span class="text-xl font-bold pb-4">Nuestros juegos</span>
                 <div class="grid hd:grid-cols-2 gap-4 grid-cols-1">
-                    <AnimatedBanner v-for="(item, index) in data" :key="index" :img="item.logo" :bg="item.bg" size="big"
-                        :path="item.path" />
+                    <AnimatedBanner v-for="(item, index) in data" :key="index" :img="item.logo" :bg="item.bg"
+                        :size="devices.width.value > 1080 ? 'bigXL' : 'bigXXL'" :path="item.path" :bgDark="false" />
 
                 </div>
             </div>
@@ -28,8 +28,10 @@
 import { computed } from "vue";
 import AnimatedBanner from "@/components/AnimatedBanner.vue";
 import { NAVIGATION } from "@/utils/constants";
+import useDevices from "@/composables/useDevices";
 
 const data = computed(() => Object.values(NAVIGATION).filter(x => !x.home));
+const devices = useDevices();
 </script>
 
 <style scoped lang="scss">
@@ -38,7 +40,7 @@ const data = computed(() => Object.values(NAVIGATION).filter(x => !x.home));
     background-repeat: no-repeat;
     background-size: contain;
 
-    background-image: url("/public/images/banner.gif");
+    background-image: url("/images/banner.gif");
     margin-left: -18px;
 
     @include breakpoint(nm) {

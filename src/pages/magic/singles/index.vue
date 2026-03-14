@@ -13,7 +13,7 @@
                 'active': leftWingIsActive
             }]">
                 <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
-                    ref="filtersComponent" class="w-[230px] flex-1 ">
+                    title="Filtros" ref="filtersComponent" class="w-[230px] flex-1 ">
                     <template #binder>
                         <Button v-if="binderActive" class="mt-3" @click="removeBinder" size="block-xy"
                             wrap="normal">Mostrar
@@ -314,8 +314,8 @@ onUnmounted(() => {
         height: 75vh;
         width: 100%;
         overflow-y: auto;
-        scrollbar-width: none;
         overflow-x: hidden;
+        scrollbar-width: thin;
 
 
 
@@ -325,6 +325,7 @@ onUnmounted(() => {
             position: absolute;
             z-index: 9999;
             @include bg-site();
+            scrollbar-width: none;
             // background-color: red;
             ;
             left: 0;
@@ -342,10 +343,6 @@ onUnmounted(() => {
     .cards-wrapper {
         @include flex(column, flex-start, flex-start);
         width: 100%;
-
-        // @include breakpoint(hd2) {
-        //     height: 100vh;
-        // }
 
         &_inner {
             @include flex(column, flex-start, center);

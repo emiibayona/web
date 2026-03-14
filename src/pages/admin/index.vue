@@ -1,14 +1,16 @@
 <template>
-    <div v-if="adminIsLoggedIn" class="px-8">
-        <h1 class="text-2xl font-bold mb-5">Panel de Admin</h1>
+    <div class="h-screen">
+        <div v-if="adminIsLoggedIn" class="px-8">
+            <h1 class="text-2xl font-bold mb-5">Panel de Admin</h1>
 
-        <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
-            <div class="tab-content">
-                <AdminPages :pages="tabs[activeTab]?.pages" />
-            </div>
-        </Tabs>
+            <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
+                <div class="tab-content">
+                    <AdminPages :pages="tabs[activeTab]?.pages" />
+                </div>
+            </Tabs>
 
 
+        </div>
     </div>
     <AdminLogin />
 </template>

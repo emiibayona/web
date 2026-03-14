@@ -28,15 +28,15 @@
 
             <div class="singles-wrapper" id="singles-wrapper">
                 <div class="filter-wrapper border-r-2 border-black">
-                    <div class="flex flex-row gap-5 mb-2 items-center sticky top-0 bg-site ">
+                    <div class="flex flex-row gap-5 mb-2 items-center bg-site absolute -top-11 z-30">
                         <h1 class="font-bold">Mi Colleción</h1>
                         <Button size="xsmall" @click="openAddCardsModal(true)">
                             + Agregar cartas
                         </Button>
                     </div>
                     <div class="filter-wrapper-list">
-                        <FiltersComponent with-apply @apply-filters="initCollection" ref="filtersComponent"
-                            @clean="searched = null" :limit="limit" class="w-[230px] flex-1">
+                        <FiltersComponent with-apply @apply-filters="initCollection" ref="filtersComponent" title=""
+                            @clean="searched = null" :limit="limit" class="w-[230px] flex-1" without-move>
                             <template #search>
                                 <InputField v-show="!loading" placeholder="Search singles..." @input="searched = $event"
                                     :model-value="searched" />

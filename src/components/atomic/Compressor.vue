@@ -23,11 +23,12 @@ defineProps({
     alwaysOpen: { type: Boolean, default: false },
     icon: { type: Boolean, default: true },
     speedy: { type: Boolean, default: false },
+    withoutMove: { type: Boolean, default: false },
 });
 const expanded = ref(false)
 const toggle = () => {
     expanded.value = !expanded.value
-    if (devices.width.value > 999) {
+    if (devices.width.value > 999 && !props.withoutMove) {
         setTimeout(() => {
             if (expanded.value && attrs.id) {
                 document.getElementById(attrs.id)?.scrollIntoView({ behavior: "smooth" })

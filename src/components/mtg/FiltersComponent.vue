@@ -2,7 +2,8 @@
     <div class="flex flex-row relative"
         :class="[{ 'pb-2 border-b-2 border-black': row }, { 'min-h-[50vh] border-r-2 border-black': !row }]"
         @keydown.enter.prevent="applyIt('inside')">
-        <Filters ref="filters" :row="row" :collapsed="collapsed" :fetching="fetching">
+        <Filters ref="filters" :row="row" :collapsed="collapsed" :fetching="fetching" :without-move="withoutMove"
+            :title="title">
             <template #search>
                 <div v-if="!collapsed" class="self-end mt-5 mb-3 w-full h-10">
                     <InputField placeholder="Buscar singles..." @input="searched = $event" :model-value="searched"
@@ -46,7 +47,9 @@ const props = defineProps({
     collapsed: { type: Boolean, default: false },
     fetching: { type: Boolean, default: false },
     withApply: { type: Boolean, default: false },
-    limit: { type: Number, default: 18 }
+    limit: { type: Number, default: 18 },
+    withoutMove: { type: Boolean, default: false },
+    title: { String, default: "" }
 })
 const emits = defineEmits(["apply-filters", "clean"])
 const { fetchSets, sets } = useSets();

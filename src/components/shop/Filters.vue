@@ -2,7 +2,7 @@
 
     <div class="flex w-full transition-all duration-300 ease-in-out h-8 max-h-[150px]"
         :class="[{ 'flex-row-reverse gap-10': row }, { 'flex-col pr-4 gap-1': !row }, { 'h-[150px]': !collapsed }, { 'justify-end': collapsed }, { 'justify-between': row && !collapsed }]">
-        <span v-if="!row" class="font-bold text-xl">Filtros</span>
+        <span v-if="title" class="font-bold text-xl">{{ title }}</span>
         <div v-if="!collapsed" class="flex flex-col justify-around gap-1"
             :class="[{ 'min-w-[300px]': row }, { '': !row }]">
             <slot name="search"></slot>
@@ -14,7 +14,8 @@
             :class="[{ 'flex-col justify-between min-w-[700px] max-w-[900px]': row }, { 'flex-col mt-4 mb-2 gap-2': !row }]">
             <div v-for="(groupFilter, index) in filtersMapped" :key="`fg-${index}-${cleaned}`">
                 <!-- Name -->
-                <Compressor v-if="groupFilter[0] !== 'Colors' && !collapsed" :id="`compressor-${index}-${cleaned}`">
+                <Compressor v-if="groupFilter[0] !== 'Colors' && !collapsed" :id="`compressor-${index}-${cleaned}`"
+                    :without-move="withoutMove">
                     <template #title><span class="font-bold w-[70px]">{{ groupFilter[0] }}</span></template>
                     <template #content>
                         <div class="content flex"
@@ -58,7 +59,9 @@ import Compressor from '../atomic/Compressor.vue';
 const props = defineProps({
     row: { type: Boolean, default: false },
     collapsed: { type: Boolean, default: false },
-    fetching: { type: Boolean, default: false }
+    fetching: { type: Boolean, default: false },
+    withoutMove: { type: Boolean, default: false },
+    title: { type: String, default: "" }
 })
 
 const { magicFilters } = useFilters(GAMES.MAGIC);

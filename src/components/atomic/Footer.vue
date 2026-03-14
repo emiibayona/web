@@ -1,12 +1,14 @@
 <template>
-    <div class="h-full flex flex-col justify-between">
-        <slot></slot>
+    <div class="h-screnn flex flex-col justify-between">
+        <div class="h-full">
+            <slot></slot>
+        </div>
 
         <footer class="footer">
             <div class="footer-content">
                 <div class="grid  gap-5 grid-cols-1 nm:grid-cols-2 ">
                     <div class="h-full">
-                        <div class="flex flex-col gap-4 justify-center h-full">
+                        <div class="flex flex-col gap-4 justify-center h-full items-center hd:items-start">
                             <a href="https://www.instagram.com/geartowntcg/" target="_blank"
                                 class="flex flex-row items-center gap-2 animated"><img src="/images/instagram.png"
                                     class="w-10 h-10" /><span class="">Vísitanos en nuestro Instagram</span></a>
