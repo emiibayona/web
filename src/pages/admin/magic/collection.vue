@@ -50,8 +50,10 @@
                     </div>
                 </div>
 
-                <div v-if="!onFetching" class="cards-wrapper_inner gap-8">
-                    <Empty v-if="!collectionMapped.length" />
+                <!-- <div v-if="!fetching && !mounting" class="cards-wrapper_inner gap-8">
+                    <Empty v-if="!collectionMapped.length && (!mounting || !fetching)" /> -->
+                <div v-if="!onFetching && !mounting" class="cards-wrapper_inner gap-8">
+                    <Empty v-if="!collectionMapped.length && (!mounting || !onFetching)" />
                     <div class="list">
                         <MtgCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable
                             @update="updateAmountCard" :updating="uploading" />
@@ -93,6 +95,7 @@ const { adminIsLoggedIn } = useUser();
 const loading = ref(false);
 const uploading = ref(false);
 const showAddModal = ref(false);
+const mounting = ref(true);
 
 
 const bindersMapped = computed(() => binders?.value?.map(x => ({ value: x, label: x.name, })))
@@ -225,6 +228,7 @@ onMounted(async () => {
     if (!binderToShow.value) {
         await initCollection();
     }
+    mounting.value = false;
 });
 
 </script>
@@ -232,6 +236,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .singles-wrapper {
     // @include flex();
+    margin-top: 4px;
     width: 100%;
     position: relative;
     display: grid;

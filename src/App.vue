@@ -12,14 +12,14 @@
             style="width: 45px; aspect-ratio: 23/32; object-fit: cover; border-radius: 2px;" />
           <div class="flex flex-col gap-1">
             <span class="font-bold text-base">{{ slotProps.message.summary }}</span>
-            <span class="text-xs">{{ slotProps.message.detail }}</span>
+            <span class="text-sm">{{ slotProps.message.detail }}</span>
           </div>
         </div>
       </template>
     </Toast>
     <div id="overlay" class="overlay"></div>
     <Analytics />
-    <!-- <Footer></Footer> -->
+    <Footer></Footer>
   </div>
 
 </template>

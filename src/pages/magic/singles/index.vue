@@ -43,19 +43,23 @@
                 <Cart class="h-[75vh] w-full" />
             </div>
         </div>
-        <Modal v-model="showModal" title="Agregar cartas desde lista" @update:modelValue="toggleModal">
+        <Modal v-model="showModal" title="Agregar cartas desde lista" close-disabled>
             <Textarea v-model="toCart" @keyup.enter="" placeholder="Lista exportada desde moxfield unicamente
             Ejemplo:
             1 Cloud of Faeries (DMR) 43 *F*
             1 Devoted Druid (SPG) 138 *F*
             1 Dust Bowl (EOS) 12
             ...." class="h-[200px]"></Textarea>
-            <Button @click="addToCart" :loading="addingToCart" class="mt-5" :disabled="toCart === ''">Agregar</Button>
+            <div class="flex flex-row justify-between">
+                <Button @click="toggleModal(false)" :loading="addingToCart" class="mt-5">Cerrar</Button>
+                <Button @click="addToCart" :loading="addingToCart" class="mt-5"
+                    :disabled="toCart === ''">Agregar</Button>
+            </div>
         </Modal>
-        <Modal v-model="showNotAdded" title="Cartas no agregadas, no disponibles" @update:modelValue="toggleNotAdded">
+        <Modal v-model="showNotAdded" title="Cartas no agregadas, no disponibles" close-disabled>
             <div class="flex flex-col gap-2 h-[300px] overflow-y-scroll">
-                <div v-for="(card, index) in listNotAdded" :key="`card-not-added-${index}`">
-                    <span>{{ Object.values(card).join(' ') }}</span>
+                <div v-for="(card, index) in assembleList(listNotAdded)" :key="`card-not-added-${index}`">
+                    <span>{{ card }}</span>
                 </div>
             </div>
 
@@ -81,11 +85,13 @@ import Empty from "@/components/atomic/Empty.vue";
 import Button from "@/components/atomic/Button.vue";
 import Modal from "@/components/atomic/Modal.vue";
 import Textarea from "@/components/atomic/Textarea.vue";
-import { parseList } from "@/utils/utils";
+import { parseList, assembleList } from "@/utils/utils";
 import useDevices from "@/composables/useDevices";
 import { useRoute, useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
 const devices = useDevices();
 
+const toast = useToast();
 const route = useRoute();
 const router = useRouter();
 const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, value: 'foil', name: "foil" }])
@@ -150,23 +156,32 @@ async function addToCart() {
     try {
         addingToCart.value = true;
         const list = parseList(toCart.value);
-        const result = await getListToCart(list);
-        for (let index = 0; index < list.length; index++) {
-            const eleWantToAdd = list[index];
-            const element = result.find(x =>
-                x.collector_number === eleWantToAdd.collector_number &&
-                x.name === eleWantToAdd.name &&
-                x.set === eleWantToAdd.set &&
-                x.treatment === eleWantToAdd.treatment)
-            if (element) {
-                add({ item: element, quantity: Math.max(element.quantity, eleWantToAdd.quantity), alert: index + 1 === list.length })
-            } else {
-                listNotAdded.value.push(eleWantToAdd)
+        if (list.every(x => Object.values(x).every(x => x !== undefined))) {
+            const result = await getListToCart(list);
+            for (let index = 0; index < list.length; index++) {
+                const eleWantToAdd = list[index];
+                const element = result.find(x =>
+                    x.collector_number === eleWantToAdd.collector_number &&
+                    x.name === eleWantToAdd.name &&
+                    x.set === eleWantToAdd.set &&
+                    x.treatment === eleWantToAdd.treatment)
+                if (element) {
+                    add({ item: element, quantity: Math.max(element.quantity, eleWantToAdd.quantity), alert: index + 1 === list.length })
+                } else {
+                    listNotAdded.value.push(eleWantToAdd)
+                }
             }
-        }
-        toggleModal(false);
-        if (listNotAdded.value && list) {
-            showNotAdded.value = true;
+            toggleModal(false);
+            if (listNotAdded.value && list) {
+                showNotAdded.value = true;
+            }
+        } else {
+            toast.add({
+                severity: "error",
+                summary: "ERROR",
+                detail: `La lista ingresada posee todas cartas con el formato equivocado`,
+                life: 3000,
+            })
         }
         addingToCart.value = false;
     } catch (error) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 nm:grid-cols-2 gap-4 nm:min-h-[calc(100vh-250px)] nm:mt-10">
+    <div class="grid grid-cols-1 nm:grid-cols-2 gap-4 nm:min-h-[calc(100vh-450px)] nm:mt-10">
         <AnimatedBanner size="big" text="Singles"
             :bg="{ src: 'https://assets-prd.ignimgs.com/2023/07/13/mtg-lotr-1-1689261247953.jpg' }" path="singles" />
         <AnimatedBanner size="big" text="Sellado"

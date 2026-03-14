@@ -1,13 +1,14 @@
 <template>
-    <div class="bg-header px-4">
-        <!-- <HeaderVue></HeaderVue> -->
-    </div>
-    <main>
+    <div class="nm:min-h-[calc(100vh-250px)]">
+        <div class="bg-header px-4">
+            <!-- <HeaderVue></HeaderVue> -->
+        </div>
+
         <div class="flex flex-col w-full justify-around bg-main px-4">
             <!-- <div class="flex flex-col w-full">
-                <span class="text-xl">NEWS</span>
-                <HeaderCarousel class="pb-4" />
-            </div> -->
+                    <span class="text-xl">NEWS</span>
+                    <HeaderCarousel class="pb-4" />
+                </div> -->
 
             <div class="flex flex-col w-full">
                 <span class="text-xl font-bold pb-4">Nuestros juegos</span>
@@ -19,7 +20,8 @@
             </div>
 
         </div>
-    </main>
+
+    </div>
 </template>
 
 <script setup>
