@@ -269,7 +269,7 @@ onUnmounted(() => {
         width: min-content;
         padding: 8px 2px;
         @include bg-site();
-        top: 7%;
+        top: 2%;
 
         transition: all 0.5s ease-out;
 
@@ -286,7 +286,7 @@ onUnmounted(() => {
             border-bottom-right-radius: 4px;
             left: -2px;
             border-right: 2px solid black;
-            top: 13%;
+            top: 5%;
 
             &.active {
                 left: 230px;
@@ -343,9 +343,9 @@ onUnmounted(() => {
         @include flex(column, flex-start, flex-start);
         width: 100%;
 
-        @include breakpoint(nm) {
-            height: 100vh;
-        }
+        // @include breakpoint(hd2) {
+        //     height: 100vh;
+        // }
 
         &_inner {
             @include flex(column, flex-start, center);
@@ -358,14 +358,12 @@ onUnmounted(() => {
                 width: -webkit-fill-available;
             }
 
-            @include breakpoint(nm) {
+            @include breakpoint(hd) {
                 max-height: 93%;
-
             }
 
             .list {
                 padding-top: 30px;
-                height: 75vh;
                 width: 100%;
                 overflow-x: hidden !important;
                 @include grid($columns: 1, $gap: 32px);
@@ -375,7 +373,6 @@ onUnmounted(() => {
 
                 @include breakpoint(nm) {
                     @include grid($columns: 1, $gap: 32px);
-                    height: 100vh;
                     overflow-y: auto;
                     scrollbar-width: none;
                     padding-bottom: 10px;
@@ -389,18 +386,22 @@ onUnmounted(() => {
 
                 @include breakpoint(hd2) {
                     @include grid($columns: 3, $gap: 32px);
+                    height: 75vh;
                 }
 
                 @include breakpoint(fhd) {
                     @include grid($columns: 4, $gap: 32px);
+                    height: 75vh;
                 }
 
                 @include breakpoint(fhd2) {
                     @include grid($columns: 5, $gap: 32px);
+                    height: 75vh;
                 }
 
                 @include breakpoint(fhd3) {
                     @include grid($columns: 6, $gap: 32px);
+                    height: 75vh;
                 }
             }
         }
@@ -411,7 +412,7 @@ onUnmounted(() => {
         overflow-y: auto;
 
         @include breakpoint(nm) {
-            position: absolute;
+            position: fixed;
             z-index: 99999;
             @include bg-site();
             width: 0%;

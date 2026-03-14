@@ -2,8 +2,12 @@
 
   <div class="h-full bg-site">
     <NavList />
-    <router-view class="bg-site px-2 nm:px-8">
-    </router-view>
+
+    <Footer>
+      <router-view class="bg-site px-2 nm:px-8">
+
+      </router-view>
+    </Footer>
     <Toast :position="devices.width.value > 1080 ? 'bottom-right' : 'top-center'" :base-z-index="999999">
       <template #message="slotProps">
         <div class="flex align-items-center gap-2" style="flex: 1">
@@ -19,7 +23,7 @@
     </Toast>
     <div id="overlay" class="overlay"></div>
     <Analytics />
-    <Footer></Footer>
+
   </div>
 
 </template>
