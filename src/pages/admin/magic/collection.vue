@@ -166,7 +166,6 @@ async function uploadCards() {
         }
         let binder = null;
         const binderTypedExisting = binders.value.find(x => x.name === binderTyped.value)
-        debugger;
         if (binderTyped.value && !binderTypedExisting) {
             binder = await createBinder({ name: binderTyped.value || "default", collectionId: collection.value.collectionId })
         } else {
@@ -202,7 +201,7 @@ async function uploadCards() {
 async function updateAmountCard(va) {
     uploading.value = true;
     if (va.quantity !== va.amount) {
-        await updateCards(collection?.value?.collectionId, [va]);
+        await updateCards(collection?.value?.collectionId, [va], binderToShow?.value?.id || null);
         filtersComponent?.value?.apply("external");
     }
     uploading.value = false;

@@ -33,9 +33,9 @@ export const useCollectionStore = defineStore("collection", () => {
     }
   }
 
-  async function updateCards(colId, arr) {
+  async function updateCards(colId, arr, binder) {
     try {
-      return await CollectionService.updateCards(colId, arr);
+      return await CollectionService.updateCards(colId, arr, binder);
     } catch (error) {
       console.error("Error updating amount of cards", error);
     }

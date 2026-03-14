@@ -98,7 +98,8 @@
                                     <div class="flex flex-row justify-end p-4 gap-2 col-span-full w-full">
 
                                         <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
-                                            @click="confirmLocalOrder(sale, true)" :loading="loading">Cerrar
+                                            @click="confirmLocalOrder(sale, true)" :loading="loading"
+                                            color="#E7000B">Cerrar
                                             orden</Button>
                                         <Button v-if="tabs[activeTab].value !== 'complete'" size="small"
                                             @click="setAllLikeSold(sale)" :loading="loading">Agregar todo</Button>
@@ -255,19 +256,12 @@ onMounted(async () => {
 
 .bg {
     &-sold {
-        // bg-green-500
-        // background-color: var(--color-green-500); /* oklch(72.3% 0.219 149.579) */
-        // bg-green-600
-        // background-color: var(--color-green-600); /* oklch(62.7% 0.194 149.214) */
         background: oklch(72.887% 0.21192 147.841 / 0.58);
     }
 
     &-not-sold {
         background-color: oklch(63.78% 0.23729 25.422 / 0.64);
-        // bg-red-500
-        /* oklch(63.7% 0.237 25.331) */
-        // bg-red-600
-        /* oklch(57.7% 0.245 27.325) */
+
     }
 }
 </style>

@@ -19,10 +19,10 @@ export default {
       .then((res) => res)
       .catch((error) => error.response);
   },
-  updateCards: async function name(colId, arr) {
+  updateCards: async function name(colId, arr, binder) {
     // TODO: do the MAGIC
     return api
-      .patch(`collections/${colId}`, { cards: arr, game: "magic" })
+      .patch(`collections/${colId}`, { cards: arr, game: "magic", binder })
       .then((res) => res)
       .catch((error) => error.response);
   },
