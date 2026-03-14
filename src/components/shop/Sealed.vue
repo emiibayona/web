@@ -1,5 +1,5 @@
 <template>
-    <div :id="value.id" class="sealed-item hover:drop-shadow-lg" :class="['seal-wrapper']" @click="openCard()">
+    <div :id="value.id" class="sealed-item nm:hover:drop-shadow-lg" :class="['seal-wrapper']" @click="openCard()">
         <div class="sealed-img">
             <img :src="value.image" />
         </div>

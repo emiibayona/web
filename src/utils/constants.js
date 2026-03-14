@@ -8,6 +8,7 @@ export const GAMES = Object.freeze({
 export const NAVIGATION = Object.freeze({
   HOME: { path: "/", name: "Inicio", home: true },
   MAGIC: {
+    key: "magic",
     path: "magic",
     name: "Magic: The Gathering",
     value: "magic",
@@ -18,6 +19,7 @@ export const NAVIGATION = Object.freeze({
     },
   },
   YUGIOH: {
+    key: "yugioh",
     path: "yugioh",
     name: "Yu-Gi-Oh!",
     value: "yugioh",
@@ -28,6 +30,7 @@ export const NAVIGATION = Object.freeze({
     },
   },
   POKEMON: {
+    key: "pokemon",
     path: "pokemon",
     name: "Pokemon",
     value: "pokemon",
@@ -38,6 +41,7 @@ export const NAVIGATION = Object.freeze({
     },
   },
   RIFTBOUND: {
+    key: "riftbound",
     path: "riftbound",
     name: "Riftbound",
     value: "riftbound",

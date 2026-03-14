@@ -35,7 +35,8 @@
                     <Pagination class="pagination" v-model:currentPage="page" :total="collection?.total" :limit="limit"
                         :loading="fetching" />
                 </div>
-                <div v-else class="flex flex-row items-center justify-center w-full overflow-hidden mt-10">
+                <div v-else
+                    class="flex flex-row items-center justify-center w-full min-h-[350px] overflow-hidden mt-10">
                     <Loader />
                 </div>
             </div>
@@ -264,12 +265,12 @@ onUnmounted(() => {
     .tag {
         writing-mode: vertical-rl;
         text-orientation: upright;
-        position: absolute;
+        position: fixed;
         z-index: 9999;
         width: min-content;
         padding: 8px 2px;
         @include bg-site();
-        top: 2%;
+        top: 30%;
 
         transition: all 0.5s ease-out;
 
@@ -286,7 +287,7 @@ onUnmounted(() => {
             border-bottom-right-radius: 4px;
             left: -2px;
             border-right: 2px solid black;
-            top: 5%;
+
 
             &.active {
                 left: 230px;
@@ -322,8 +323,9 @@ onUnmounted(() => {
         // position: relative;
         @include breakpoint(nm) {
             height: 100vh;
-            position: absolute;
+            position: fixed;
             z-index: 9999;
+            top: 0;
             @include bg-site();
             scrollbar-width: none;
             // background-color: red;
@@ -409,8 +411,10 @@ onUnmounted(() => {
         overflow-y: auto;
 
         @include breakpoint(nm) {
+            height: 100vh;
             position: fixed;
-            z-index: 99999;
+            z-index: 9999;
+            top: 0;
             @include bg-site();
             width: 0%;
             right: 0;

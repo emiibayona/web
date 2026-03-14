@@ -1,6 +1,7 @@
 <template>
     <div class="h-screnn flex flex-col justify-between">
-        <div class="h-full">
+        <!-- hd:max-h-screen -->
+        <div class="min-h-min-content hd:h-screen">
             <slot></slot>
         </div>
 
@@ -53,6 +54,7 @@ function toWpp() {
     color: #e0e0e0;
     padding: 2rem 1rem;
     border-top: 1px solid #16213e;
+    margin-top: 16px;
 }
 
 .footer-content {
