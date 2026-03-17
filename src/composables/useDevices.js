@@ -6,7 +6,6 @@ const useDevices = () => {
   const handleResize = () => {
     width.value = window.innerWidth;
     height.value = window.innerHeight;
-    // console.log(width.value, height.value);
   };
 
   onMounted(() => {

@@ -28,13 +28,15 @@
 
 </template>
 <script setup>
-import { computed, onBeforeMount } from 'vue';
+import { computed, onBeforeMount, onMounted } from 'vue';
 import Footer from './components/atomic/Footer.vue';
 import NavList from './components/NavList.vue';
 import Toast from 'primevue/toast';
 import { Analytics } from '@vercel/analytics/vue';
 import useDevices from '@/composables/useDevices';
+import { useAuth } from './composables/useAuth';
 const devices = useDevices();
+const auth = useAuth();
 onBeforeMount(() => {
   const seller = localStorage.getItem("seller")
   const user = localStorage.getItem("user");
@@ -48,6 +50,7 @@ onBeforeMount(() => {
     localStorage.setItem("user", import.meta.env.VITE_SELLER_EMAIL);
   }
 })
+
 </script>
 <style lang="scss" scoped>
 .overlay {

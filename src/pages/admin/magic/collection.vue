@@ -178,7 +178,6 @@ async function uploadCards() {
         const form = new FormData();
         if (elem.files.length) {
             form.append("file", elem.files[0]);
-            console.log("File selected: ", elem.files[0]);
         }
         form.append("binder", binder.name)
         form.append("user", localStorage.getItem("seller"))

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/pages/home/index.vue";
+import { useAuth } from "@/composables/useAuth";
 
 const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -10,6 +11,7 @@ const router = createRouter({
       path: "/magic",
       name: "magic",
       component: () => import("@/pages/magic/index.vue"),
+      meta: { public: true }, // Marcar explícitamente como pública
     },
     {
       path: "/yugioh",
@@ -70,6 +72,7 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("@/pages/admin/index.vue"),
+      meta: { requiresAuth: true, role: "admin" },
     },
     {
       path: "/admin/sellado",
@@ -97,11 +100,44 @@ const router = createRouter({
       component: () => import("@/pages/admin/magic/binders.vue"),
     },
     {
+      path: "/auth/login",
+      name: "Login",
+      component: () => import("@/pages/auth/index.vue"),
+    },
+    {
+      path: "/auth/success",
+      name: "Auth success",
+      component: () => import("@/pages/auth/success.vue"),
+    },
+    {
+      path: "/auth/info",
+      name: "Auth info",
+      component: () => import("@/pages/auth/login.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "not-found",
       component: () => import("@/pages/NotFound.vue"),
     },
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  const { isAuthenticated, user, fetchProfile } = useAuth();
+  console.log({ isAuthenticated: isAuthenticated.value, user: user.value });
+  // 1. Proteger rutas
+  if (to.meta.requiresAuth && !isAuthenticated.value) {
+    console.log("aqui");
+    return next({ name: "Login" });
+  }
+
+  // 2. Si hay token pero NO hay usuario en memoria ni en disco (raro, pero posible)
+  // fetchProfile ahora solo hace el fetch si user.value es null
+  if (isAuthenticated.value && !user.value) {
+    await fetchProfile();
+  }
+
+  next();
 });
 
 export default router;

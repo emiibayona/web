@@ -30,8 +30,10 @@ import AnimatedBanner from "@/components/AnimatedBanner.vue";
 import { NAVIGATION } from "@/utils/constants";
 import useDevices from "@/composables/useDevices";
 
+
 const data = computed(() => Object.values(NAVIGATION).filter(x => !x.home));
 const devices = useDevices();
+
 </script>
 
 <style scoped lang="scss">
