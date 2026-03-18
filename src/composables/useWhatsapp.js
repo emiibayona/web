@@ -10,9 +10,10 @@ const useWhatsapp = () => {
     content,
     phone = import.meta.env.VITE_PHONE_CONTACT,
   ) {
+    const fullyContent = `${header}${content ? "\n" + content : ''}`
     if (window && phone) {
       window.open(
-        `https://wa.me/${parsePhone(phone)}?text=${encodeURIComponent(header + "\n" + content)}`,
+        `https://wa.me/${parsePhone(phone)}?text=${encodeURIComponent(fullyContent)}`,
         "_blank",
       );
     }
