@@ -19,8 +19,8 @@ export const parseList = (inputText) => {
       const set = setMatch ? setMatch[1] : undefined;
 
       // 3. Buscamos el número de coleccionista (el número después del set)
-      // Buscamos dígitos que estén después del paréntesis de cierre
-      const collectorMatch = line.match(/\)\s+(\d+)/);
+      // Puede ser un número simple o un formato como TMP-294
+      const collectorMatch = line.match(/\)\s+([\d\w-]+)/);
       const collectorNumber = collectorMatch ? collectorMatch[1] : undefined;
 
       // 4. Buscamos el tratamiento especial entre asteriscos (F, E, etc.)

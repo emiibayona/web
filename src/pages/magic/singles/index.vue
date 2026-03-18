@@ -58,7 +58,7 @@
             </div>
         </Modal>
         <Modal v-model="showNotAdded" title="Cartas no agregadas, no disponibles" close-disabled>
-            <div class="flex flex-col gap-2 h-[300px] overflow-y-scroll">
+            <div class="flex flex-col gap-1 h-[300px] overflow-y-scroll">
                 <div v-for="(card, index) in assembleList(listNotAdded)" :key="`card-not-added-${index}`">
                     <span>{{ card }}</span>
                 </div>
