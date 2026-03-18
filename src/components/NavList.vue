@@ -1,4 +1,8 @@
 <template>
+  <div class="absolute top-0 left-0 p-4 z-50 hover:scale-125 transition-all duration-300 ease-out"
+    :class="[atHome ? 'h-[100px]' : 'h-min']">
+    <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
+  </div>
   <ul v-show="!isMobile" :class="[headerClass, { 'py-0': atAdmin }, { 'py-5 nm:py-3': !atAdmin }]">
     <li @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-5 h-5"><img v-if="!atHome"
         class="rotate-90 hover:cursor-pointer hover:scale-110 hover:drop-shadow-lg w-5 h-5" src="/images/arrow.svg" />
@@ -25,7 +29,7 @@
       <template #content>
         <div class="content grid grid-cols-4 justify-center items-center">
           <!-- <li > -->
-          <NavLink v-for="(item, index) in data.filter(x => !x.home)" :key="index" :id="`navLink-${index}`"
+          <NavLink v-for="(item, index) in data" :key="index" :id="`navLink-${index}`"
             class="px-1 self-center justify-self-center" mobile :nav="item.path" :active="item.active" :item="item"
             :class="[
               { 'max-w-[100px]': atAdmin },
@@ -84,7 +88,7 @@ const isAdmin = computed(() => localStorage.getItem("admin-browser"))
 const headerClass = "relative flex flex-row justify-center items-center px-10 z-20 bg-site whitespace-nowrap w-full overflow-auto nm:px-20 hd:gap-5 hd:overflow-none hd2:gap-24"
 
 const data = computed(() =>
-  Object.values(NAVIGATION).map(x => ({ ...x, active: x.home ? route.path === x.path : route.path.includes(x.path) })))
+  Object.values(NAVIGATION).filter(x => !x.home).map(x => ({ ...x, active: x.home ? route.path === x.path : route.path.includes(x.path) })))
 
 watch(data, () => {
   const index = data.value.findIndex(x => x.active);
@@ -105,15 +109,10 @@ watch(data, () => {
   cursor: pointer;
 
   .icon {
-    @include breakpoint(nm) {
-      width: 20px;
-      height: 20px;
-    }
 
-    @include breakpoint(hd) {
-      width: 30px;
-      height: 30px;
-    }
+    width: 30px;
+    height: 30px;
+
   }
 
   &.active {
