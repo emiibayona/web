@@ -90,7 +90,7 @@ import { parseList, assembleList } from "@/utils/utils";
 import useDevices from "@/composables/useDevices";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
-const devices = useDevices();
+const { width, isMobile } = useDevices();
 
 const toast = useToast();
 const route = useRoute();
@@ -119,8 +119,9 @@ const params = ref({ page: 1 });
 const page = ref(1);
 
 const limit = computed(() => {
+    if (isMobile.value) return 20;
     let val = 12;
-    const wd = devices.width.value;
+    const wd = width.value;
     if (wd >= 2560) {
         val = 30
     } else if (wd >= 1920) {
@@ -135,8 +136,8 @@ const limit = computed(() => {
     return val;
 });
 
-const leftWingIsActive = computed(() => devices?.width?.value > 1000 ? false : wings.value.left)
-const rightWingIsActive = computed(() => devices?.width?.value > 1000 ? false : wings.value.right)
+const leftWingIsActive = computed(() => width?.value > 1000 ? false : wings.value.left)
+const rightWingIsActive = computed(() => width?.value > 1000 ? false : wings.value.right)
 const binderActive = computed(() => !!route.query.binder)
 
 const toggleModal = (val) => {
