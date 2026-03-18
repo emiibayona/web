@@ -14,8 +14,8 @@
                                 class="flex flex-row items-center gap-2 animated"><img src="/images/instagram.png"
                                     class="w-10 h-10" /><span class="">Vísitanos en nuestro Instagram</span></a>
                             <span class="flex flex-row items-center gap-2 animated hover:cursor-pointer"
-                                @click="toWpp"><img src="/images/whatsapp.png" class="w-10 h-10" /><span
-                                    class="">Contáctanos por
+                                @click="openWhatsApp('Hola, vine a través de su web, quería hacer unas consultas!!!')"><img
+                                    src="/images/whatsapp.png" class="w-10 h-10" /><span class="">Contáctanos por
                                     Whatsapp</span></span>
                             <!-- <a class="flex flex-row items-center gap-2 animated"
                             href="https://maps.app.goo.gl/MZcJUUJixqqfeK1V8" target="_blank"><img src="/images/map.png"
@@ -43,9 +43,9 @@
 </template>
 
 <script setup>
-function toWpp() {
-    window.open(`https://wa.me/${import.meta.env.VITE_CONTACT_PHONE}?text=Hola, vine a través de su web, quería hacer unas consultas!!!`, '_blank');
-}
+import useWhatsapp from '@/composables/useWhatsapp';
+const { openWhatsApp } = useWhatsapp();
+
 </script>
 
 <style lang="scss" scoped>

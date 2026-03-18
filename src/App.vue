@@ -8,7 +8,7 @@
 
       </router-view>
     </Footer>
-    <Toast :position="devices.width.value > 1080 ? 'bottom-right' : 'top-center'" :base-z-index="999999">
+    <Toast :position="width?.value > 1080 ? 'bottom-right' : 'top-center'" :base-z-index="999999">
       <template #message="slotProps">
         <div class="flex align-items-center gap-2" style="flex: 1">
           <img v-if="slotProps.message?.data?.image" :src="slotProps.message.data.image"
@@ -35,7 +35,7 @@ import Toast from 'primevue/toast';
 import { Analytics } from '@vercel/analytics/vue';
 import useDevices from '@/composables/useDevices';
 import { useAuth } from './composables/useAuth';
-const devices = useDevices();
+const { width, isMobile } = useDevices();
 const auth = useAuth();
 onBeforeMount(() => {
   const seller = localStorage.getItem("seller")

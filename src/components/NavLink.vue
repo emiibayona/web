@@ -7,9 +7,8 @@
     <a :href="href" class="py-1 flex items-center justify-center link" :class="{ 'with-logo': item.logo }">
       <slot></slot>
     </a>
-    <span
-      class="block bg-darkMoustard h-1 scale-0 origin-left transition-transform duration-500 ease-in-out group-hover:scale-100"
-      :class="[{ 'scale-0': !active }, { 'scale-100': active }]"></span>
+    <span class="block bg-darkMoustard h-1 scale-0 origin-left "
+      :class="[{ 'transition-transform duration-500 ease-in-out group-hover:scale-100': !mobile }, { 'scale-0': !active }, { 'scale-100': active }]"></span>
   </div>
 </template>
 <script setup>
@@ -23,6 +22,10 @@ const props = defineProps({
     default: "",
   },
   active: {
+    type: Boolean,
+    default: false,
+  },
+  mobile: {
     type: Boolean,
     default: false,
   },
@@ -42,6 +45,7 @@ const href = ref(`${window?.location?.origin}${props.item.home ? '' : '/'}${prop
   }
 
   height: 100%;
+
   &.with-logo {
     height: calc(100% - 4px);
   }
