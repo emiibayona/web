@@ -18,7 +18,7 @@
     <Compressor without-move bottom-arrow>
       <template #selected>
         <div class="w-full flex flex-row gap-4 items-center p-4" :class="[atHome ? 'h-[100px]' : 'h-min']">
-          <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-20 w-auto " /></a>
+          <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
           <span class="font-bold text-xl">Menú de navegación</span>
         </div>
       </template>
@@ -69,7 +69,6 @@ import useDevices from "@/composables/useDevices";
 import Compressor from "./atomic/Compressor.vue";
 
 const { isMobile } = useDevices();
-// const isMobile = computed(() => true)
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({
   cart: allGamesCarts.value.reduce((prev, cur) => prev += cur.count, 0), wishlist:
