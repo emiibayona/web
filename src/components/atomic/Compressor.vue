@@ -1,11 +1,17 @@
 <template>
     <div class="compressor-wrapper" :ref="attrs.id">
+        <slot name="selected"></slot>
         <div class="header-wrapper" @click="toggle" :class="[{ expanded }]">
             <slot name="title"></slot>
-            <img v-if="!alwaysOpen && icon" src="/images/bleach.png" class="icon" />
+            <img v-if="!alwaysOpen && icon && !bottomArrow" src="/images/bleach.png" class="icon"
+                :class="{ 'is-expanded': expanded }" />
         </div>
         <div class="expandable-container" :class="[{ 'expanded': alwaysOpen || expanded }, { speedy }]">
             <slot name="content"></slot>
+        </div>
+        <div v-if="bottomArrow" class="header-wrapper center mb-4" @click="toggle" :class="[{ expanded }]">
+            <img src="/images/arrow-up.png" class="icon big transition-all duration-300 ease-in-out"
+                :class="{ 'is-expanded': expanded, 'is-bouncing': !expanded }" />
         </div>
     </div>
 </template>
@@ -24,6 +30,7 @@ defineProps({
     icon: { type: Boolean, default: true },
     speedy: { type: Boolean, default: false },
     withoutMove: { type: Boolean, default: false },
+    bottomArrow: { type: Boolean, default: false },
 });
 const expanded = ref(false)
 const toggle = () => {
@@ -52,16 +59,41 @@ defineExpose({ toggle });
         width: 100%;
         cursor: pointer;
 
+        &.center {
+            justify-content: center;
+        }
+
         .icon {
-            transition: transform 0.5s ease;
             height: 10px;
             width: 10px;
             transform: rotate(-180deg);
+            transition: all 0.5s ease-in-out;
+
+            &.big {
+                height: 24px;
+                width: 24px;
+            }
+
+            &.is-expanded {
+                transform: rotate(0deg);
+            }
+
+            &.is-bouncing {
+                animation: bounce-custom 1s infinite;
+            }
         }
 
-        &.expanded {
-            .icon {
-                transform: rotate(0deg);
+        @keyframes bounce-custom {
+
+            0%,
+            100% {
+                transform: rotate(-180deg) translateY(-25%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+
+            50% {
+                transform: rotate(-180deg) translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
             }
         }
     }
@@ -86,26 +118,13 @@ defineExpose({ toggle });
             transition: grid-template-rows 0.2s ease-in-out;
         }
 
-        // :deep(.content-child) {
-        //     opacity: 0;
-        //     transition: opacity 0.5s ease;
-        // }
-
         &.expanded {
             grid-template-rows: 1fr;
             padding: auto;
-            // transition: all 0.5s ease-in-out;
-
-            // :deep(.content-child) {
-            //     opacity: 1;
-            // }
         }
 
         &.with-border {
-            // transition: border 0.5s ease-in-out;
-
             :deep(.content) {
-                // transition: border-bottom 0.2s ease-in-out;
                 margin-top: 4px;
                 border-bottom: 2px solid black;
 
