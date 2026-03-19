@@ -13,7 +13,7 @@
                 'active': leftWingIsActive
             }]">
                 <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
-                    title="Filtros" ref="filtersComponent" class="w-[230px] flex-1 ">
+                    title="Filtros" without-move ref="filtersComponent" class="w-[230px] flex-1 ">
                     <template #binder>
                         <Button v-if="binderActive" class="mt-3" @click="removeBinder" size="block-xy"
                             wrap="normal">Mostrar
