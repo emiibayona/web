@@ -30,10 +30,11 @@ defineProps({
     edit: { type: Boolean, default: false }
 })
 
-const { cart, } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
+const { cart, calculateTotal } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
 
 const gameCart = computed(() => cart.value || []);
-const totalCart = computed(() => gameCart.value.reduce((prev, curr) => prev += curr.sets.reduce((prevSet, currSet) => prevSet += currSet.qty, 0), 0))
+const totalCart = computed(() => calculateTotal(gameCart.value))
+// const totalCart = computed(() => gameCart.value.reduce((prev, curr) => prev += curr.sets.reduce((prevSet, currSet) => prevSet += currSet.qty, 0), 0))
 </script>
 
 <style scoped lang="scss">

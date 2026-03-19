@@ -267,7 +267,7 @@ onUnmounted(() => {
         writing-mode: vertical-rl;
         text-orientation: upright;
         position: fixed;
-        z-index: 9999;
+        z-index: 997;
         width: min-content;
         padding: 8px 2px;
         @include bg-site();

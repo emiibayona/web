@@ -28,7 +28,7 @@
             <div class="singles-wrapper" id="singles-wrapper">
                 <div class="filter-wrapper border-r-2 border-black">
                     <div class="flex flex-row gap-5 mb-2 items-center bg-site absolute -top-11 z-30">
-                        <h1 class="font-bold">Mi Colleción</h1>
+                        <h1 class="font-bold">Mi Colección</h1>
                         <Button size="xsmall" @click="openAddCardsModal(true)">
                             + Agregar cartas
                         </Button>

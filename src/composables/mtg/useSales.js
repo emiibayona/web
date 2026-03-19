@@ -12,7 +12,7 @@ const useSales = () => {
     }
   };
 
-  const updateSales = async (params) => {};
+  const updateSales = async (params) => { };
   const fetchSalesResumen = async () => {
     return await store.fetchOrderResumen();
   };
@@ -47,7 +47,6 @@ const useSales = () => {
     return cart;
   };
   const createOrder = async ({ name: game, values, form }) => {
-    // debugger;
     const result = await store.createOrder({
       ...form,
       game,

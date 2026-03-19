@@ -19,9 +19,9 @@ export const useAuthStore = defineStore("auth", () => {
             loading.value = true;
             try {
                 const key = `loggedUser_${tenant || 'geartown'}`
-                const userOnStorage = JSON.parse(sessionStorage.getItem(key));
+                const userOnStorage = sessionStorage.getItem(key);
 
-                if (!userOnStorage) {
+                if (userOnStorage === 'undefined' || !userOnStorage) {
                     const response = await AuthService.profile();
 
                     // Hidratamos el estado global
@@ -30,7 +30,7 @@ export const useAuthStore = defineStore("auth", () => {
                     }
 
                 } else {
-                    user.value = userOnStorage;
+                    user.value = JSON.parse(userOnStorage);
                 }
 
                 isHydrated.value = true;

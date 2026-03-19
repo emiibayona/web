@@ -4,10 +4,11 @@ import { useAuth } from "./useAuth";
 import { useToast } from "primevue/usetoast";
 import { ACTIVE_GAMES, GAMES, RECIPIENTS_LISTS } from "@/utils/constants.js";
 import useSets from "./mtg/useSets";
+import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 
 const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
   const store = useCartStore();
-  const { user: loggedUser } = useAuth();
+  const { user: loggedUser, loginWithGoogle } = useAuth();
   const { sets } = useSets(game);
   const toast = useToast();
 
@@ -46,6 +47,10 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
   };
 
   const add = ({ item, quantity = 1, sealed = false, alert = true }) => {
+    if (!loggedUser.value) {
+      loginWithGoogle();
+      return;
+    }
     const recipient = [...currentRecipient.value]; // Clonamos para mantener inmutabilidad
     let toastOpt = {
       severity: "success",
@@ -155,20 +160,17 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
     store.updateLocal(loggedUser.value?.email, game, receptor, currentRecipient.value.splice(0));
   };
   const calculateTotal = (arr) => {
-    return arr?.reduce((acc, curr) => acc + curr.sets.reduce((s, c) => s + c.qty, 0), 0);
+    if (!Array.isArray(arr)) return 0;
+    return arr?.reduce((acc, curr) => acc + curr?.sets?.reduce((s, c) => s + c?.qty, 0), 0);
   };
 
   // Watcher para persistencia local automática
   watch(() => store.cart, (newVal) => {
-    for (const game of ACTIVE_GAMES) {
-      sessionStorage.setItem(`${game}_${RECIPIENTS_LISTS.CART}_${loggedUser.value?.email || 'guest'}`, JSON.stringify(newVal[game]));
-    }
+    cleanOrUpdateCarts(loggedUser.value?.email, { cart: true }, JSON.stringify(newVal[game]))
   }, { deep: true });
 
   watch(() => store.wishlist, (newVal) => {
-    for (const game of ACTIVE_GAMES) {
-      sessionStorage.setItem(`${game}_${RECIPIENTS_LISTS.WISHLIST}_${loggedUser.value?.email || 'guest'}`, JSON.stringify(newVal[game]));
-    }
+    cleanOrUpdateCarts(loggedUser.value?.email, { wish: true }, JSON.stringify(newVal[game]))
   }, { deep: true });
 
   // Ejecutamos la lógica de carga al usar el composable
@@ -183,8 +185,8 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
     cleanCart,
     calculateTotal,
     allGamesCarts: computed(() => [{ name: game, values: store.cart?.[game], count: calculateTotal(store.cart?.[game]) }]),
-    allGamesWishlists: computed(() => [{ name: game, values: wishlist.cart?.[game], count: calculateTotal(store.wishlist?.[game]) }]),
-    init
+    allGamesWishlists: computed(() => [{ name: game, values: store.wishlist?.[game], count: calculateTotal(store.wishlist?.[game]) }]),
+    init,
   };
 };
 

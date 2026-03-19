@@ -1,7 +1,7 @@
 <template>
-    <div class="h-screnn flex flex-col justify-between">
+    <div class="h-scren flex flex-col justify-between">
         <!-- hd:max-h-screen -->
-        <div class="min-h-min-content hd:h-screen">
+        <div class="min-h-min-content hd:h-screen mt-2">
             <slot></slot>
         </div>
 

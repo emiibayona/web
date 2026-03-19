@@ -46,6 +46,7 @@ const devices = useDevices();
     margin-left: -18px;
 
     @include breakpoint(nm) {
+        margin-top: -20px;
         height: 200px;
         background-size: cover;
     }

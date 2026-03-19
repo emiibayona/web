@@ -1,14 +1,15 @@
 <template>
-    <div v-for="(cart, index) in values" :key="`${cart.name}-${index}`">
+    {{ cart }}
+    <div v-for="(cart, index) in values" :key="`${cart.name}-${index}`" :class="{ 'min-h-[300px]': isMobile }">
         <div class="flex flex-col px-2 nm:px-10"
             :class="[{ 'pb-4': wishlist }, { 'py-4': !cart.count }, { 'border-b-2 border-black': index + 1 !== values.length }]">
             <span class="font-bold mb-2 text-xl">{{ capi(cart.name) }} (<span class="font-normal">{{ cart.count
-                    }}</span>) <Button v-if="cart.count" size="xsmall" @click="clean">Remover todo</Button></span>
+            }}</span>) <Button v-if="cart.count" size="xsmall" @click="clean">Remover todo</Button></span>
             <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'cart-count-body': cart.count }]">
                 <MiniCartCard v-for="(item, index_2) in cart.values" :key="`${cart.name}-${index}-${index_2}`"
                     :item="item" @add="add" @remove="remove" @remove-wishlist="removeWishlist" edit
                     :from-wishlist="wishlist" />
-                <div v-if="!cart.values.length" class="font-bold mt-5 ml-5">
+                <div v-if="!cart?.values?.length" class="font-bold mt-5 ml-5" :class="{ 'text-sm': isMobile }">
                     <span>
                         {{ `No hay nada en tu ${wishlist ? 'wishlist' : 'carrito'}, ` }}
                         <span class="text-blue-700 underline decoration-blue-700 cursor-pointer"
@@ -23,6 +24,9 @@
                     `Comprar carrito de
                 ${capi(cart.name)}`
                 }}</Button>
+            <Button v-if="wishlist && cart.count && false" size="small" disabled class="self-end my-5">
+                Mover lista al carrito (en desarrollo)
+            </Button>
         </div>
         <Modal v-model="showModal" :title="!showOrderConfirmed ? 'Confirmar carrito' : 'Carrito enviado'"
             :close-disabled="loading || showOrderConfirmed">
@@ -84,6 +88,7 @@ import InputField from '@/components/atomic/InputField.vue';
 import Textarea from '@/components/atomic/Textarea.vue';
 import useSales from '@/composables/mtg/useSales';
 import { useRouter } from 'vue-router';
+import useDevices from '@/composables/useDevices';
 
 const props = defineProps({ values: { type: Array, default: () => [] }, wishlist: { type: Boolean, default: false } })
 const { add, remove, cleanCart } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
@@ -98,6 +103,7 @@ const loading = ref(false)
 const showOrderConfirmed = ref(false)
 const contactPhone = ref(import.meta.env.VITE_PHONE_CONTACT)
 const router = useRouter();
+const { isMobile } = useDevices();
 
 
 function openConfirmationModal(cart) {

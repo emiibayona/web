@@ -8,7 +8,7 @@ export const useSetStore = defineStore("set", () => {
 
   async function fetchSets() {
     try {
-      const setsStorage = JSON.parse(localStorage.getItem("sets") || []);
+      const setsStorage = JSON.parse(localStorage.getItem("sets") || `[]`);
       if (setsStorage?.length === 0) {
         sets.value = await SetService.list();
         localStorage.setItem("sets", JSON.stringify(sets.value));

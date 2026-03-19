@@ -1,12 +1,18 @@
 <template>
     <div class="compressor-wrapper" :ref="attrs.id">
         <slot name="selected"></slot>
-        <div class="header-wrapper" @click="toggle" :class="[{ expanded }]">
+        <div class="header-wrapper" @click="toggle"
+            :class="[{ expanded, 'notSpace': iconNextToContent, 'ended': contentEnd }]">
             <slot name="title"></slot>
-            <img v-if="!alwaysOpen && icon && !bottomArrow && !withoutArrow" src="/images/bleach.png" class="icon"
-                :class="{ 'is-expanded': expanded }" />
+            <img v-if="!alwaysOpen && icon && !bottomArrow && !withoutArrow" :src="icon" class="icon" :class="{
+                'is-expanded': expanded,
+                'big': big,
+                'mid': mid,
+                'end': arrowEnd
+            }" />
         </div>
-        <div class="expandable-container" :class="[{ 'expanded': alwaysOpen || expanded }, { speedy }]">
+        <div class="expandable-container"
+            :class="[{ 'expanded': alwaysOpen || expanded }, { speedy }, { 'isShadow': shadow }]">
             <slot name="content"></slot>
         </div>
         <div v-if="bottomArrow && !withoutArrow" class="header-wrapper center mt-2 mb-4" @click="toggle"
@@ -23,7 +29,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useAttrs } from 'vue'
 import useClickOutside from '@/composables/useClickOutside';
 import useDevices from '@/composables/useDevices';
@@ -32,19 +38,31 @@ const devices = useDevices();
 
 const attrs = useAttrs()
 const props = defineProps({
+    // 
+    icon: { type: Boolean, default: '/images/bleach.png' },
+    iconNextToContent: { type: Boolean, default: false },
+    contentEnd: { type: Boolean, default: false },
+    shadow: { type: Boolean, default: false },
+    // upper:{}
+    // Behaiviour
     alwaysOpen: { type: Boolean, default: false },
-    icon: { type: Boolean, default: true },
     speedy: { type: Boolean, default: false },
+    withoutMove: { type: Boolean, default: false },
+    mobile: { type: Boolean, default: false },
+    // Arrow
     big: { type: Boolean, default: false },
     mid: { type: Boolean, default: false },
-    withoutMove: { type: Boolean, default: false },
     withoutArrow: { type: Boolean, default: false },
     bottomArrow: { type: Boolean, default: false },
     staticArrow: { type: Boolean, default: false },
+    arrowEnd: { type: Boolean, default: false },
 });
+let overlay = null;
 const expanded = ref(false)
+
 const toggle = () => {
     expanded.value = !expanded.value
+
     if (devices.width.value > 999 && !props.withoutMove) {
         setTimeout(() => {
             if (expanded.value && attrs.id) {
@@ -53,8 +71,20 @@ const toggle = () => {
         }, 500);
     }
 };
+watch(expanded, () => {
+    if (props.mobile) {
+        if (expanded.value) {
+            overlay.classList.add('active');
+        } else {
+            overlay.classList.remove('active');
+        }
+    }
+})
 const { setListener } = useClickOutside({ templateRef: attrs.id, target: expanded, clicked: false });
-onMounted(() => setListener())
+onMounted(() => {
+    overlay = document.getElementById('overlay');
+    setListener();
+})
 onBeforeUnmount(() => { setListener(); expanded.value = false; })
 defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
 
@@ -62,6 +92,7 @@ defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
 
 <style lang="scss" scoped>
 .compressor-wrapper {
+    z-index: 1000;
     @include flex(column, flex-start, flex-start);
 
     .header-wrapper {
@@ -71,6 +102,16 @@ defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
 
         &.center {
             justify-content: center;
+        }
+
+        &.notSpace {
+            justify-content: flex-start;
+            gap: 8px;
+        }
+
+        &.ended {
+            justify-content: flex-end;
+
         }
 
         .icon {
@@ -89,6 +130,11 @@ defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
                 width: 24px;
             }
 
+            &.end {
+                align-self: flex-end;
+                margin-bottom: 8px;
+            }
+
             &.is-expanded {
                 transform: rotate(0deg);
             }
@@ -102,12 +148,12 @@ defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
 
             0%,
             100% {
-                transform: rotate(-180deg) translateY(-25%);
+                transform: rotate(180deg) translateY(-25%);
                 animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
             }
 
             50% {
-                transform: rotate(-180deg) translateY(0);
+                transform: rotate(180deg) translateY(0);
                 animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
             }
         }
@@ -144,6 +190,10 @@ defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
                 border-bottom: 2px solid black;
 
             }
+        }
+
+        &.isShadow {
+            filter: drop-shadow(#301934 2px 5px 5px);
         }
 
 

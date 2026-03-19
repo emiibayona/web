@@ -141,8 +141,6 @@ onMounted(() => {
         width: 100%;
     }
 
-    &:hover {}
-
     .sealed-img {
         height: 100%;
         width: 25%;

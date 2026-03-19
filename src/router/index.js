@@ -137,7 +137,6 @@ router.beforeEach(async (to, from, next) => {
   if (isAuthenticated.value && !user.value) {
     await fetchUser({ tenant: "geartown" });
   }
-
   if (to.meta.requiresAuth) {
     if (!isAuthenticated.value) {
       console.info("Login required");

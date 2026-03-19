@@ -20,16 +20,16 @@
                     {{ card.quantity }}
                 </span>
             </div>
-            <div class="flex flex-row gap-1">
-                <span
-                    class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2 border-r-2 border-white hover:border-none pr-1"
+            <div v-if="!loading" class="flex flex-row gap-1">
+                <span class="border-r-2 border-white pr-1" :class="[cartWish, !isMobile && hoverClass]"
                     @click="addCard">+1
                     Carrito</span>
                 <!-- <span class="text-white font-bold drop-shadow-md">|</span> -->
-                <span
-                    class="text-white font-bold drop-shadow-md hover:cursor-pointer hover:scale-125 duration-300 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2"
-                    @click="addWishlist">+1
+                <span :class="[cartWish, !isMobile && hoverClass]" @click="addWishlist">+1
                     Wishlist</span>
+            </div>
+            <div v-else>
+                <Loader />
             </div>
             <a :href="ckUrl" target="_blank" class="text-sm text-gray-300 underline hover:scale-110 duration-300">Ver
                 versiones en CardKingdom</a>
@@ -46,7 +46,10 @@
 import axios from 'axios';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import InputField from '@/components/atomic/InputField.vue';
-import Loader from './atomic/Loader.vue';
+import Loader from '@/components/atomic/Loader.vue';
+import { useAuth } from '@/composables/useAuth';
+import useDevices from '@/composables/useDevices';
+
 
 const props = defineProps({
     card: { type: Object, default: () => ({}) },
@@ -56,11 +59,17 @@ const props = defineProps({
     id: { type: [String, Number], default: () => null }
 })
 
+const cartWish = 'text-white font-bold drop-shadow-md duration-300 text-white font-bold drop-shadow-md duration-300';
+const hoverClass = 'hover:cursor-pointer hover:scale-125 hover:z-20 hover:bg-black hover:rounded-sm hover:px-2 hover:border-none';
+
 const emits = defineEmits(["add-to-cart", "add-to-wishlist", 'update']);
 const price = ref(null);
 const qty = ref(null);
 const editQty = ref(false);
 const inputFieldRef = ref(null);
+const { loading } = useAuth();
+const { isMobile } = useDevices();
+
 let touchTimeout;
 
 const cardName = computed(() => props.card.name.toLowerCase().split("//")[0].trim().replaceAll(",", ""))

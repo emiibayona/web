@@ -1,6 +1,6 @@
 <template>
 
-  <div class="h-full bg-site">
+  <div class="h-full bg-site" :class="{ 'pointer-events-none': loading }">
     <NavList />
 
     <Footer>
@@ -37,7 +37,7 @@ import useDevices from '@/composables/useDevices';
 import { useAuth } from './composables/useAuth';
 import useCarts from './composables/useCart';
 const { isMobile } = useDevices();
-const { user } = useAuth();
+const { user, loading } = useAuth();
 const { init } = useCarts();
 onBeforeMount(() => {
   const seller = localStorage.getItem("seller")

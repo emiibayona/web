@@ -1,7 +1,7 @@
 <template>
   <div class="absolute top-0 left-0 p-4 z-50 hover:scale-125 transition-all duration-300 ease-out"
     :class="[atHome ? 'h-[100px]' : 'h-min']">
-    <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
+    <a v-show="!atHome && !isMobile" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
   </div>
   <ul v-show="!isMobile" :class="[headerClass, { 'py-0': atAdmin }, { 'py-5 nm:py-3': !atAdmin }]">
     <li @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-5 h-5"><img v-if="!atHome"
@@ -18,12 +18,13 @@
     </li>
   </ul>
 
-  <div v-show="isMobile" class="w-full relative">
-    <Compressor without-move bottom-arrow id="navList" ref="compressorList">
-      <template #selected>
-        <div class="w-full flex flex-row gap-4 items-center p-4" :class="[atHome ? 'h-[100px]' : 'h-min']">
-          <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
-          <span class="font-bold text-xl">Menú de navegación</span>
+  <div v-show="isMobile" class="w-full relative ">
+    <Compressor without-move icon-next-to-content arrow-end mid icon="/images/arrow-dotted.png" id="navList"
+      ref="compressorList">
+      <template #title>
+        <div class="flex flex-row gap-2 items-end px-2 h-[75px] mb-1 ">
+          <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-10 w-auto" @click.stop /></a>
+          <span class="font-bold text-lg">Menú de navegación</span>
         </div>
       </template>
       <template #content>
@@ -46,42 +47,44 @@
   <div class="absolute
   top-2 right-2
   nm:top-4 nm:right-4
-  flex flex-row items-start gap-4 cursor-pointer z-50" :class="{ 'items-center': !user }">
-    <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
-    :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
+  flex flex-row items-start gap-2 cursor-pointer " :class="{ 'items-center': !user }">
     <!-- User Zone -->
-    <Compressor without-move static-arrow bottom-arrow :without-arrow="!user" mid class="w-[100px]" id="userNav"
-      ref="compressorUser">
-      <template #selected>
-        <div class="flex flex-col gap-2">
-          <div v-if="user" class="flex flex-row items-center gap-2 mb-1">
-            <span>{{ user?.name }}</span>
-            <img :src="user?.picture" class="h-6 w-6 rounded-full" />
-          </div>
-          <div v-else-if="!loadingUser"
-            @click="action(() => { updateLoading(true); loginWithGoogle(); compressorUser.toggle(); })">Conectarme</div>
-          <Loader v-else />
+    <Compressor without-move without-arrow mid content-end :shadow="!isMobile" :mobile="isMobile" class="w-auto"
+      :class="{ 'w-[25px]': loadingUser }" id="userNav" ref="compressorUser">
+      <template #title>
+        <!-- <div class="flex flex-col gap-2"> -->
+        <div v-if="user" class="flex flex-row items-center gap-2 mb-1">
+          <!-- <span>{{ user?.name }}</span> -->
+          <img :src="user?.picture" class="h-6 w-6 rounded-full" />
         </div>
+        <!-- <div v-else-if="false" -->
+        <div v-else-if="!loadingUser"
+          @click="action(() => { updateLoading(true); loginWithGoogle(); compressorUser.toggle(); })">Conectarme</div>
+        <Loader v-else />
+        <!-- </div> -->
       </template>
       <template #content>
-        <div v-if="user" class="content buttons flex flex-col gap-1 justify-center items-center">
-          <Button size="xsmall" @click="action(() => { router.push('/user/magic/collection') })">Colleción</Button>
-          <Button v-if="isAdmin && !atAdmin" size="xsmall" @click="action(() => { router.push('/admin') })"
-            class="">Admin
+        <div class="content buttons flex flex-col gap-1 justify-center items-center text-xs min-w-[100px]">
+          <Button v-show="user" size="block" wrap="normal"
+            @click="action(() => { router.push('/user/magic/collection') })">Colección</Button>
+          <Button v-show="isAdmin && !atAdmin" size="block" wrap="normal"
+            @click="action(() => { router.push('/admin') })" class="">Admin
             panel</Button>
+          <Button v-show="isAuthenticated" size="block" wrap="normal" color="#FC9C86"
+            @click="action(() => { logout() })">Logout</Button>
         </div>
       </template>
     </Compressor>
 
     <!-- User Zone -->
 
-    <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
+    <a class="ml-1 icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
       <span v-if="listsLength?.cart"></span>
-      <img class="icon" src="/images/cart.png" alt="Logo" />
+      <img class="icon" src="/images/cart.png" alt="Logo" :class="{ isMobile }" />
     </a>
     <a class="icon-wrapper" href="/wishlist" :class="[{ 'active': route.path.includes('wishlist') }]">
       <span v-if="listsLength?.wishlist"></span>
-      <img class="icon" src="/images/wishlist.png" alt="Logo" />
+      <img class="icon" src="/images/wishlist.png" alt="Logo" :class="{ isMobile }" />
     </a>
   </div>
 </template>
@@ -98,7 +101,7 @@ import Compressor from "./atomic/Compressor.vue";
 import { useAuth } from "@/composables/useAuth";
 import Loader from "@/components/atomic/Loader.vue"
 
-const { user, loginWithGoogle, loading: loadingUser, isAdmin, updateLoading } = useAuth();
+const { user, loginWithGoogle, loading: loadingUser, isAdmin, updateLoading, logout, isAuthenticated } = useAuth();
 const { isMobile } = useDevices();
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({
@@ -147,6 +150,11 @@ watch(data, () => {
 
     width: 30px;
     height: 30px;
+
+    &.isMobile {
+      width: 24px;
+      height: 24px;
+    }
 
   }
 

@@ -1,5 +1,15 @@
 <template>
-    <div>
+    <div v-if="isMobile" class="w-">
+        <div class="w-full flex flex-col gap-10 items-center py-10 nm:gap-5">
+            <h1 class="font-black text-xl text-center">
+                Sección no disponible en celular por el momento.
+            </h1>
+            <h1 class="font-black text-xl text-center">
+                Pronta actualizacion.
+            </h1>
+        </div>
+    </div>
+    <div v-else>
         <div class="flex flex-col">
             <Modal v-model="showAddModal" title="Agregar a la coleccion" :close-disabled="uploading">
                 <div class="w-full flex flex-col gap-5">
@@ -8,7 +18,8 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="text-xl mb-4">Binder:</span>
-                        <span class="font-thin text-xs mb-2">Si no eliges un binder, se colocara en el default</span>
+                        <span class="font-thin text-xs mb-2">Si no eliges un binder, se colocara en el
+                            default</span>
                         <div class="flex flex-row w-full gap-2">
                             <InputField :modelValue="binderTyped" class="w-1/2" placeholder="Escribe un nombre"
                                 @input="val => binderTyped = val" type="text" />
@@ -28,7 +39,7 @@
             <div class="singles-wrapper" id="singles-wrapper">
                 <div class="filter-wrapper border-r-2 border-black">
                     <div class="flex flex-row gap-5 mb-2 items-center bg-site absolute -top-11 z-30">
-                        <h1 class="font-bold">Mi Colleción</h1>
+                        <h1 class="font-bold">Mi Colección</h1>
                         <Button size="xsmall" @click="openAddCardsModal(true)">
                             + Agregar cartas
                         </Button>
@@ -85,9 +96,10 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import useDevices from "@/composables/useDevices";
 import { useRoute } from 'vue-router';
 import { useAuth } from '@/composables/useAuth';
+import Underdev from '@/components/Underdev.vue';
 
 const route = useRoute();
-const devices = useDevices();
+const { width, isMobile } = useDevices();
 const toast = useToast();
 const { fetchCollection, collection, collectionMapped, onFetching, binders, fetchBinders, createBinder, addCards, updateCards } = useCollection();
 const loading = ref(false);
@@ -110,7 +122,7 @@ const page = ref(1);
 
 const limit = computed(() => {
     let val = 12;
-    const wd = devices.width.value;
+    const wd = width.value;
     if (wd >= 2560) {
         val = 30
     } else if (wd >= 1920) {

@@ -1,5 +1,6 @@
 
 import { useAuthStore } from "@/stores/auth";
+import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 
@@ -8,12 +9,11 @@ export function useAuth() {
   const user = computed(() => store.user);
   const loading = computed(() => store.loading);
   const token = ref(localStorage.getItem("token") || null);
-
   const router = useRouter();
 
   // Getters reactivos
   const isAuthenticated = computed(() => !!token.value);
-  const isAdmin = computed(() => (user.value?.Tenants[0]?.role || user.value?.Tenants[0]?.UserTenant?.role) === 'ADMIN')
+  const isAdmin = computed(() => (isAuthenticated.value && user.value?.Tenants[0]?.role || user.value?.Tenants[0]?.UserTenant?.role) === 'ADMIN')
 
 
   const init = async () => {
@@ -27,7 +27,7 @@ export function useAuth() {
   // Función interna para sincronizar localStorage y estado reactivo
   const _updateUser = (userData) => {
     user.value = userData;
-    const key = `loggedUser_${tenant || 'geartown'}`;
+    const key = `loggedUser_${userData?.tenant || 'geartown'}`;
     if (userData) {
       sessionStorage.setItem(key, JSON.stringify(userData));
     } else {
@@ -50,10 +50,16 @@ export function useAuth() {
 
   // Cerrar sesión
   const logout = () => {
-    token.value = null;
-    _updateUser(null);
-    localStorage.removeItem("token");
-    router.push("/auth/login");
+    store.updateLoading(true);
+    cleanOrUpdateCarts(user?.value?.email, { cart: true, wish: true, user: true }, [])
+    setTimeout(() => {
+      token.value = null;
+      _updateUser(null);
+      localStorage.removeItem("token");
+      store.updateLocal(null);
+      store.updateLoading(false);
+      router.push('/')
+    }, 1000)
   };
 
   // Iniciar flujo con Google (Recibe el tenant actual)
