@@ -3,7 +3,7 @@
         <slot name="selected"></slot>
         <div class="header-wrapper" @click="toggle" :class="[{ expanded }]">
             <slot name="title"></slot>
-            <img v-if="!alwaysOpen && icon && !bottomArrow && !withoutArrow" src="/images/bleach.png" class="icon big"
+            <img v-if="!alwaysOpen && icon && !bottomArrow && !withoutArrow" src="/images/bleach.png" class="icon"
                 :class="{ 'is-expanded': expanded }" />
         </div>
         <div class="expandable-container" :class="[{ 'expanded': alwaysOpen || expanded }, { speedy }]">
