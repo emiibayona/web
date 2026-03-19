@@ -116,11 +116,6 @@ const router = createRouter({
       component: () => import("@/pages/auth/success.vue"),
     },
     {
-      path: "/auth/info",
-      name: "Auth info",
-      component: () => import("@/pages/auth/login.vue"),
-    },
-    {
       path: "/user/magic/collection",
       name: "Magic Collection",
       component: () => import("@/pages/user/magic/collection.vue"),
