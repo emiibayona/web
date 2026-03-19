@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <p class="footer-text pt-4">
-                    © <span id="year">2019-2026</span> Geartown TCG Club. Todos los derechos reservados.
+                    © <span id="year">2011-2026</span> Geartown TCG Club. Todos los derechos reservados.
                 </p>
                 <p class="footer-text small">
                     Created by <a href="https://linkedin.com/in/emiliano-bayona/" target="_blank"
