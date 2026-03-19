@@ -3,15 +3,21 @@
         <slot name="selected"></slot>
         <div class="header-wrapper" @click="toggle" :class="[{ expanded }]">
             <slot name="title"></slot>
-            <img v-if="!alwaysOpen && icon && !bottomArrow" src="/images/bleach.png" class="icon"
+            <img v-if="!alwaysOpen && icon && !bottomArrow && !withoutArrow" src="/images/bleach.png" class="icon big"
                 :class="{ 'is-expanded': expanded }" />
         </div>
         <div class="expandable-container" :class="[{ 'expanded': alwaysOpen || expanded }, { speedy }]">
             <slot name="content"></slot>
         </div>
-        <div v-if="bottomArrow" class="header-wrapper center mb-4" @click="toggle" :class="[{ expanded }]">
-            <img src="/images/arrow-up.png" class="icon big transition-all duration-300 ease-in-out"
-                :class="{ 'is-expanded': expanded, 'is-bouncing': !expanded }" />
+        <div v-if="bottomArrow && !withoutArrow" class="header-wrapper center mt-2 mb-4" @click="toggle"
+            :class="[{ expanded }]">
+            <img src="/images/arrow-up.png" class="icon" :class="{
+                'big': big,
+                'mid': mid,
+                'transition-all duration-300 ease-in-out': !staticArrow,
+                'is-expanded': expanded,
+                'is-bouncing': !expanded && !staticArrow
+            }" />
         </div>
     </div>
 </template>
@@ -25,12 +31,16 @@ import useDevices from '@/composables/useDevices';
 const devices = useDevices();
 
 const attrs = useAttrs()
-defineProps({
+const props = defineProps({
     alwaysOpen: { type: Boolean, default: false },
     icon: { type: Boolean, default: true },
     speedy: { type: Boolean, default: false },
+    big: { type: Boolean, default: false },
+    mid: { type: Boolean, default: false },
     withoutMove: { type: Boolean, default: false },
+    withoutArrow: { type: Boolean, default: false },
     bottomArrow: { type: Boolean, default: false },
+    staticArrow: { type: Boolean, default: false },
 });
 const expanded = ref(false)
 const toggle = () => {
@@ -43,10 +53,10 @@ const toggle = () => {
         }, 500);
     }
 };
-const { setListener } = useClickOutside({ templateRef: attrs.id, target: open, clicked: false });
+const { setListener } = useClickOutside({ templateRef: attrs.id, target: expanded, clicked: false });
 onMounted(() => setListener())
 onBeforeUnmount(() => { setListener(); expanded.value = false; })
-defineExpose({ toggle });
+defineExpose({ toggle, setExpanded: (val) => expanded.value = val });
 
 </script>
 
@@ -68,6 +78,11 @@ defineExpose({ toggle });
             width: 10px;
             transform: rotate(-180deg);
             transition: all 0.5s ease-in-out;
+
+            &.mid {
+                height: 18px;
+                width: 18px;
+            }
 
             &.big {
                 height: 24px;

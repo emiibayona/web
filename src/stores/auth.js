@@ -49,11 +49,15 @@ export const useAuthStore = defineStore("auth", () => {
     async function updateLocal(tenant, newData) {
         user.value = newData;
     }
+    function updateLoading(val) {
+        loading.value = val;
+    }
 
     return {
         loading,
         user,
         fetchUser,
-        updateLocal
+        updateLocal,
+        updateLoading
     }
 });

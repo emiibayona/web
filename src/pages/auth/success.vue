@@ -11,7 +11,7 @@ const txt = ref("Procesando inicio de sesión...");
 
 onMounted(async () => {
     if (Object.values(route.query).length) {
-
+        auth.updateLoading(true);
         const token = route.query.token;
         const redirect = route.query.redirect;
 

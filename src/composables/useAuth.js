@@ -78,5 +78,6 @@ export function useAuth() {
     logout,
     loginWithGoogle,
     isAdmin,
+    updateLoading: store.updateLoading
   };
 }

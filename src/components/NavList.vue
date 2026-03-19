@@ -19,7 +19,7 @@
   </ul>
 
   <div v-show="isMobile" class="w-full relative">
-    <Compressor without-move bottom-arrow>
+    <Compressor without-move bottom-arrow id="navList" ref="compressorList">
       <template #selected>
         <div class="w-full flex flex-row gap-4 items-center p-4" :class="[atHome ? 'h-[100px]' : 'h-min']">
           <a v-show="!atHome" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
@@ -46,19 +46,33 @@
   <div class="absolute
   top-2 right-2
   nm:top-4 nm:right-4
-  flex flex-row items-center gap-4 cursor-pointer z-50">
+  flex flex-row items-start gap-4 cursor-pointer z-50" :class="{ 'items-center': !user }">
     <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
     :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
-    <Button v-if="isAdmin && !atAdmin" class="" @click="router.push('/admin')">Admin
-      panel</Button>
     <!-- User Zone -->
-    <div v-if="user" class="flex flex-row items-center gap-2">
-      <span>{{ user?.name }}</span>
-      <img :src="user?.picture" class="h-6 w-6 rounded-full" />
-      <Button size="xsmall" @click="router.push('/user/magic/collection')">Colleción</Button>
-    </div>
-    <div v-else-if="!loadingUser" @click="() => loginWithGoogle()">Conectarme</div>
-    <Loader v-else />
+    <Compressor without-move static-arrow bottom-arrow :without-arrow="!user" mid class="w-[100px]" id="userNav"
+      ref="compressorUser">
+      <template #selected>
+        <div class="flex flex-col gap-2">
+          <div v-if="user" class="flex flex-row items-center gap-2 mb-1">
+            <span>{{ user?.name }}</span>
+            <img :src="user?.picture" class="h-6 w-6 rounded-full" />
+          </div>
+          <div v-else-if="!loadingUser"
+            @click="action(() => { updateLoading(true); loginWithGoogle(); compressorUser.toggle(); })">Conectarme</div>
+          <Loader v-else />
+        </div>
+      </template>
+      <template #content>
+        <div v-if="user" class="content buttons flex flex-col gap-1 justify-center items-center">
+          <Button size="xsmall" @click="action(() => { router.push('/user/magic/collection') })">Colleción</Button>
+          <Button v-if="isAdmin && !atAdmin" size="xsmall" @click="action(() => { router.push('/admin') })"
+            class="">Admin
+            panel</Button>
+        </div>
+      </template>
+    </Compressor>
+
     <!-- User Zone -->
 
     <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
@@ -84,7 +98,7 @@ import Compressor from "./atomic/Compressor.vue";
 import { useAuth } from "@/composables/useAuth";
 import Loader from "@/components/atomic/Loader.vue"
 
-const { user, loginWithGoogle, loading: loadingUser } = useAuth();
+const { user, loginWithGoogle, loading: loadingUser, isAdmin, updateLoading } = useAuth();
 const { isMobile } = useDevices();
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({
@@ -96,12 +110,20 @@ const route = useRoute();
 const router = useRouter();
 const atHome = computed(() => route.path === '/')
 const atAdmin = computed(() => route.path.includes('admin'))
-const isAdmin = computed(() => localStorage.getItem("admin-browser"))
 
 const headerClass = "relative flex flex-row justify-center items-center px-10 z-20 bg-site whitespace-nowrap w-full overflow-auto nm:px-20 hd:gap-5 hd:overflow-none hd2:gap-24"
 
 const data = computed(() =>
   Object.values(NAVIGATION).filter(x => !x.home).map(x => ({ ...x, active: x.home ? route.path === x.path : route.path.includes(x.path) })))
+
+const compressorList = ref(null);
+const compressorUser = ref(null);
+
+const action = (func) => {
+  func();
+  compressorList?.value.setExpanded(false);
+  compressorUser?.value.setExpanded(false);
+}
 
 watch(data, () => {
   const index = data.value.findIndex(x => x.active);
@@ -177,5 +199,10 @@ watch(data, () => {
     }
   }
 
+  .buttons {
+    btn:last-child {
+      margin-bottom: 4px;
+    }
+  }
 }
 </style>

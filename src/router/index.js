@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/pages/home/index.vue";
 import { useAuth } from "@/composables/useAuth";
+import { useToast } from "primevue/usetoast";
 
 const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -131,7 +132,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const { isAuthenticated, user, fetchUser, isAdmin } = useAuth();
-
+  const toast = useToast();
 
   if (isAuthenticated.value && !user.value) {
     await fetchUser({ tenant: "geartown" });
@@ -140,8 +141,15 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth) {
     if (!isAuthenticated.value) {
       console.info("Login required");
+
       return next({ name: "Login", query: { redirect: window.location.origin + to.fullPath } });
     } else if (to.meta.role === "ADMIN" && !isAdmin.value) {
+      toast.add({
+        severity: "error",
+        summary: "PERMISOS FALTANTES",
+        detail: `Esta cuenta no cumple con los requisitos para acceder a esa pantalla`,
+        life: 5000,
+      });
       console.info("Access role ADMIN required, not fullfiled, going home")
       return next({ name: "home" });
     }
