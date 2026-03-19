@@ -112,7 +112,7 @@ watch(() => [filters?.value?.activeFilters, expansionSelected.value, searched.va
 
     } else if (!props.withApply) { applyIt(); }
 }, { deep: true })
-onMounted(async () => { if (!sets.value.length) await fetchSets() })
+onMounted(async () => { if (!sets?.value?.length) await fetchSets() })
 defineExpose({ toggle: () => collapsed.value = !collapsed.value, clear, apply: (val) => applyIt(val), shouldApply: shouldActiveApplyFilter.value })
 </script>
 

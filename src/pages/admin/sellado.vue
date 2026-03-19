@@ -51,9 +51,8 @@
                 </div>
             </div>
         </Modal>
-        <AdminLogin />
         <!-- Modal ZONE -->
-        <div v-if="adminIsLoggedIn">
+        <div>
             <h1 class="text-2xl font-bold mb-5">{{ `Panel de Admin > ${capitalizeFirstLetter(route.query.game)} >
                 Sellados`}}</h1>
             <Button size="small mb-10" @click="showModal = true">Agregar nuevo artículo</Button>
@@ -78,9 +77,6 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import AdminLogin from '@/components/admin/AdminLogin.vue';
-import useUser from '@/composables/useUser';
-const { adminIsLoggedIn } = useUser();
 
 import Sealed from '@/components/shop/Sealed.vue';
 import useShop from '@/composables/useShop';
@@ -97,7 +93,6 @@ import { capitalizeFirstLetter } from '@/utils/utils';
 
 
 const route = useRoute();
-// console.log(route.query.game);
 
 const {
     sealed,

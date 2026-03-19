@@ -28,26 +28,27 @@
 
 </template>
 <script setup>
-import { computed, onBeforeMount } from 'vue';
+import { computed, onBeforeMount, onMounted, watch } from 'vue';
 import Footer from './components/atomic/Footer.vue';
 import NavList from './components/NavList.vue';
 import Toast from 'primevue/toast';
 import { Analytics } from '@vercel/analytics/vue';
 import useDevices from '@/composables/useDevices';
-const { width, isMobile } = useDevices();
+import { useAuth } from './composables/useAuth';
+import useCarts from './composables/useCart';
+const { width } = useDevices();
+const { user } = useAuth();
+const { init } = useCarts();
 onBeforeMount(() => {
   const seller = localStorage.getItem("seller")
-  const user = localStorage.getItem("user");
-
   if (!seller) {
     localStorage.setItem("seller", import.meta.env.VITE_SELLER_EMAIL);
-    console.info("Seller email set")
-  }
-  if (!user) {
-    console.info("User email set")
-    localStorage.setItem("user", import.meta.env.VITE_SELLER_EMAIL);
   }
 })
+watch(user, () => {
+  init();
+})
+
 </script>
 <style lang="scss" scoped>
 .overlay {

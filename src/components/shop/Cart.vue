@@ -32,7 +32,7 @@ defineProps({
 
 const { cart, } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
 
-const gameCart = computed(() => cart.value[GAMES.MAGIC] || []);
+const gameCart = computed(() => cart.value || []);
 const totalCart = computed(() => gameCart.value.reduce((prev, curr) => prev += curr.sets.reduce((prevSet, currSet) => prevSet += currSet.qty, 0), 0))
 </script>
 

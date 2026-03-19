@@ -84,6 +84,7 @@ import { useToast } from "primevue/usetoast";
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import useDevices from "@/composables/useDevices";
 import { useRoute } from 'vue-router';
+import { useAuth } from '@/composables/useAuth';
 
 const route = useRoute();
 const devices = useDevices();
@@ -93,6 +94,7 @@ const loading = ref(false);
 const uploading = ref(false);
 const showAddModal = ref(false);
 const mounting = ref(true);
+const { user } = useAuth();
 
 
 const bindersMapped = computed(() => binders?.value?.map(x => ({ value: x, label: x.name, })))
@@ -141,7 +143,7 @@ async function initCollection(addParams = null, filt = null) {
         ...(addParams || {}),
     };
 
-    await fetchCollection(params.value, localStorage.getItem("user"))
+    await fetchCollection(params.value, user?.value?.email)
 
 }
 function openAddCardsModal(val = true) {
@@ -177,7 +179,7 @@ async function uploadCards() {
             form.append("file", elem.files[0]);
         }
         form.append("binder", binder.name)
-        form.append("user", localStorage.getItem("seller"))
+        form.append("user", user?.value?.email)
 
         const result = await addCards(form);
         toast.removeAllGroups();

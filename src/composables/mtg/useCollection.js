@@ -64,7 +64,6 @@ const useCollection = () => {
 
   async function updateCards(colId, arr, binder) {
     const res = await store.updateCards(colId, arr, binder);
-    console.log("Removing card from collection as array");
   }
 
   async function getListToCart(list) {

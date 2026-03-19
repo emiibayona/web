@@ -5,6 +5,8 @@ export const GAMES = Object.freeze({
   RIFTBOUND: "riftbound",
 });
 
+export const ACTIVE_GAMES = Object.values(GAMES).filter(x => x === "magic")
+
 export const NAVIGATION = Object.freeze({
   HOME: { path: "/", name: "Inicio", home: true },
   MAGIC: {
@@ -66,7 +68,9 @@ export const MTG = Object.freeze({
   },
 });
 export const ApiConfig = Object.freeze({
+  VUE_AUTH_APP_API_URL: import.meta.env.VITE_AUTH_API_URL,
   VUE_APP_API_URL: import.meta.env.VITE_API_URL,
   VUE_APP_API_NAME: "api/",
 });
 export const ApiURL = `${ApiConfig.VUE_APP_API_URL}/${ApiConfig.VUE_APP_API_NAME}`;
+export const AuthApiURL = `${ApiConfig.VUE_AUTH_APP_API_URL}/${ApiConfig.VUE_APP_API_NAME}`;

@@ -67,7 +67,7 @@ const props = defineProps({
     fromWishlist: { type: Boolean, default: false },
     item: { type: Object, default: () => { } }
 })
-const itemName = computed(() => props.item.name.split("//")[0])
+const itemName = computed(() => props?.item?.name?.split("//")[0])
 </script>
 
 <style lang="scss" scoped>
