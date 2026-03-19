@@ -1,36 +1,96 @@
-import { computed, watch } from "vue";
-import { useCartStore } from "@/stores/cart";
-import { useAuth } from "./useAuth";
+import { ref, computed, watch } from "vue";
+import { GAMES, RECIPIENTS_LISTS } from "@/utils/constants.js";
+import useUser from "./useUser";
 import { useToast } from "primevue/usetoast";
-import { ACTIVE_GAMES, GAMES, RECIPIENTS_LISTS } from "@/utils/constants.js";
 import useSets from "./mtg/useSets";
+import CartService from "@/services/CartService";
+import { useAuth } from "./useAuth";
 
-const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
-  const store = useCartStore();
-  const { user: loggedUser } = useAuth();
+
+
+const cartOnline = ref({});
+const cart = ref(
+  Object.values(GAMES)
+    .filter((x) => x === GAMES.MAGIC)
+    .reduce((acc, game) => ({ ...acc, [game]: [] }), {}),
+);
+const wishlist = ref(
+  Object.values(GAMES)
+    .filter((x) => x === GAMES.MAGIC)
+    .reduce((acc, game) => ({ ...acc, [game]: [] }), {}),
+);
+
+const useCarts = (
+  game = GAMES.MAGIC,
+  receptor = RECIPIENTS_LISTS.CART,
+  init = true,
+) => {
+  const loading = ref(true);
+  const { user } = useUser();
   const { sets } = useSets(game);
   const toast = useToast();
+  const { user: loggedUser } = useAuth();
 
-  // Getters reactivos al Store de Pinia
-  const cart = computed(() => store.cart[game]);
-  const wishlist = computed(() => store.wishlist[game]);
-  const loading = computed(() => store.loading);
-
-  const currentRecipient = computed(() =>
-    receptor === RECIPIENTS_LISTS.CART ? store.cart[game] : store.wishlist[game]
+  const cartKey = computed(
+    () => `${RECIPIENTS_LISTS.CART}_${user.value || "guest"}`,
+  );
+  const wishlistKey = computed(
+    () => `${RECIPIENTS_LISTS.WISHLIST}_${user.value || "guest"}`,
   );
 
   const receptorBox = computed(() =>
     receptor === RECIPIENTS_LISTS.CART ? "carrito" : "wishlist",
   );
-  // Inicialización controlada
-  const init = async () => {
-    if (!store.isHydrated && !store.loading) {
-      await store.fetchCart({
-        email: loggedUser.value?.email,
-        tenant: "geartown",
+
+  function getCurrentRecipient() {
+    if (receptor === RECIPIENTS_LISTS.CART) return cart.value[game];
+    if (receptor === RECIPIENTS_LISTS.WISHLIST) return wishlist.value[game];
+    throw new Error("Invalid receptor");
+  }
+
+  const getCart = (currentGame) =>
+    JSON.parse(localStorage.getItem(cartKey.value) || "{}")[currentGame] || [];
+  const getWishlist = (currentGame) =>
+    JSON.parse(localStorage.getItem(wishlistKey.value) || "{}")[currentGame] ||
+    [];
+
+  const getAllCarts = () => {
+    return Object.entries(GAMES)
+      .filter((x) => x[1] === GAMES.MAGIC)
+      .map(([name, value]) => {
+        const values = getCart(value);
+        return {
+          name: value,
+          values,
+          count: calculateTotal(values),
+        };
       });
-    }
+  };
+
+  const getAllWishlists = () => {
+    return Object.entries(GAMES)
+      .filter((x) => x[1] === GAMES.MAGIC)
+      .map(([name, value]) => {
+        const values = getWishlist(value);
+        return {
+          name: value,
+          values,
+          count: calculateTotal(values),
+        };
+      });
+  };
+
+  const allGamesCarts = ref(getAllCarts());
+  const allGamesWishlists = ref(getAllWishlists());
+
+  const load = async () => {
+    if (!init) return;
+    loading.value = true;
+
+    cart.value[game] = getCart(game);
+    wishlist.value[game] = getWishlist(game);
+
+    loading.value = false;
   };
 
   const parseCard = (card) => {
@@ -46,7 +106,6 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
   };
 
   const add = ({ item, quantity = 1, sealed = false, alert = true }) => {
-    const recipient = [...currentRecipient.value]; // Clonamos para mantener inmutabilidad
     let toastOpt = {
       severity: "success",
       summary: "Agregada!",
@@ -56,6 +115,7 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
       },
       life: 2000,
     };
+    const recipient = getCurrentRecipient();
 
     const itemParsed = parseCard(item);
     const currentSet = sets.value.find((x) => x.code === itemParsed.set);
@@ -102,19 +162,16 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
       toast.removeAllGroups();
       toast.add(toastOpt);
     }
-
-    store.updateLocal(loggedUser.value?.email, game, receptor, recipient);
   };
 
   const remove = ({ item, quantity = 1, all = false, sealed = false }) => {
-    const recipient = [...currentRecipient.value]; // Clonamos para mantener inmutabilidad
     let toastOpt = {
       severity: "success",
       summary: "Removida!",
       detail: `Todas las cartas de esa version fueron removidas.`,
       life: 2000,
     };
-
+    const recipient = getCurrentRecipient();
     const itemParsed = parseCard(item);
     const indexCard = recipient.findIndex((i) => i.id === itemParsed.id);
 
@@ -147,44 +204,67 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
       toast.removeAllGroups();
       toast.add(toastOpt);
     }
-    store.updateLocal(loggedUser.value?.email, game, receptor, recipient);
   };
 
   const cleanCart = () => {
-    currentRecipient.value.splice(0); // Clonamos para mantener inmutabilidad
-    store.updateLocal(loggedUser.value?.email, game, receptor, currentRecipient.value.splice(0));
-  };
-  const calculateTotal = (arr) => {
-    return arr?.reduce((acc, curr) => acc + curr.sets.reduce((s, c) => s + c.qty, 0), 0);
+    getCurrentRecipient().splice(0);
   };
 
-  // Watcher para persistencia local automática
-  watch(() => store.cart, (newVal) => {
-    for (const game of ACTIVE_GAMES) {
-      sessionStorage.setItem(`${game}_${RECIPIENTS_LISTS.CART}_${loggedUser.value?.email || 'guest'}`, JSON.stringify(newVal[game]));
-    }
-  }, { deep: true });
+  function calculateTotal(arr) {
+    return arr.reduce(
+      (prev, curr) =>
+      (prev += curr.sets.reduce(
+        (prevSet, currSet) => (prevSet += currSet.qty),
+        0,
+      )),
+      0,
+    );
+  }
 
-  watch(() => store.wishlist, (newVal) => {
-    for (const game of ACTIVE_GAMES) {
-      sessionStorage.setItem(`${game}_${RECIPIENTS_LISTS.WISHLIST}_${loggedUser.value?.email || 'guest'}`, JSON.stringify(newVal[game]));
-    }
-  }, { deep: true });
+  load();
 
-  // Ejecutamos la lógica de carga al usar el composable
-  init();
+  watch(
+    cart,
+    (newCart) => {
+      if (init && !loading.value) {
+        localStorage.setItem(cartKey.value, JSON.stringify(newCart));
+        allGamesCarts.value = getAllCarts();
+      }
+    },
+    { deep: true },
+  );
+
+  watch(
+    wishlist,
+    (newWishlist) => {
+      if (init && !loading.value) {
+        localStorage.setItem(wishlistKey.value, JSON.stringify(newWishlist));
+        allGamesWishlists.value = getAllWishlists();
+      }
+    },
+    { deep: true },
+  );
+
+  // watch(
+  //   () => [cartKey.value, wishlistKey.value],
+  //   () => {
+  //     load();
+  //   },
+  // );
 
   return {
-    cart,
     wishlist,
-    loading,
+    cart,
+    allGamesCarts,
+    allGamesWishlists,
     add,
     remove,
-    cleanCart,
     calculateTotal,
-    allGamesCarts: computed(() => [{ name: game, values: store.cart?.[game], count: calculateTotal(store.cart?.[game]) }]),
-    allGamesWishlists: computed(() => [{ name: game, values: wishlist.cart?.[game], count: calculateTotal(store.wishlist?.[game]) }]),
-    init
+    getCart,
+    getWishlist,
+    getCart,
+    getWishlist,
+    cleanCart,
   };
 };
 

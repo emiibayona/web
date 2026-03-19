@@ -11,7 +11,6 @@ const router = createRouter({
       path: "/magic",
       name: "magic",
       component: () => import("@/pages/magic/index.vue"),
-      meta: { public: true }, // Marcar explícitamente como pública
     },
     {
       path: "/yugioh",
@@ -62,42 +61,49 @@ const router = createRouter({
       path: "/cart",
       name: "Cart",
       component: () => import("@/pages/cart.vue"),
+      meta: { requiresAuth: true, },
     },
     {
       path: "/wishlist",
       name: "Wishlist",
       component: () => import("@/pages/wishlist.vue"),
+      meta: { requiresAuth: true, },
     },
     {
       path: "/admin",
       name: "admin",
       component: () => import("@/pages/admin/index.vue"),
-      meta: { requiresAuth: true, role: "admin" },
+      meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/sellado",
       name: "admin sellado",
       component: () => import("@/pages/admin/sellado.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/ventas",
       name: "Magic ventas",
       component: () => import("@/pages/admin/magic/ventas.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/sellado",
       name: "Magic sellado",
       component: () => import("@/pages/admin/magic/sellado.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/collection",
       name: "Magic collection",
       component: () => import("@/pages/admin/magic/collection.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/binders",
       name: "Magic binders",
       component: () => import("@/pages/admin/magic/binders.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/auth/login",
@@ -115,6 +121,12 @@ const router = createRouter({
       component: () => import("@/pages/auth/login.vue"),
     },
     {
+      path: "/user/magic/collection",
+      name: "Magic Collection",
+      component: () => import("@/pages/user/magic/collection.vue"),
+      meta: { requiresAuth: true, role: "USER" },
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "not-found",
       component: () => import("@/pages/NotFound.vue"),
@@ -123,18 +135,21 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const { isAuthenticated, user, fetchProfile } = useAuth();
-  console.log({ isAuthenticated: isAuthenticated.value, user: user.value });
-  // 1. Proteger rutas
-  if (to.meta.requiresAuth && !isAuthenticated.value) {
-    console.log("aqui");
-    return next({ name: "Login" });
+  const { isAuthenticated, user, fetchUser, isAdmin } = useAuth();
+
+
+  if (isAuthenticated.value && !user.value) {
+    await fetchUser({ tenant: "geartown" });
   }
 
-  // 2. Si hay token pero NO hay usuario en memoria ni en disco (raro, pero posible)
-  // fetchProfile ahora solo hace el fetch si user.value es null
-  if (isAuthenticated.value && !user.value) {
-    await fetchProfile();
+  if (to.meta.requiresAuth) {
+    if (!isAuthenticated.value) {
+      console.info("Login required");
+      return next({ name: "Login", query: { redirect: window.location.origin + to.fullPath } });
+    } else if (to.meta.role === "ADMIN" && !isAdmin.value) {
+      console.info("Access role ADMIN required, not fullfiled, going home")
+      return next({ name: "home" });
+    }
   }
 
   next();

@@ -1,6 +1,6 @@
 <template>
     <div class="h-screen">
-        <div v-if="adminIsLoggedIn" class="px-8">
+        <div>
             <h1 class="text-2xl font-bold mb-5">Panel de Admin</h1>
 
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
@@ -12,7 +12,7 @@
 
         </div>
     </div>
-    <AdminLogin />
+
 </template>
 
 <script setup>
@@ -20,14 +20,11 @@ import { computed, ref, } from 'vue';
 
 import Tabs from "@/components/atomic/Tabs.vue";
 import { useRouter } from 'vue-router';
-import AdminLogin from '@/components/admin/AdminLogin.vue';
 import { GAMES } from '@/utils/constants';
-import useUser from '@/composables/useUser';
 import AdminPages from '@/components/admin/AdminPages.vue';
 
 const router = useRouter();
 
-const { adminIsLoggedIn } = useUser();
 const activeTab = ref(0);
 
 const info = {
@@ -52,11 +49,6 @@ const tabs = computed(() => {
     })
     return games;
 })
-
-function goHome() {
-    router.push("/");
-}
-
 </script>
 
 <style lang="scss" scoped>

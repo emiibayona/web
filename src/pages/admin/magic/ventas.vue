@@ -1,12 +1,7 @@
 <template>
     <div>
         <h1 class="text-2xl font-bold mb-5">Panel de Admin > Ventas de Magic</h1>
-
-        <!-- MODAL ZONE -->
-        <AdminLogin @post-login="loadSales()" />
-        <!-- MODAL ZONE -->
-
-        <div v-if="adminIsLoggedIn">
+        <div>
             <Tabs :tabs="tabs" :active-tab="activeTab" @change="val => activeTab = val.index" id="tabs">
                 <template #helper>
                     <InputField class="mb-1 ml-5" v-model="searchOrder"
@@ -23,9 +18,9 @@
                                 <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
                                     :class="[tabs[activeTab].bg]">
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                            }}</span></span>
+                                    }}</span></span>
                                     <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
                                         sale.contact
                                             }}</span> <span
@@ -33,7 +28,7 @@
                                             @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
                                                 class="w-4 h-4" /></span></span>
                                     <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                            }}</span></span>
+                                    }}</span></span>
                                 </div>
                             </template>
                             <template #content>
@@ -71,9 +66,9 @@
                                                 <!-- SELECTOR -->
                                                 <div class="flex flex-col gap-1">
                                                     <span class="font-bold text-lg">{{ `Agregadas para entrega: `
-                                                    }}<span class="font-normal">{{ card.sold }}</span></span>
+                                                        }}<span class="font-normal">{{ card.sold }}</span></span>
                                                     <span class=" flex flex-row gap-2 font-bold text-lg">{{ `Estado: `
-                                                    }}<span class="font-normal"> <img
+                                                        }}<span class="font-normal"> <img
                                                                 :src="`/images/${parseInt(card.sold) === parseInt(card.quantity) ? 'check-mark' : 'letter-x'}.png`"
                                                                 class="w-6 h-6" /></span></span>
 
@@ -130,14 +125,11 @@ import useSales from '@/composables/mtg/useSales';
 import Compressor from '@/components/atomic/Compressor.vue';
 import { capitalizeFirstLetter } from '@/utils/utils';
 import useWhatsapp from '@/composables/useWhatsapp';
-import AdminLogin from '@/components/admin/AdminLogin.vue';
-import useUser from '@/composables/useUser';
 import Loader from '@/components/atomic/Loader.vue';
 import Empty from '@/components/atomic/Empty.vue';
 
 
 const toast = useToast();
-const { adminIsLoggedIn } = useUser();
 const { fetchSales, sales, fetchSalesResumen, confirmOrder } = useSales();
 const { openWhatsApp } = useWhatsapp()
 const loading = ref(false);
@@ -215,6 +207,7 @@ watch(sales, () => {
 })
 onMounted(async () => {
     orderResumen.value = await fetchSalesResumen();
+    await loadSales();
 })
 </script>
 

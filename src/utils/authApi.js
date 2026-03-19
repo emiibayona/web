@@ -29,8 +29,6 @@ authApi.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Si el servidor dice que el token no vale, limpiamos y redirigimos
-      // localStorage.removeItem("token");
-      // window.location.href = "/login";
       console.log("Error on interceptor", error);
     }
     return Promise.reject(error);

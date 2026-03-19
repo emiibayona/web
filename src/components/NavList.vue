@@ -46,11 +46,21 @@
   <div class="absolute
   top-2 right-2
   nm:top-4 nm:right-4
-  flex flex-row gap-4 cursor-pointer">
+  flex flex-row items-center gap-4 cursor-pointer z-50">
     <!-- <a v-if="data.find(x => x.active && x.value === 'magic')" class=""
     :href="`/user${data.find(x => x.active && x.path !== '/')?.path}`">Tus cartas</a> -->
-    <Button v-if="isAdmin && !atAdmin" class="z-50" @click="router.push('/admin')">Admin
+    <Button v-if="isAdmin && !atAdmin" class="" @click="router.push('/admin')">Admin
       panel</Button>
+    <!-- User Zone -->
+    <div v-if="user" class="flex flex-row items-center gap-2">
+      <span>{{ user?.name }}</span>
+      <img :src="user?.picture" class="h-6 w-6 rounded-full" />
+      <Button size="xsmall" @click="router.push('/user/magic/collection')">Colleción</Button>
+    </div>
+    <div v-else-if="!loadingUser" @click="() => loginWithGoogle()">Conectarme</div>
+    <Loader v-else />
+    <!-- User Zone -->
+
     <a class="icon-wrapper" href="/cart" :class="[{ 'active': route.path.includes('cart') }]">
       <span v-if="listsLength?.cart"></span>
       <img class="icon" src="/images/cart.png" alt="Logo" />
@@ -68,10 +78,13 @@ import { useRoute, useRouter } from "vue-router";
 import { NAVIGATION } from "@/utils/constants";
 import { GAMES } from '@/utils/constants';
 import useCarts from '@/composables/useCart';
-import Button from "./atomic/Button.vue";
+import Button from "@/components/atomic/Button.vue";
 import useDevices from "@/composables/useDevices";
 import Compressor from "./atomic/Compressor.vue";
+import { useAuth } from "@/composables/useAuth";
+import Loader from "@/components/atomic/Loader.vue"
 
+const { user, loginWithGoogle, loading: loadingUser } = useAuth();
 const { isMobile } = useDevices();
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({

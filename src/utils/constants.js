@@ -5,6 +5,8 @@ export const GAMES = Object.freeze({
   RIFTBOUND: "riftbound",
 });
 
+export const ACTIVE_GAMES = Object.values(GAMES).filter(x => x === "magic")
+
 export const NAVIGATION = Object.freeze({
   HOME: { path: "/", name: "Inicio", home: true },
   MAGIC: {
