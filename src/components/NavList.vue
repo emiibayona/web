@@ -55,11 +55,16 @@
         <!-- <div class="flex flex-col gap-2"> -->
         <div v-if="user" class="flex flex-row items-center gap-2 mb-1">
           <!-- <span>{{ user?.name }}</span> -->
-          <img :src="user?.picture" class="h-6 w-6 rounded-full" />
+          <img :src="user?.picture" class="h-10 w-10 rounded-full" :class="{ 'h-6 w-6': isMobile }" />
         </div>
         <!-- <div v-else-if="false" -->
-        <div v-else-if="!loadingUser"
-          @click="action(() => { updateLoading(true); loginWithGoogle(); compressorUser.toggle(); })">Conectarme</div>
+        <div v-else-if="!loadingUser" @click.stop="action(() => {
+          // compressorUser.toggle();
+          router.push({
+            name: 'Login'
+          })
+        })">
+          Conectarme</div>
         <Loader v-else />
         <!-- </div> -->
       </template>
@@ -101,7 +106,7 @@ import Compressor from "./atomic/Compressor.vue";
 import { useAuth } from "@/composables/useAuth";
 import Loader from "@/components/atomic/Loader.vue"
 
-const { user, loginWithGoogle, loading: loadingUser, isAdmin, updateLoading, logout, isAuthenticated } = useAuth();
+const { user, loading: loadingUser, isAdmin, updateLoading, logout, isAuthenticated } = useAuth();
 const { isMobile } = useDevices();
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
 const listsLength = computed(() => ({

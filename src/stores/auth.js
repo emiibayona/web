@@ -46,6 +46,15 @@ export const useAuthStore = defineStore("auth", () => {
         return loadPromise;
     }
 
+    async function loginLocal(body) {
+        try {
+            if (!body) throw "Body required";
+            return await AuthService.loginLocal(body)
+        } catch (error) {
+            return error;
+        }
+    }
+
     async function updateLocal(tenant, newData) {
         user.value = newData;
     }
@@ -58,6 +67,7 @@ export const useAuthStore = defineStore("auth", () => {
         user,
         fetchUser,
         updateLocal,
-        updateLoading
+        updateLoading,
+        loginLocal
     }
 });

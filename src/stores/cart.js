@@ -32,11 +32,11 @@ export const useCartStore = defineStore("cart", () => {
                     const cartKey = `${game}_${RECIPIENTS_LISTS.CART}_${email || 'guest'}`
                     const wishKey = `${game}_${RECIPIENTS_LISTS.WISHLIST}_${email || 'guest'}`
 
-                    const itemCart = JSON.parse(sessionStorage.getItem(cartKey));
-                    const itemWhishlist = JSON.parse(sessionStorage.getItem(wishKey));
+                    const itemCart = JSON.parse(sessionStorage.getItem(cartKey) || `[]`);
+                    const itemWhishlist = JSON.parse(sessionStorage.getItem(wishKey || `[]`));
 
 
-                    if (!itemCart) {
+                    if (!itemCart?.length) {
                         const responseCart = await CartService.fetch({
                             type: 'cart',
                             info: { email, tenant, game }
@@ -52,7 +52,7 @@ export const useCartStore = defineStore("cart", () => {
                         cart.value[game] = itemCart;
                     }
 
-                    if (!itemWhishlist) {
+                    if (!itemWhishlist?.length) {
                         const responseWish = await CartService.fetch({
                             type: 'wishlist',
                             info: { email, tenant, game }

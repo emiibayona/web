@@ -5,12 +5,15 @@ import { useToast } from "primevue/usetoast";
 import { ACTIVE_GAMES, GAMES, RECIPIENTS_LISTS } from "@/utils/constants.js";
 import useSets from "./mtg/useSets";
 import { cleanOrUpdateCarts } from "@/utils/cartUtils";
+import { useRoute, useRouter } from "vue-router";
 
 const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
   const store = useCartStore();
-  const { user: loggedUser, loginWithGoogle } = useAuth();
+  const { user: loggedUser } = useAuth();
   const { sets } = useSets(game);
   const toast = useToast();
+  const route = useRoute();
+  const router = useRouter()
 
   // Getters reactivos al Store de Pinia
   const cart = computed(() => store.cart[game]);
@@ -48,7 +51,7 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
 
   const add = ({ item, quantity = 1, sealed = false, alert = true }) => {
     if (!loggedUser.value) {
-      loginWithGoogle();
+      router.push({ name: "Login" })
       return;
     }
     const recipient = [...currentRecipient.value]; // Clonamos para mantener inmutabilidad

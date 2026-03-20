@@ -64,10 +64,20 @@ export function useAuth() {
 
   // Iniciar flujo con Google (Recibe el tenant actual)
   const loginWithGoogle = (tenantSlug = "geartown", redirect) => {
+    store.updateLoading(true);
     const backendUrl = import.meta.env.VITE_AUTH_API_URL || "http://localhost:8089";
     const origin = window.location.origin;
     window.location.href = `${backendUrl}/api/auth/google?origin=${origin}&tenant=${tenantSlug}&redirect=${encodeURIComponent(redirect || window.location.href)}`;
   };
+
+  const loginWithLocal = async (body, redirect) => {
+    store.updateLoading(true);
+    const loginResult = await store.loginLocal({ ...body, redirect });
+    console.log("Login Result", loginResult)
+    if (loginResult.token) {
+      router.push({ name: "Auth success", query: { ...loginResult } })
+    }
+  }
 
   watch(() => store.user, (newVal) => {
     sessionStorage.setItem(`loggedUser_${'geartown'}`, JSON.stringify(newVal))
@@ -84,6 +94,7 @@ export function useAuth() {
     logout,
     loginWithGoogle,
     isAdmin,
-    updateLoading: store.updateLoading
+    updateLoading: store.updateLoading,
+    loginWithLocal,
   };
 }

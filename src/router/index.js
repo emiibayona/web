@@ -137,11 +137,18 @@ router.beforeEach(async (to, from, next) => {
   if (isAuthenticated.value && !user.value) {
     await fetchUser({ tenant: "geartown" });
   }
+  // const redirectQuery = { redirect: window.location.origin + from.fullPath }
+
+  // // debugger;
+  // if (to.name === 'Login') {
+  //   to.query = { ...(to?.query || {}), ...redirectQuery }
+  // }
+
   if (to.meta.requiresAuth) {
     if (!isAuthenticated.value) {
       console.info("Login required");
 
-      return next({ name: "Login", query: { redirect: window.location.origin + to.fullPath } });
+      return next({ name: "Login" });
     } else if (to.meta.role === "ADMIN" && !isAdmin.value) {
       toast.add({
         severity: "error",
