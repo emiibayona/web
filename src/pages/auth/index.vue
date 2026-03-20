@@ -121,14 +121,14 @@ const loginForm = ref({
 const registerMode = ref(false);
 const googleEnabled = computed(() => import.meta.env.VITE_GOOGLE_ENABLED)
 const handleLogin = () => {
-    if (googleEnabled.value) {
-        try {
-            loginWithLocal({ tenant: 'geartown', ...loginForm.value }, window.location.origin + (route?.redirectedFrom?.fullPath || '/'));
-            // loginWithGoogle('geartown', route?.query?.redirect || null);
-        } catch (err) {
-            updateLoading(false);
-            console.error(err);
+    try {
+        loginWithLocal({ tenant: 'geartown', ...loginForm.value }, window.location.origin + (route?.redirectedFrom?.fullPath || '/'));
+        if (googleEnabled.value) {
+            loginWithGoogle('geartown', route?.query?.redirect || null);
         }
+    } catch (err) {
+        updateLoading(false);
+        console.error(err);
     }
 };
 const handleRegister = async () => {
