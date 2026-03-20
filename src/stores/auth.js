@@ -62,12 +62,31 @@ export const useAuthStore = defineStore("auth", () => {
         loading.value = val;
     }
 
+    async function registerOnLogin(body) {
+        try {
+            if (!body) return;
+            return await AuthService.registerOnLogin(body);
+        } catch (error) {
+
+        }
+    }
+    async function registerOnWeb(body) {
+        try {
+            if (!body) return;
+            return await AuthService.registerOnWeb(body);
+        } catch (error) {
+
+        }
+    }
+
     return {
         loading,
         user,
         fetchUser,
         updateLocal,
         updateLoading,
-        loginLocal
+        loginLocal,
+        registerOnLogin,
+        registerOnWeb
     }
 });

@@ -48,7 +48,7 @@ export default {
   post: async (path, data) => {
     try {
       const response = await authApi.post(path, data);
-      return response.data;
+      return response?.data;
     } catch (error) {
       console.error("POST request error:", error);
       throw error;

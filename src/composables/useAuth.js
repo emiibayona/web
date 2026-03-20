@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/auth";
 import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
 
 export function useAuth() {
   const store = useAuthStore();
@@ -10,6 +11,7 @@ export function useAuth() {
   const loading = computed(() => store.loading);
   const token = ref(localStorage.getItem("token") || null);
   const router = useRouter();
+  const toast = useToast();
 
   // Getters reactivos
   const isAuthenticated = computed(() => !!token.value);
@@ -74,8 +76,33 @@ export function useAuth() {
     store.updateLoading(true);
     const loginResult = await store.loginLocal({ ...body, redirect });
     console.log("Login Result", loginResult)
+    if (loginResult.status === 500) {
+      store.updateLoading(false);
+      toast.add({
+        severity: "error",
+        summary: "Error en conexión",
+        detail: loginResult.data.error.split("Something went wrong:")?.[1],
+        life: 3000,
+      })
+      return;
+    }
     if (loginResult.token) {
+      toast.add({
+        severity: "success",
+        summary: "Conexión exitosa",
+        detail: "",
+        life: 3000,
+      })
       router.push({ name: "Auth success", query: { ...loginResult } })
+    }
+  }
+
+  async function register(body) {
+    store.updateLoading(true);
+    const resApi = await store.registerOnLogin(body);
+    const resWeb = await store.registerOnWeb(body);
+    if (resApi && resWeb) {
+      await loginWithLocal(body, "/")
     }
   }
 
@@ -96,5 +123,6 @@ export function useAuth() {
     isAdmin,
     updateLoading: store.updateLoading,
     loginWithLocal,
+    register
   };
 }
