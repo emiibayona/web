@@ -32,11 +32,11 @@ export const useCartStore = defineStore("cart", () => {
                     const cartKey = `${game}_${RECIPIENTS_LISTS.CART}_${email || 'guest'}`
                     const wishKey = `${game}_${RECIPIENTS_LISTS.WISHLIST}_${email || 'guest'}`
 
-                    const itemCart = JSON.parse(sessionStorage.getItem(cartKey) || `[]`);
-                    const itemWhishlist = JSON.parse(sessionStorage.getItem(wishKey || `[]`));
+                    const itemCart = JSON.parse(sessionStorage.getItem(cartKey) || null);
+                    const itemWhishlist = JSON.parse(sessionStorage.getItem(wishKey) || null);
 
-
-                    if (!itemCart?.length) {
+                    if (!itemCart) {
+                        debugger
                         const responseCart = await CartService.fetch({
                             type: 'cart',
                             info: { email, tenant, game }
@@ -44,7 +44,7 @@ export const useCartStore = defineStore("cart", () => {
 
                         // Hidratamos el estado global
                         if (responseCart) {
-                            cart.value[game] = JSON.parse(responseCart?.data || []);
+                            cart.value[game] = responseCart?.data || [];
                             localStorage.setItem(cartKey + '_ID', responseCart?.id)
                         }
 
@@ -52,7 +52,7 @@ export const useCartStore = defineStore("cart", () => {
                         cart.value[game] = itemCart;
                     }
 
-                    if (!itemWhishlist?.length) {
+                    if (!itemWhishlist) {
                         const responseWish = await CartService.fetch({
                             type: 'wishlist',
                             info: { email, tenant, game }
@@ -60,7 +60,7 @@ export const useCartStore = defineStore("cart", () => {
 
                         // Hidratamos el estado global
                         if (responseWish) {
-                            wishlist.value[game] = JSON.parse(responseWish?.data || []);
+                            wishlist.value[game] = responseWish?.data || [];
                             localStorage.setItem(wishKey + '_ID', responseWish?.id)
                         }
 

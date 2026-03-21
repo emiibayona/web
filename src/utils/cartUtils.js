@@ -1,6 +1,6 @@
 import { ACTIVE_GAMES, RECIPIENTS_LISTS } from "./constants";
 
-export function cleanOrUpdateCarts(email, { cart = true, wish = true, user = false }, val) {
+export function cleanOrUpdateCarts(email, { cart = false, wish = false, user = false }, val) {
     if (!sessionStorage || !localStorage) return;
     for (const game of ACTIVE_GAMES) {
         if (cart) {
