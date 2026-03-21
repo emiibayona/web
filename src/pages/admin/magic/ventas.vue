@@ -13,14 +13,14 @@
                     <Loader v-if="fetching" class="self-center mt-10" />
                     <div v-for="(sale, index) in localSales" :key="index" class="flex flex-col gap-5 w-full">
                         <!-- {{ sale }} -->
-                        <Compressor :icon="false" speedy :id="`compressor-${index}`">
+                        <Compressor :icon="false" speedy :id="`compressor-${index}`" without-move>
                             <template #title>
                                 <div class="flex flex-col w-full rounded-md p-3 hover:cursor-pointer"
                                     :class="[tabs[activeTab].bg]">
                                     <span class="font-bold">Orden de compra: <span class="font-normal"> {{ sale.id
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold">Nombre: <span class="font-normal"> {{ sale.name
-                                    }}</span></span>
+                                            }}</span></span>
                                     <span class="font-bold fles flex-row">Telefono: <span class=" font-normal"> {{
                                         sale.contact
                                             }}</span> <span
@@ -28,7 +28,7 @@
                                             @click.stop="goWpp(sale.contact)">Contactar <img src="/images/whatsapp.png"
                                                 class="w-4 h-4" /></span></span>
                                     <span class="font-bold">Comentarios: <span class="font-normal"> {{ sale.comments
-                                    }}</span></span>
+                                            }}</span></span>
                                 </div>
                             </template>
                             <template #content>
@@ -66,9 +66,9 @@
                                                 <!-- SELECTOR -->
                                                 <div class="flex flex-col gap-1">
                                                     <span class="font-bold text-lg">{{ `Agregadas para entrega: `
-                                                        }}<span class="font-normal">{{ card.sold }}</span></span>
+                                                    }}<span class="font-normal">{{ card.sold }}</span></span>
                                                     <span class=" flex flex-row gap-2 font-bold text-lg">{{ `Estado: `
-                                                        }}<span class="font-normal"> <img
+                                                    }}<span class="font-normal"> <img
                                                                 :src="`/images/${parseInt(card.sold) === parseInt(card.quantity) ? 'check-mark' : 'letter-x'}.png`"
                                                                 class="w-6 h-6" /></span></span>
 

@@ -8,7 +8,8 @@
         class="rotate-90 hover:cursor-pointer hover:scale-110 hover:drop-shadow-lg w-5 h-5" src="/images/arrow.svg" />
     </li>
 
-    <li v-for="(item, index) in data" :key="index" :id="`navLink-${index}`" class="h-[100px]">
+    <li v-for="(item, index) in data" :key="index" :id="`navLink-${index}`" class="h-[100px]"
+      :class="{ 'h-[60px] mb-2': atAdmin }">
       <NavLink :nav="item.path" :active="item.active" :item="item" class="px-1"
         :class="[{ 'w-[500px]': item.logo }, { 'w-min': !item.logo }, { 'max-w-[100px]': atAdmin }, { 'min-w-min max-w-[100px] nm:max-w-[200px]': !atAdmin }]">
         <img v-if="item.logo" class="w-auto object-contain justify-self-center"

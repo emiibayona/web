@@ -73,28 +73,31 @@ export function useAuth() {
   };
 
   const loginWithLocal = async (body, redirect) => {
-    store.updateLoading(true);
-    const loginResult = await store.loginLocal({ ...body, redirect });
-    console.log("Login Result", loginResult)
-    if (loginResult.status === 500) {
-      store.updateLoading(false);
-      toast.add({
-        severity: "error",
-        summary: "Error en conexión",
-        detail: loginResult.data.error.split("Something went wrong:")?.[1],
-        life: 3000,
-      })
-      return;
-    }
-    if (loginResult.token) {
-      toast.add({
-        severity: "success",
-        summary: "Conexión exitosa",
-        detail: "",
-        life: 3000,
-      })
-      router.push({ name: "Auth success", query: { ...loginResult } })
-    }
+    try {
+
+      store.updateLoading(true);
+      const loginResult = await store.loginLocal({ ...body, redirect });
+
+      if (loginResult.status === 500) {
+        store.updateLoading(false);
+        toast.add({
+          severity: "error",
+          summary: "Error en conexión",
+          detail: loginResult.data.error.split("Something went wrong:")?.[1],
+          life: 3000,
+        })
+        return;
+      }
+      if (loginResult.token) {
+        toast.add({
+          severity: "success",
+          summary: "Conexión exitosa",
+          detail: "",
+          life: 3000,
+        })
+        router.push({ name: "Auth success", query: { ...loginResult } })
+      }
+    } catch (err) { console.error("!!!!!!!!!!" + err) }
   }
 
   async function register(body) {

@@ -49,7 +49,8 @@ export const useAuthStore = defineStore("auth", () => {
     async function loginLocal(body) {
         try {
             if (!body) throw "Body required";
-            return await AuthService.loginLocal(body)
+
+            return await AuthService.loginLocal(body);
         } catch (error) {
             return error;
         }

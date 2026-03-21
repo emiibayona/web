@@ -8,7 +8,7 @@
 
       </router-view>
     </Footer>
-    <Toast :position="isMobile ? 'bottom-center' : 'bottom-right'" :base-z-index="999999">
+    <Toast :position="isMobile ? 'bottom-center' : 'top-right'" :base-z-index="999999">
       <template #message="slotProps">
         <div class="flex align-items-center gap-2" style="flex: 1">
           <img v-if="slotProps.message?.data?.image" :src="slotProps.message.data.image"

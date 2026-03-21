@@ -6,7 +6,7 @@
             'btn--outlined': outlined,
             'btn--disabled': disabled || loading
         }
-    ]" :style="[{ '--btn-color': color }, { 'white-space': wrap }]" :disabled="disabled" v-bind="$attrs">
+    ]" :style="[{ '--btn-color': color }, { 'white-space': wrap }]" :disabled="disabled" v-bind="$attrs" :type="type">
         <div class="btn-slot" v-if="!loading">
             <slot />
         </div>
