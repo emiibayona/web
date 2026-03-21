@@ -4,9 +4,9 @@
             <div class="card relative">
                 <div class="front">
                     <div class="flex flex-col items-center w-1/2 mt-4 mb-2">
-                        <form @submit.prevent="" class="w-full flex flex-col items-center gap-4">
+                        <form class="w-full flex flex-col items-center gap-4">
                             <div class="w-full flex justify-center">
-                                <div class="w-[400px] flex flex-col items-start">
+                                <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                     <span class="text-lg"> Email <span v-if="fieldIsEmpty(loginForm.email)"
                                             class="font-bold text-xs text-red-600">(requerido)</span></span>
                                     <InputField v-model="loginForm.email" @keyup.enter=""
@@ -14,7 +14,7 @@
                                 </div>
                             </div>
                             <div class="w-full flex justify-center">
-                                <div class="w-[400px] flex flex-col items-start">
+                                <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                     <span class="text-lg">
                                         Contraseña
                                         <span v-if="fieldIsEmpty(loginForm.password)"
@@ -47,14 +47,14 @@
                 <div class="back">
                     <form @submit.prevent="" class="w-full flex flex-col items-center gap-4">
                         <div class="w-full flex justify-center">
-                            <div class="w-[400px] flex flex-col items-start">
+                            <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                 <span class="text-lg">Nombre <span v-if="fieldIsEmpty(loginForm.name)"
                                         class="font-bold text-xs text-red-600">(requerido)</span></span>
                                 <InputField v-model="loginForm.name" @keyup.enter="" placeholder="Jace" type="text" />
                             </div>
                         </div>
                         <div class="w-full flex justify-center">
-                            <div class="w-[400px] flex flex-col items-start">
+                            <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                 <span class="text-lg">Apellido <span v-if="fieldIsEmpty(loginForm.lastname)"
                                         class="font-bold text-xs text-red-600">(requerido)</span></span>
                                 <InputField v-model="loginForm.lastname" @keyup.enter="" placeholder="Beleren"
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                         <div class="w-full flex justify-center">
-                            <div class="w-[400px] flex flex-col items-start">
+                            <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                 <span class="text-lg">Email <span v-if="fieldIsEmpty(loginForm.email)"
                                         class="font-bold text-xs text-red-600">(requerido)</span></span>
                                 <InputField v-model="loginForm.email" @keyup.enter=""
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                         <div class="w-full flex justify-center">
-                            <div class="w-[400px] flex flex-col items-start">
+                            <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                 <span class="text-lg">
                                     Contraseña
                                     <span v-if="fieldIsEmpty(loginForm.password)"
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="w-full flex justify-center">
-                            <div class="w-[400px] flex flex-col items-start">
+                            <div class="w-[400px] flex flex-col items-start" :class="{ 'w-full': isMobile }">
                                 <span class="text-lg">
                                     Logo
                                 </span>
@@ -110,6 +110,7 @@ import Button from '@/components/atomic/Button.vue';
 import InputField from '@/components/atomic/InputField.vue';
 import Loader from '@/components/atomic/Loader.vue';
 import { useAuth } from '@/composables/useAuth';
+import useDevices from '@/composables/useDevices';
 import useFile from '@/composables/useFile';
 import { fieldIsEmpty } from '@/utils/utils';
 import { computed, ref } from 'vue';
@@ -117,6 +118,7 @@ import { useRoute } from 'vue-router';
 
 const { loginWithGoogle, loginWithLocal, loading, updateLoading, register } = useAuth();
 const { uploadImage } = useFile();
+const { isMobile } = useDevices();
 
 const route = useRoute();
 const loginForm = ref({
@@ -184,10 +186,12 @@ const handleRegister = async () => {
     position: relative;
     @include flex(column, flex-start, center);
 
-    height: 70vh;
+    height: 50vh;
     width: 100%;
 
     &.flip {
+        height: 70vh;
+
         .card {
             transform: rotateY(180deg);
 
