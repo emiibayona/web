@@ -41,7 +41,7 @@ const openSingles = (binder) => {
 }
 
 onMounted(async () => {
-    await fetchBinders(import.meta.env.VITE_SELLER_COLLECTION_ID);
+    await fetchBinders(null, { email: localStorage.getItem("seller") });
 })
 </script>
 

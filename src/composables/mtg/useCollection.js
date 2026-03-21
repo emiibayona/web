@@ -44,8 +44,8 @@ const useCollection = () => {
     }, 1000);
   }
 
-  async function fetchBinders(colId) {
-    await store.fetchBinders(colId);
+  async function fetchBinders(colId, query) {
+    await store.fetchBinders(colId, query);
   }
   async function createBinder(params) {
     try {

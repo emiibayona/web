@@ -27,9 +27,9 @@ export default {
       .catch((error) => error.response);
   },
   // BINDERS
-  listBinders: async function (collectionId) {
+  listBinders: async function (collectionId, query) {
     return api
-      .get(`collections/${collectionId}/binders`)
+      .get(`collections/${collectionId}/binders`, { params: query })
       .then((res) => res)
       .catch((error) => error.response);
   },

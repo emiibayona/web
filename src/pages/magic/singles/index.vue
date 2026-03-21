@@ -233,7 +233,7 @@ onMounted(async () => {
             filtersComponent?.value?.clear('outside');
         }
     });
-    await fetchBinders(import.meta.env.VITE_SELLER_COLLECTION_ID);
+    await fetchBinders(null, { email: localStorage.getItem("seller") });
     binderToShow.value = binders?.value?.find(x => x.id === route.query.binder) || null
     await initCollection();
     mounting.value = false;

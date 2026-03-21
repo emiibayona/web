@@ -42,9 +42,9 @@ export const useCollectionStore = defineStore("collection", () => {
   }
 
   // BINDERS
-  async function fetchBinders(collectionId) {
+  async function fetchBinders(collectionId, query) {
     try {
-      binders.value = await CollectionService.listBinders(collectionId);
+      binders.value = await CollectionService.listBinders(collectionId, query);
     } catch (error) {
       console.error("Error fetching binder:", error);
     }
