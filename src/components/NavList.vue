@@ -71,8 +71,8 @@
       </template>
       <template #content>
         <div class="content buttons flex flex-col gap-1 justify-center items-center text-xs min-w-[100px]">
-          <Button v-show="user" size="block" wrap="normal"
-            @click="action(() => { router.push('/user/magic/collection') })">Colección</Button>
+          <!-- <Button v-show="user" size="block" wrap="normal"
+            @click="action(() => { router.push('/user/magic/collection') })">Colección</Button> -->
           <Button v-show="isAdmin && !atAdmin" size="block" wrap="normal"
             @click="action(() => { router.push('/admin') })" class="">Admin
             panel</Button>
