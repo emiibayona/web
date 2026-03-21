@@ -2,7 +2,7 @@
 import { useAuthStore } from "@/stores/auth";
 import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 import { ref, computed, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 
 export function useAuth() {
@@ -11,6 +11,7 @@ export function useAuth() {
   const loading = computed(() => store.loading);
   const token = ref(localStorage.getItem("token") || null);
   const router = useRouter();
+  const route = useRoute();
   const toast = useToast();
 
   // Getters reactivos
@@ -105,7 +106,7 @@ export function useAuth() {
     const resApi = await store.registerOnLogin(body);
     const resWeb = await store.registerOnWeb(body);
     if (resApi && resWeb) {
-      await loginWithLocal(body, "/")
+      await loginWithLocal(body, window.location.origin + (route?.redirectedFrom?.fullPath || '/'))
     }
   }
 

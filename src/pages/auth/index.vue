@@ -153,6 +153,7 @@ const handleLogin = () => {
 const handleRegister = async () => {
     if (registerMode.value && canRegister.value) {
         try {
+            updateLoading(true);
             const data = loginForm.value;
 
             const elem = document?.getElementById("imagepicker");
