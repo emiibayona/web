@@ -209,7 +209,7 @@ button:active {
     width: 100%;
 
     &.flip {
-        height: 65vh;
+        height: 75vh;
 
         .card {
             transform: rotateX(180deg);
