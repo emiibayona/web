@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import("@/pages/yugioh/sealed/index.vue"),
     },
     {
+      path: "/yugioh/bd",
+      name: "yugioh bd",
+      component: () => import("@/pages/yugioh/bd/index.vue"),
+    },
+    {
       path: "/pokemon",
       name: "pokemon",
       component: () => import("@/pages/pokemon/index.vue"),

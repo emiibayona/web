@@ -78,7 +78,7 @@ export function useAuth() {
 
       store.updateLoading(true);
       const loginResult = await store.loginLocal({ ...body, redirect });
-
+      toast.removeAllGroups();
       if (loginResult.status === 500) {
         store.updateLoading(false);
         toast.add({
