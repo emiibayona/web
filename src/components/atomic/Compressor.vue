@@ -72,7 +72,6 @@ const toggle = () => {
     }
 };
 watch(expanded, () => {
-    console.log(expanded.value)
     if (props.mobile) {
         if (expanded.value) {
             overlay.classList.add('active');

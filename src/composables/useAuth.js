@@ -16,7 +16,11 @@ export function useAuth() {
 
   // Getters reactivos
   const isAuthenticated = computed(() => !!token.value);
-  const isAdmin = computed(() => (isAuthenticated.value && user.value?.Tenants[0]?.role || user.value?.Tenants[0]?.UserTenant?.role) === 'ADMIN')
+  const isAdmin = computed(() => {
+    if (!isAuthenticated.value) return false;
+    const currentTenants = user.value?.Tenants || user.value?.UserTenant || [];
+    return currentTenants.length ? currentTenants?.[0]?.UserTenant?.role === 'ADMIN' : false
+  })
 
 
   const init = async () => {
@@ -89,6 +93,7 @@ export function useAuth() {
         return;
       }
       if (loginResult.token) {
+        toast.removeAllGroups();
         toast.add({
           severity: "success",
           summary: "Conexión exitosa",

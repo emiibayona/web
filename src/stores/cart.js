@@ -15,6 +15,8 @@ export const useCartStore = defineStore("cart", () => {
     const isHydrated = ref(false);
     const loading = ref(false);
 
+    const parseInfo = data => typeof data === 'string' ? JSON.parse(data || `[]`) : data;
+
     // Guardamos la promesa para evitar colisiones de llamadas simultáneas
     let loadPromise = null;
 
@@ -36,7 +38,6 @@ export const useCartStore = defineStore("cart", () => {
                     const itemWhishlist = JSON.parse(sessionStorage.getItem(wishKey) || null);
 
                     if (!itemCart) {
-                        debugger
                         const responseCart = await CartService.fetch({
                             type: 'cart',
                             info: { email, tenant, game }
@@ -44,7 +45,7 @@ export const useCartStore = defineStore("cart", () => {
 
                         // Hidratamos el estado global
                         if (responseCart) {
-                            cart.value[game] = responseCart?.data || [];
+                            cart.value[game] = parseInfo(responseCart?.data)
                             localStorage.setItem(cartKey + '_ID', responseCart?.id)
                         }
 
@@ -60,7 +61,7 @@ export const useCartStore = defineStore("cart", () => {
 
                         // Hidratamos el estado global
                         if (responseWish) {
-                            wishlist.value[game] = responseWish?.data || [];
+                            wishlist.value[game] = parseInfo(responseWish?.data)
                             localStorage.setItem(wishKey + '_ID', responseWish?.id)
                         }
 
