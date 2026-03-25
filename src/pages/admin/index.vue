@@ -33,7 +33,7 @@ const info = {
     { path: "admin/sellado?game=magic", button: "Panel de Sellados" },
     { path: "admin/magic/binders", button: "Panel de Binders" }],
     pokemon: [{ path: "admin/sellado?game=pokemon", button: "Panel de Sellados" }],
-    yugioh: [{ path: "admin/sellado?game=yugioh", button: "Panel de Sellados" }],
+    yugioh: [{ path: "admin/sellado?game=yugioh", button: "Panel de Sellados" }, { path: "admin/yugioh/ventas", button: "Ventas de singles" }],
     riftbound: [{ path: "admin/sellado?game=riftbound", button: "Panel de Sellados" }]
 }
 const tabs = computed(() => {

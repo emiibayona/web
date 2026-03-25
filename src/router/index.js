@@ -94,6 +94,12 @@ const router = createRouter({
       meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
+      path: "/admin/yugioh/ventas",
+      name: "Yugioh ventas",
+      component: () => import("@/pages/admin/yugioh/ventas.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    {
       path: "/admin/magic/sellado",
       name: "Magic sellado",
       component: () => import("@/pages/admin/magic/sellado.vue"),

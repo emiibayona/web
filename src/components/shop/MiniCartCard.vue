@@ -6,7 +6,7 @@
                     class="font-bold">{{ `(${item.qty}) `
                     }}</span>{{
                         itemName }}
-                <img v-if="!item?.sets" :src="item.image" class="h-[100px] w-fit" />
+                <img v-if="!item?.sets" :src="item.image" class="h-[100px] w-fit object-contain" />
 
             </span>
             <div v-if="!item.sets" class="flex items-end justify-end justify-self-end gap-2 ml-2"
