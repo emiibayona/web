@@ -26,11 +26,13 @@ import { computed, } from "vue";
 import MiniCartCard from "./MiniCartCard.vue";
 import Button from "@/components/atomic/Button.vue";
 
-defineProps({
-    edit: { type: Boolean, default: false }
+const props = defineProps({
+    edit: { type: Boolean, default: false },
+
+    game: { type: String, default: GAMES.MAGIC }
 })
 
-const { cart, calculateTotal } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
+const { cart, calculateTotal } = useCarts(props.game, RECIPIENTS_LISTS.CART);
 
 const gameCart = computed(() => cart.value || []);
 const totalCart = computed(() => calculateTotal(gameCart.value))

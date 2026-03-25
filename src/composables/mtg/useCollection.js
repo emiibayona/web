@@ -1,7 +1,8 @@
 import { useCollectionStore } from "@/stores/collection";
 import { computed, ref } from "vue";
 import useCards from "./useCards";
-const useCollection = () => {
+import { GAMES } from "@/utils/constants";
+const useCollection = (game = GAMES.MAGIC) => {
   const store = useCollectionStore();
   const { getImages, fetchDoubleFaces } = useCards();
 
@@ -16,18 +17,22 @@ const useCollection = () => {
     user = localStorage.getItem("seller"),
   ) {
     fetching.value = true;
-
-    await store.fetchCollection(params, user);
+    await store.fetchCollection({ ...params, game }, user);
 
     collectionMapped.value =
-      collectionMapped.value?.length === collection.value.data.length
-        ? collectionMapped.value
+      collectionMapped.value?.length === collection.value?.data?.length
+        ? collectionMapped?.value
         : [];
 
-    await fetchDoubleFaces(collection.value?.data.map((x) => x.cardId));
+    if (game === GAMES.MAGIC) {
+      await fetchDoubleFaces(collection.value?.data?.map((x) => x.cardId));
+    } else if (game === GAMES.YUGIOH) {
+      // collectionMapped.value = collection?.value?.data;
+      console.log("COLLECTION ON YUGI", collectionMapped.value)
+    }
 
     collection.value?.data?.forEach((cd, index) => {
-      const cardToShow = { ...cd, image: getImages(cd.card) };
+      const cardToShow = { ...cd, image: getImages(cd?.card || cd, game) };
       if (collectionMapped.value?.length === collection.value.data.length) {
         collectionMapped.value[index] = cardToShow;
       } else {

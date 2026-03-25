@@ -1,7 +1,9 @@
 <template>
-    <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]" :id="`card-${id}`">
+    <div class="flip-container" :class="[{ 'hasDouble': card.image.hasDouble && !flipDisable }]"
+        :id="`card-${card?.id}`" @click="hightlightComponent()">
         <div class="card relative" :class="[{ 'in-shop': shop }]">
-            <div class="quantity" :class="{ 'edit': !updating && (!shop && editQty) }" @click="showEdit">
+            <div v-if="card?.quantity" class="quantity" :class="{ 'edit': !updating && (!shop && editQty) }"
+                @click="showEdit">
                 <Loader v-if="updating" class="w-1/2 h-1/2" />
                 <span v-show="!updating && (shop || !editQty)">{{ card.quantity }}</span>
                 <InputField v-show="!updating && (!shop && editQty)" v-model="qty" placeholder="" @input="updateCard"
@@ -10,11 +12,11 @@
             </div>
             <div v-if="card.treatment === 'foil'" class="absolute top-0 left-0 w-full h-full rainbow-bg z-10">
             </div>
-            <img :src="card.image.faceUp" class="front" />
-            <img :src="card.image.faceDown" class="back" />
+            <img :src="card?.image?.faceUp" class="front" />
+            <img :src="card?.image?.faceDown" class="back" />
         </div>
         <div v-if="shop" class="shop">
-            <div class="quantity_tag hi-res px-2">
+            <div v-if="card.quantity" class="quantity_tag hi-res px-2">
                 <span>
                     Disponibles:
                     {{ card.quantity }}
@@ -22,20 +24,21 @@
             </div>
             <div v-if="!loading" class="flex flex-row gap-1">
                 <span class="border-r-2 border-white pr-1" :class="[cartWish, !isMobile && hoverClass]"
-                    @click="addCard">+1
+                    @click.stop="addCard">+1
                     Carrito</span>
                 <!-- <span class="text-white font-bold drop-shadow-md">|</span> -->
-                <span :class="[cartWish, !isMobile && hoverClass]" @click="addWishlist">+1
+                <span :class="[cartWish, !isMobile && hoverClass]" @click.stop="addWishlist">+1
                     Wishlist</span>
             </div>
             <div v-else>
                 <Loader />
             </div>
-            <a :href="ckUrl" target="_blank" class="text-sm text-gray-300 underline hover:scale-110 duration-300">Ver
+            <a v-if="game === GAMES.MAGIC" :href="ckUrl" target="_blank"
+                class="text-sm text-gray-300 underline hover:scale-110 duration-300">Ver
                 versiones en CardKingdom</a>
             <span v-if="!price" class="text-white font-bold hover:scale-125 duration-300" @click="checkPrice">Ver precio
                 aprox</span>
-            <div v-else class="flex flex-col justify-center items-center gap-2">
+            <div v-else class="flex flex-col justify-center items-center gap-2 mt-1">
                 <span class="text-white font-bold">{{ price }}</span>
             </div>
         </div>
@@ -49,6 +52,8 @@ import InputField from '@/components/atomic/InputField.vue';
 import Loader from '@/components/atomic/Loader.vue';
 import { useAuth } from '@/composables/useAuth';
 import useDevices from '@/composables/useDevices';
+import { GAMES } from '@/utils/constants';
+import useBeauty from '@/composables/useBeauty';
 
 
 const props = defineProps({
@@ -56,7 +61,9 @@ const props = defineProps({
     shop: { type: Boolean, default: false },
     flipDisable: { type: Boolean, default: false },
     updating: { type: Boolean, default: false },
-    id: { type: [String, Number], default: () => null }
+    id: { type: [String, Number], default: () => null },
+    game: { type: String, default: GAMES.MAGIC },
+    zoomeable: { type: Boolean, default: false },
 })
 
 const cartWish = 'text-white font-bold drop-shadow-md duration-300 text-white font-bold drop-shadow-md duration-300';
@@ -68,7 +75,10 @@ const qty = ref(null);
 const editQty = ref(false);
 const inputFieldRef = ref(null);
 const { loading } = useAuth();
-const { isMobile } = useDevices();
+const { isMobile, width } = useDevices();
+
+const isZoomeable = computed(() => props.zoomeable && width.value >= 1280);
+const { hightlightComponent } = useBeauty(`card-${props?.card?.id}`, isZoomeable.value, { width: '400px' })
 
 let touchTimeout;
 
@@ -118,21 +128,28 @@ onMounted(() => {
     }
 
     const card = document.getElementById(`card-${props.id}`);
-    card.addEventListener('touchstart', () => {
-        touchTimeout = setTimeout(() => {
-            card.classList.add('active');
-        }, 100);
-    }, { passive: true });
+    if (isMobile.value) {
 
-    card.addEventListener('touchmove', () => {
-        clearTimeout(touchTimeout);
-        card.classList.remove('active');
-    });
+        card.addEventListener('touchstart', () => {
+            touchTimeout = setTimeout(() => {
+                card.classList.add('active');
+            }, 100);
+        }, { passive: true });
 
-    card.addEventListener('touchend', () => {
-        clearTimeout(touchTimeout);
-        card.classList.remove('active');
-    });
+        card.addEventListener('touchmove', () => {
+            clearTimeout(touchTimeout);
+            card.classList.remove('active');
+        });
+
+        card.addEventListener('touchend', () => {
+            clearTimeout(touchTimeout);
+            card.classList.remove('active');
+        });
+    }
+
+    if (props?.card?.card_prices?.length) {
+        price.value = `TCG: $${props?.card?.card_prices[0]?.tcgplayer_price}`;
+    }
 })
 onUnmounted(() => { if (props.edit) { document.removeEventListener('keydown', lowKey) } })
 </script>

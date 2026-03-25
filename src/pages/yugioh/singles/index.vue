@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="singles-wrapper" id="singles-wrapper">
-            <Button class="absolute right-0" size="xsmall" @click="toggleModal(true)">Agregar desde lista</Button>
             <span class="tag left"
                 :class="[{ 'active': leftWingIsActive }, { 'opacity-30 hover:opacity-100': rightWingIsActive }]"
                 @click="toggleWings('left', !wings.left)">Filtros</span>
@@ -13,7 +12,7 @@
                 'active': leftWingIsActive
             }]">
                 <FiltersComponent with-apply :fetching="fetching" @apply-filters="initCollection" :limit="limit"
-                    title="Filtros" without-move ref="filtersComponent" class="w-[230px] flex-1 ">
+                    :game="GAMES.YUGIOH" title="Filtros" without-move ref="filtersComponent" class="w-[230px] flex-1">
                     <template #binder>
                         <Button v-if="binderActive" class="mt-3" @click="removeBinder" size="block-xy"
                             wrap="normal">Mostrar
@@ -28,9 +27,8 @@
                 <div v-if="!fetching && !mounting" class="cards-wrapper_inner gap-8">
                     <Empty v-if="!collectionMapped.length && (!mounting || !fetching)" />
                     <div class="list">
-                        <ShopCard v-for="(card, index) in collectionMapped" :id="index" :index="index" :card="card" shop
-                            @add-to-cart="add" @add-to-wishlist="addWishlist" />
-
+                        <ShopCard v-for="(card, index) in collectionMapped" :index="index" :card="card" shop
+                            @add-to-cart="add" @add-to-wishlist="addWishlist" :game="GAMES.YUGIOH" zoomeable />
                     </div>
                     <Pagination class="pagination" v-model:currentPage="page" :total="collection?.total" :limit="limit"
                         :loading="fetching" />
@@ -41,31 +39,9 @@
                 </div>
             </div>
             <div class="cart-wrapper" :class="[{ 'active': rightWingIsActive }]">
-                <Cart class="h-[75vh] w-full" />
+                <Cart class="h-[75vh] w-full" :game="GAMES.YUGIOH" />
             </div>
         </div>
-        <Modal v-model="showModal" title="Agregar cartas desde lista" close-disabled>
-            <Textarea v-model="toCart" @keyup.enter="" placeholder="Lista exportada desde moxfield unicamente
-            Ejemplo:
-            1 Cloud of Faeries (DMR) 43 *F*
-            1 Devoted Druid (SPG) 138 *F*
-            1 Dust Bowl (EOS) 12
-            ...." class="h-[200px]"></Textarea>
-            <div class="flex flex-row justify-between">
-                <Button @click="toggleModal(false)" :loading="addingToCart" class="mt-5">Cerrar</Button>
-                <Button @click="addToCart" :loading="addingToCart" class="mt-5"
-                    :disabled="toCart === ''">Agregar</Button>
-            </div>
-        </Modal>
-        <Modal v-model="showNotAdded" title="Cartas no agregadas, no disponibles" close-disabled>
-            <div class="flex flex-col gap-1 h-[300px] overflow-y-scroll">
-                <div v-for="(card, index) in assembleList(listNotAdded)" :key="`card-not-added-${index}`">
-                    <span>{{ card }}</span>
-                </div>
-            </div>
-
-            <Button @click="toggleNotAdded" class="mt-5 self-end">Cerrar</Button>
-        </Modal>
     </div>
 </template>
 <script setup>
@@ -84,32 +60,22 @@ import Loader from "@/components/atomic/Loader.vue";
 import Tabs from "@/components/atomic/Tabs.vue";
 import Empty from "@/components/atomic/Empty.vue";
 import Button from "@/components/atomic/Button.vue";
-import Modal from "@/components/atomic/Modal.vue";
-import Textarea from "@/components/atomic/Textarea.vue";
-import { parseList, assembleList } from "@/utils/utils";
 import useDevices from "@/composables/useDevices";
 import { useRoute, useRouter } from "vue-router";
-import { useToast } from "primevue/usetoast";
 const { width, isMobile } = useDevices();
 
-const toast = useToast();
 const route = useRoute();
 const router = useRouter();
-const tabs = ref([{ index: 0, value: 'normal', name: "normal" }, { index: 1, value: 'foil', name: "foil" }])
+const tabs = ref([{ index: 0, value: 'normal', name: "normal" }/*, { index: 1, value: 'foil', name: "foil" }*/])
 const activeTab = ref(0);
-const toCart = ref("");
-const showModal = ref(false);
-const showNotAdded = ref(false);
-const addingToCart = ref(false);
-const listNotAdded = ref([])
 const mounting = ref(true);
 
 const wings = ref({ left: false, right: false })
-const { add } = useCarts(GAMES.MAGIC);
-const { add: addWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
+const { add } = useCarts(GAMES.YUGIOH);
+const { add: addWishlist } = useCarts(GAMES.YUGIOH, RECIPIENTS_LISTS.WISHLIST);
 
-const { fetchCollection, collection, collectionMapped, fetching, getListToCart, binders,
-    fetchBinders } = useCollection();
+const { fetchCollection, collection, collectionMapped, fetching, getListToCart,
+} = useCollection(GAMES.YUGIOH);
 
 const binderToShow = ref(null);
 
@@ -140,11 +106,6 @@ const leftWingIsActive = computed(() => width?.value > 1000 ? false : wings.valu
 const rightWingIsActive = computed(() => width?.value > 1000 ? false : wings.value.right)
 const binderActive = computed(() => !!route.query.binder)
 
-const toggleModal = (val) => {
-    showModal.value = val;
-    toCart.value = "";
-}
-const toggleNotAdded = () => { showNotAdded.value = false; listNotAdded.value = [] }
 const toggleWings = (wing, value) => {
     Object.keys(wings.value).forEach(x => {
         wings.value[x] = false;
@@ -153,43 +114,6 @@ const toggleWings = (wing, value) => {
         }
 
     })
-}
-async function addToCart() {
-    try {
-        addingToCart.value = true;
-        const list = parseList(toCart.value);
-        if (list.every(x => Object.values(x).every(x => x !== undefined))) {
-            const result = await getListToCart(list);
-            for (let index = 0; index < list.length; index++) {
-                const eleWantToAdd = list[index];
-                const element = result.find(x =>
-                    x.collector_number === eleWantToAdd.collector_number &&
-                    x.name === eleWantToAdd.name &&
-                    x.set === eleWantToAdd.set &&
-                    x.treatment === eleWantToAdd.treatment)
-                if (element) {
-                    add({ item: element, quantity: Math.max(element.quantity, eleWantToAdd.quantity), alert: index + 1 === list.length })
-                } else {
-                    listNotAdded.value.push(eleWantToAdd)
-                }
-            }
-            toggleModal(false);
-            if (listNotAdded.value && list) {
-                showNotAdded.value = true;
-            }
-        } else {
-            toast.add({
-                severity: "error",
-                summary: "ERROR",
-                detail: `La lista ingresada posee todas cartas con el formato equivocado`,
-                life: 3000,
-            })
-        }
-        addingToCart.value = false;
-    } catch (error) {
-        console.error(error);
-        addingToCart.value = false;
-    }
 }
 
 async function initCollection(addParams = null, filt = null) {
@@ -204,8 +128,6 @@ async function initCollection(addParams = null, filt = null) {
         limit: limit.value,
         treatment: addParams?.treatment || tabs.value[activeTab.value]?.value,
         cardWhere: JSON.stringify(cardFilters.value || {}),
-        cards: true,
-        binder: binderToShow?.value?.id || null,
         ...(addParams || {}),
     };
 
@@ -233,8 +155,6 @@ onMounted(async () => {
             filtersComponent?.value?.clear('outside');
         }
     });
-    await fetchBinders(null, { email: localStorage.getItem("seller") });
-    binderToShow.value = binders?.value?.find(x => x.id === route.query.binder) || null
     await initCollection();
     mounting.value = false;
 });

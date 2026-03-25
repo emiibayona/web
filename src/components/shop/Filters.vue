@@ -16,14 +16,15 @@
                 <!-- Name -->
                 <Compressor v-if="groupFilter[0] !== 'Colors' && !collapsed" :id="`compressor-${index}-${cleaned}`"
                     :without-move="withoutMove">
-                    <template #title><span class="font-bold w-[70px]">{{ groupFilter[0] }}</span></template>
+                    <template #title><span class="font-bold w-[70px]">{{ capitalizeFirstLetter(groupFilter[0])
+                            }}</span></template>
                     <template #content>
                         <div class="content flex"
                             :class="[{ 'flex-row items-center flex-wrap gap-y-1 gap-x-2': row }, { 'flex-col items-start': !row }]">
                             <Checkbox v-for="(filter, index_2) in groupFilter[1]" :checked="filter.checked"
-                                :label="filter.label" :key="`${groupFilter[0]}-${index_2}-${cleaned}`"
-                                :disabled="fetching" :id="`${groupFilter[0]}-${index_2}`"
-                                @update="val => applyFilter(val, filter)" />
+                                :label="capitalizeFirstLetter(filter.label)"
+                                :key="`${groupFilter[0]}-${index_2}-${cleaned}`" :disabled="fetching"
+                                :id="`${groupFilter[0]}-${index_2}`" @update="val => applyFilter(val, filter)" />
                         </div>
                     </template>
                 </Compressor>
@@ -55,20 +56,22 @@ import Checkbox from '@/components/atomic/Checkbox.vue';
 import useFilters from '@/composables/useFilters';
 import { GAMES } from '@/utils/constants.js';
 import Compressor from '../atomic/Compressor.vue';
+import { capitalizeFirstLetter } from '@/utils/utils';
 
 const props = defineProps({
     row: { type: Boolean, default: false },
     collapsed: { type: Boolean, default: false },
     fetching: { type: Boolean, default: false },
     withoutMove: { type: Boolean, default: false },
-    title: { type: String, default: "" }
+    title: { type: String, default: "" },
+    game: { type: String, default: GAMES.MAGIC },
 })
 
-const { magicFilters } = useFilters(GAMES.MAGIC);
+const { filters } = useFilters(props.game);
 const filtersMapped = ref(null);
 const cleaned = ref(0);
 
-const init = () => { filtersMapped.value = Object.entries(JSON.parse(JSON.stringify(magicFilters.value))) };
+const init = () => { filtersMapped.value = Object.entries(JSON.parse(JSON.stringify(filters.value))) };
 
 const clean = () => {
     if (props.fetching) return;

@@ -65,7 +65,7 @@
                 <div v-if="!onFetching && !mounting" class="cards-wrapper_inner gap-8">
                     <Empty v-if="!collectionMapped.length && (!mounting || !onFetching)" />
                     <div class="list">
-                        <MtgCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable
+                        <ShopCard v-for="(card, index) in collectionMapped" :id="index" :card="card" flip-disable
                             @update="updateAmountCard" :updating="uploading" />
                     </div>
                     <Pagination v-model:currentPage="page" :total="collection?.total" :limit="limit"
@@ -87,7 +87,7 @@ import InputField from '@/components/atomic/InputField.vue';
 import Loader from '@/components/atomic/Loader.vue';
 import Modal from '@/components/atomic/Modal.vue';
 import FiltersComponent from '@/components/mtg/FiltersComponent.vue';
-import MtgCard from '@/components/MtgCard.vue';
+import ShopCard from '@/components/ShopCard.vue';
 import Pagination from '@/components/Pagination.vue';
 import useCollection from '@/composables/mtg/useCollection';
 import useUser from '@/composables/useUser';

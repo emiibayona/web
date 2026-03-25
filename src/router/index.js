@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import("@/pages/yugioh/index.vue"),
     },
     {
+      path: "/yugioh/singles",
+      name: "yugioh singles",
+      component: () => import("@/pages/yugioh/singles/index.vue"),
+    },
+    {
       path: "/yugioh/sealed",
       name: "yugioh sellado",
       component: () => import("@/pages/yugioh/sealed/index.vue"),

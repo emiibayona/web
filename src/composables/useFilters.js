@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { GAMES } from "@/utils/constants.js";
 const useFilters = (game = GAMES.MAGIC) => {
-  const magicFilters = computed(() => {
+  const filters = computed(() => {
     const magic = {
       Type: [
         { label: "Artifact", value: "artifact", checked: false },
@@ -16,6 +16,7 @@ const useFilters = (game = GAMES.MAGIC) => {
         { label: "Sorcery", value: "sorcery", checked: false },
       ],
       Rarity: [
+        [{ label: "Common", value: "common", checked: false }],
         { label: "Common", value: "common", checked: false },
         { label: "Uncommon", value: "uncommon", checked: false },
         { label: "Rare", value: "rare", checked: false },
@@ -33,11 +34,111 @@ const useFilters = (game = GAMES.MAGIC) => {
       ],
     };
 
+    const yugioh = {
+      race: [
+        { label: "Aqua", value: "Aqua", checked: false },
+        { label: "Beast", value: "Beast", checked: false },
+        { label: "Beast-Warrior", value: "Beast-Warrior", checked: false },
+        { label: "Creator-God", value: "Creator-God", checked: false },
+        { label: "Cyberse", value: "Cyberse", checked: false },
+        { label: "Dinosaur", value: "Dinosaur", checked: false },
+        { label: "Divine-Beast", value: "Divine-Beast", checked: false },
+        { label: "Dragon", value: "Dragon", checked: false },
+        { label: "Fairy", value: "Fairy", checked: false },
+        { label: "Fiend", value: "Fiend", checked: false },
+        { label: "Fish", value: "Fish", checked: false },
+        { label: "Insect", value: "Insect", checked: false },
+        { label: "Machine", value: "Machine", checked: false },
+        { label: "Plant", value: "Plant", checked: false },
+        { label: "Psychic", value: "Psychic", checked: false },
+        { label: "Pyro", value: "Pyro", checked: false },
+        { label: "Reptile", value: "Reptile", checked: false },
+        { label: "Rock", value: "Rock", checked: false },
+        { label: "Sea Serpent", value: "Sea Serpent", checked: false },
+        { label: "Spellcaster", value: "Spellcaster", checked: false },
+        { label: "Thunder", value: "Thunder", checked: false },
+        { label: "Warrior", value: "Warrior", checked: false },
+        { label: "Winged Beast", value: "Winged Beast", checked: false },
+        { label: "Wyrm", value: "Wyrm", checked: false },
+        { label: "Zombie", value: "Zombie", checked: false },
+        { label: "Normal", value: "Normal", checked: false },
+        { label: "Field", value: "Field", checked: false },
+        { label: "Equip", value: "Equip", checked: false },
+        { label: "Continuous", value: "Continuous", checked: false },
+        { label: "Quick-Play", value: "Quick-Play", checked: false },
+        { label: "Ritual", value: "Ritual", checked: false },
+        { label: "Normal", value: "Normal", checked: false },
+        { label: "Continuous", value: "Continuous", checked: false },
+        { label: "Counter", value: "Counter", checked: false },
+      ],
+      type: [
+        { label: "Eff. Monster", value: "Effect Monster", checked: false },
+        { label: "Flip Eff. Monster", value: "Flip Effect Monster", checked: false },
+        { label: "Flip Tuner Eff. Monster", value: "Flip Tuner Effect Monster", checked: false },
+        { label: "Gemini Monster", value: "Gemini Monster", checked: false },
+        { label: "Normal Monster", value: "Normal Monster", checked: false },
+        { label: "Normal Tuner Monster", value: "Normal Tuner Monster", checked: false },
+        { label: "Pendulum Eff. Monster", value: "Pendulum Effect Monster", checked: false },
+        { label: "Pendulum Eff. Ritual Monster", value: "Pendulum Effect Ritual Monster", checked: false },
+        { label: "Pendulum Flip Eff. Monster", value: "Pendulum Flip Effect Monster", checked: false },
+        { label: "Pendulum Normal Monster", value: "Pendulum Normal Monster", checked: false },
+        { label: "Pendulum Tuner Eff. Monster", value: "Pendulum Tuner Effect Monster", checked: false },
+        { label: "Ritual Eff. Monster", value: "Ritual Effect Monster", checked: false },
+        { label: "Ritual Monster", value: "Ritual Monster", checked: false },
+        { label: "Spell Card", value: "Spell Card", checked: false },
+        { label: "Spirit Monster", value: "Spirit Monster", checked: false },
+        { label: "Toon Monster", value: "Toon Monster", checked: false },
+        { label: "Trap Card", value: "Trap Card", checked: false },
+        { label: "Tuner Monster", value: "Tuner Monster", checked: false },
+        { label: "Union Eff. Monster", value: "Union Effect Monster", checked: false },
+        { label: "Fusion Monster", value: "Fusion Monster", checked: false },
+        { label: "Link Monster", value: "Link Monster", checked: false },
+        { label: "Pendulum Eff. Fusion Monster", value: "Pendulum Effect Fusion Monster", checked: false },
+        { label: "Synchro Monster", value: "Synchro Monster", checked: false },
+        { label: "Synchro Pendulum Eff. Monster", value: "Synchro Pendulum Effect Monster", checked: false },
+        { label: "Synchro Tuner Monster", value: "Synchro Tuner Monster", checked: false },
+        { label: "XYZ Monster", value: "XYZ Monster", checked: false },
+        { label: "XYZ Pendulum Eff. Monster", value: "XYZ Pendulum Effect Monster", checked: false },
+        { label: "Skill Card", value: "Skill Card", checked: false },
+        { label: "Token", value: "Token", checked: false },
+      ],
+      frameType: [
+        { label: "normal", value: "normal", checked: false },
+        { label: "effect", value: "effect", checked: false },
+        { label: "ritual", value: "ritual", checked: false },
+        { label: "fusion", value: "fusion", checked: false },
+        { label: "synchro", value: "synchro", checked: false },
+        { label: "xyz", value: "xyz", checked: false },
+        { label: "link", value: "link", checked: false },
+        { label: "normal pendulum", value: "normal_pendulum", checked: false },
+        { label: "effect pendulum", value: "effect_pendulum", checked: false },
+        { label: "ritual pendulum", value: "ritual_pendulum", checked: false },
+        { label: "fusion pendulum", value: "fusion_pendulum", checked: false },
+        { label: "synchro pendulum", value: "synchro_pendulum", checked: false },
+        { label: "xyz pendulum", value: "xyz_pendulum", checked: false },
+        { label: "spell", value: "spell", checked: false },
+        { label: "trap", value: "trap", checked: false },
+        { label: "token", value: "token", checked: false },
+        { label: "skill", value: "skill", checked: false },
+      ],
+      attribute: [
+        { label: "dark", value: "dark", checked: false },
+        { label: "divine", value: "divine", checked: false },
+        { label: "earth", value: "earth", checked: false },
+        { label: "fire", value: "fire", checked: false },
+        { label: "light", value: "light", checked: false },
+        { label: "water", value: "water", checked: false },
+        { label: "wind", value: "wind", checked: false },
+        { label: "laugh", value: "laugh", checked: false },
+      ]
+    };
+
     if (game === GAMES.MAGIC) return magic;
+    if (game === GAMES.YUGIOH) return yugioh;
     return {};
   });
 
-  return { magicFilters };
+  return { filters };
 };
 
 export default useFilters;
