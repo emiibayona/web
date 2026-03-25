@@ -3,7 +3,7 @@
         :class="[{ 'pb-2 border-b-2 border-black': row }, { 'min-h-[50vh] border-r-2 border-black': !row }]"
         @keydown.enter.prevent="applyIt('inside')">
         <Filters ref="filters" :row="row" :collapsed="collapsed" :fetching="fetching" :without-move="withoutMove"
-            :title="title">
+            :title="title" :game="game">
             <template #search>
                 <div v-if="!collapsed" class="self-end mt-5 mb-3 w-full h-10">
                     <InputField placeholder="Buscar singles..." @input="searched = $event" :model-value="searched"
@@ -11,8 +11,9 @@
                 </div>
             </template>
             <template #expansions>
-                <Dropdown v-if="!collapsed" class="w-full" :model-value="expansionSelected" :items="mappedSets"
-                    placeholder="Expansion" @update:model-value="(va) => expansionSelected = va" :loading="fetching" />
+                <Dropdown v-if="!collapsed && game === GAMES.MAGIC" class="w-full" :model-value="expansionSelected"
+                    :items="mappedSets" placeholder="Expansion" @update:model-value="(va) => expansionSelected = va"
+                    :loading="fetching" />
             </template>
             <template #dropdown>
                 <slot name="binder">
@@ -42,6 +43,7 @@ import { ref, watch, computed, onMounted } from "vue";
 import Dropdown from "../atomic/Dropdown.vue";
 import useSets from "@/composables/mtg/useSets";
 import Button from "../atomic/Button.vue";
+import { GAMES } from "@/utils/constants";
 const props = defineProps({
     row: { type: Boolean, default: false },
     collapsed: { type: Boolean, default: false },
@@ -49,16 +51,17 @@ const props = defineProps({
     withApply: { type: Boolean, default: false },
     limit: { type: Number, default: 18 },
     withoutMove: { type: Boolean, default: false },
-    title: { String, default: "" }
+    title: { String, default: "" },
+    game: { type: String, default: GAMES.MAGIC },
 })
 const emits = defineEmits(["apply-filters", "clean"])
-const { fetchSets, sets } = useSets();
+const { fetchSets, sets } = useSets(props.game);
 const collapsed = ref(props.row && true);
 const filters = ref(null);
 const onClear = ref(false);
 const searched = ref("");
 const expansionSelected = ref(null);
-const mappedSets = computed(() => sets?.value?.map(x => ({ label: x.name, value: x.code })))
+const mappedSets = computed(() => sets?.value?.map(x => ({ label: x.name || x.set_name, value: x.code || x.set_code })))
 
 const initialStateValues = { active: {}, searched: "", expansionSelected: null, };
 const initialState = ref({ ...initialStateValues });

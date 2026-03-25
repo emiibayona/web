@@ -1,30 +1,32 @@
 <template>
-    {{ cart }}
-    <div v-for="(cart, index) in values" :key="`${cart.name}-${index}`" :class="{ 'min-h-[300px]': isMobile }">
+    <div :class="{ 'min-h-[300px]': isMobile }">
         <div class="flex flex-col px-2 nm:px-10"
-            :class="[{ 'pb-4': wishlist }, { 'py-4': !cart.count }, { 'border-b-2 border-black': index + 1 !== values.length }]">
-            <span class="font-bold mb-2 text-xl">{{ capi(cart.name) }} (<span class="font-normal">{{ cart.count
-            }}</span>) <Button v-if="cart.count" size="xsmall" @click="clean">Remover todo</Button></span>
-            <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'cart-count-body': cart.count }]">
-                <MiniCartCard v-for="(item, index_2) in cart.values" :key="`${cart.name}-${index}-${index_2}`"
+            :class="[{ 'pb-4': wishlist }, { 'py-4': !cart?.count }, { 'border-b-2 border-black mt-4': index + 1 !== cart?.values.length }]">
+            <span class="font-bold mb-2 text-xl">{{ capi(cart?.name) }} (<span class="font-normal">{{
+                cart?.count
+                    }}</span>) <Button v-if="cart?.count" size="xsmall" @click="clean">Remover
+                    todo</Button></span>
+            <div class="flex flex-col gap-2 pl-2 overflow-auto" :class="[{ 'cart-count-body': cart?.count }]">
+                <MiniCartCard v-for="(item, index_2) in cart?.values" :key="`${cart?.name}-${index}-${index_2}`"
                     :item="item" @add="add" @remove="remove" @remove-wishlist="removeWishlist" edit
-                    :from-wishlist="wishlist" />
+                    :from-wishlist="wishlist" :loading="loadingCart || loadingWish" />
+                <!-- <div v-for="(item, index_2) in cart?.values" :key="`${cart?.name}-${index}-${index_2}`">{{ item }}</div> -->
                 <div v-if="!cart?.values?.length" class="font-bold mt-5 ml-5" :class="{ 'text-sm': isMobile }">
                     <span>
                         {{ `No hay nada en tu ${wishlist ? 'wishlist' : 'carrito'}, ` }}
                         <span class="text-blue-700 underline decoration-blue-700 cursor-pointer"
-                            @click="router.push(`/${cart.name}/singles`)">
+                            @click="router.push(`/${cart?.name}/singles`)">
                             ve por tus cartas ...
                         </span>
                     </span>
                 </div>
             </div>
-            <Button v-if="!wishlist && cart.count" class="self-end my-5" size="small"
+            <Button v-if="!wishlist && cart?.count" class="self-end my-5" size="small"
                 @click="openConfirmationModal(cart)">{{
                     `Comprar carrito de
-                ${capi(cart.name)}`
+                ${capi(cart?.name)}`
                 }}</Button>
-            <Button v-if="wishlist && cart.count && false" size="small" disabled class="self-end my-5">
+            <Button v-if="wishlist && cart?.count && false" size="small" disabled class="self-end my-5">
                 Mover lista al carrito (en desarrollo)
             </Button>
         </div>
@@ -90,9 +92,13 @@ import useSales from '@/composables/mtg/useSales';
 import { useRouter } from 'vue-router';
 import useDevices from '@/composables/useDevices';
 
-const props = defineProps({ values: { type: Array, default: () => [] }, wishlist: { type: Boolean, default: false } })
-const { add, remove, cleanCart } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.CART);
-const { remove: removeWishlist, cleanCart: cleanWishlist } = useCarts(GAMES.MAGIC, RECIPIENTS_LISTS.WISHLIST);
+const props = defineProps({
+    cart: { type: Object, default: () => { } },
+    wishlist: { type: Boolean, default: false }
+})
+
+const { add, remove, cleanCart, localLoading: loadingCart } = useCarts(props.cart?.name, RECIPIENTS_LISTS.CART);
+const { remove: removeWishlist, cleanCart: cleanWishlist, localLoading: loadingWish } = useCarts(props.cart?.name, RECIPIENTS_LISTS.WISHLIST);
 const capi = (str) => capitalizeFirstLetter(str);
 const { openWhatsApp } = useWhatsapp();
 const { createOrder } = useSales();
@@ -139,14 +145,17 @@ watch(showModal, () => {
 
 <style lang="scss" scoped>
 .cart-count-body {
-    height: 400px;
+    min-height: fit-content;
+    max-height: 400px;
 
     @include breakpoint(fhd2) {
-        height: 500px;
+        min-height: fit-content;
+        max-height: 500px;
     }
 
     @include breakpoint(fhd3) {
-        height: 600px;
+        min-height: fit-content;
+        max-height: 600px;
     }
 }
 </style>

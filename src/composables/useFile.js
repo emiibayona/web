@@ -10,7 +10,14 @@ const useFile = () => {
     }
   }
 
-  return { uploadImage };
+  async function getCardsImage(params) {
+    try {
+      return await FileService.getCardsImage(params);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  return { uploadImage, getCardsImage };
 };
 
 export default useFile;

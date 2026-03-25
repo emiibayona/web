@@ -2,6 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import CollectionService from "@/services/CollectionService";
+import { GAMES } from "@/utils/constants";
 
 export const useCollectionStore = defineStore("collection", () => {
   const collection = ref(null);
@@ -9,10 +10,18 @@ export const useCollectionStore = defineStore("collection", () => {
 
   async function fetchCollection(params, user = null) {
     try {
-      collection.value = await CollectionService.list(
-        user || localStorage.getItem("seller"),
-        params,
-      );
+      // TODO: Improve
+      if (params.game === GAMES.MAGIC) {
+        collection.value = await CollectionService.list(
+          user || localStorage.getItem("seller"),
+          params,
+        );
+      } else if (params.game === GAMES.YUGIOH) {
+        collection.value = await CollectionService.listByGame(
+          user || localStorage.getItem("seller"),
+          params,
+        );
+      }
     } catch (error) {
       console.error("Error fetching collection:", error);
     }

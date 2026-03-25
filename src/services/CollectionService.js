@@ -7,6 +7,12 @@ export default {
       .then((res) => res)
       .catch((error) => error.response);
   },
+  listByGame: async function (user, params) {
+    return api
+      .get(`collections/collection/${params.game}`, { params: params })
+      .then((res) => res)
+      .catch((error) => error.response);
+  },
   listToCart: async function (body) {
     return api
       .post(`collections/to-cart/list`, body)

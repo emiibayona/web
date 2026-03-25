@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { GAMES, RECIPIENTS_LISTS, ACTIVE_GAMES } from "@/utils/constants.js";
 import CartService from "@/services/CartService";
+import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 
 export const useCartStore = defineStore("cart", () => {
     const cart = ref(
@@ -29,8 +30,6 @@ export const useCartStore = defineStore("cart", () => {
             loading.value = true;
             try {
                 for (const game of ACTIVE_GAMES) {
-
-
                     const cartKey = `${game}_${RECIPIENTS_LISTS.CART}_${email || 'guest'}`
                     const wishKey = `${game}_${RECIPIENTS_LISTS.WISHLIST}_${email || 'guest'}`
 
@@ -46,6 +45,7 @@ export const useCartStore = defineStore("cart", () => {
                         // Hidratamos el estado global
                         if (responseCart) {
                             cart.value[game] = parseInfo(responseCart?.data)
+                            cleanOrUpdateCarts(email, { cart: true, game }, responseCart?.data)
                             localStorage.setItem(cartKey + '_ID', responseCart?.id)
                         }
 
@@ -62,6 +62,7 @@ export const useCartStore = defineStore("cart", () => {
                         // Hidratamos el estado global
                         if (responseWish) {
                             wishlist.value[game] = parseInfo(responseWish?.data)
+                            cleanOrUpdateCarts(email, { wish: true, game }, responseWish?.data)
                             localStorage.setItem(wishKey + '_ID', responseWish?.id)
                         }
 
@@ -69,8 +70,8 @@ export const useCartStore = defineStore("cart", () => {
                         wishlist.value[game] = itemWhishlist;
                     }
 
-                    isHydrated.value = true;
                 }
+                isHydrated.value = true;
             } catch (error) {
                 console.error("Error al hidratar el carrito:", error);
             } finally {
