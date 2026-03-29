@@ -88,12 +88,6 @@ const router = createRouter({
       component: () => import("@/pages/admin/index.vue"),
       meta: { requiresAuth: true, role: "ADMIN" },
     },
-    {
-      path: "/admin/sellado",
-      name: "admin sellado",
-      component: () => import("@/pages/admin/sellado.vue"),
-      meta: { requiresAuth: true, role: "ADMIN" },
-    },
     // MAGIC ADMIN
     {
       path: "/admin/magic",
