@@ -8,61 +8,67 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: "/", name: "home", component: HomeView },
+    // MAGIC
     {
       path: "/magic",
-      name: "magic",
+      name: "Home Magic",
       component: () => import("@/pages/magic/index.vue"),
     },
     {
+      path: "/magic/singles",
+      name: "Magic Singles",
+      component: () => import("@/pages/magic/singles/index.vue"),
+    },
+    {
+      path: "/magic/sealed",
+      name: "Magic Sealed",
+      component: () => import("@/pages/magic/sealed/index.vue"),
+    },
+    // YUGIOH
+    {
       path: "/yugioh",
-      name: "yugioh",
+      name: "Home Yugioh",
       component: () => import("@/pages/yugioh/index.vue"),
     },
     {
       path: "/yugioh/singles",
-      name: "yugioh singles",
+      name: "Yugioh Singles",
       component: () => import("@/pages/yugioh/singles/index.vue"),
     },
     {
       path: "/yugioh/sealed",
-      name: "yugioh sellado",
+      name: "Yugioh Sealed",
       component: () => import("@/pages/yugioh/sealed/index.vue"),
     },
+    // POKEMON
     {
       path: "/pokemon",
-      name: "pokemon",
+      name: "Home Pokemon",
       component: () => import("@/pages/pokemon/index.vue"),
     },
     {
       path: "/pokemon/sealed",
-      name: "pokemon sellado",
+      name: "Pokemon Sealed",
       component: () => import("@/pages/pokemon/sealed/index.vue"),
     },
+    // RIFTBOUND
     {
       path: "/riftbound",
-      name: "riftbound",
+      name: "Home Riftbound",
       component: () => import("@/pages/riftbound/index.vue"),
     },
     {
       path: "/riftbound/sealed",
-      name: "riftbound sellado",
+      name: "Riftbound Sealed",
       component: () => import("@/pages/riftbound/sealed/index.vue"),
     },
+    // GENERIC
     {
       path: "/about",
       name: "about",
       component: () => import("@/pages/about/index.vue"),
     },
-    {
-      path: "/magic/singles",
-      name: "magic-singles",
-      component: () => import("@/pages/magic/singles/index.vue"),
-    },
-    {
-      path: "/magic/sealed",
-      name: "magic-sealed",
-      component: () => import("@/pages/magic/sealed/index.vue"),
-    },
+    // USER
     {
       path: "/cart",
       name: "Cart",
@@ -75,42 +81,90 @@ const router = createRouter({
       component: () => import("@/pages/wishlist.vue"),
       meta: { requiresAuth: true, },
     },
+    // 
     {
       path: "/admin",
       name: "admin",
       component: () => import("@/pages/admin/index.vue"),
       meta: { requiresAuth: true, role: "ADMIN" },
     },
+    // MAGIC ADMIN
     {
-      path: "/admin/sellado",
-      name: "admin sellado",
-      component: () => import("@/pages/admin/sellado.vue"),
+      path: "/admin/magic",
+      name: "Magic admin",
+      component: () => import("@/pages/admin/magic/index.vue"),
       meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/ventas",
-      name: "Magic ventas",
+      name: "Magic admin ventas",
       component: () => import("@/pages/admin/magic/ventas.vue"),
       meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/sellado",
-      name: "Magic sellado",
-      component: () => import("@/pages/admin/magic/sellado.vue"),
-      meta: { requiresAuth: true, role: "ADMIN" },
-    },
-    {
-      path: "/admin/magic/collection",
-      name: "Magic collection",
-      component: () => import("@/pages/admin/magic/collection.vue"),
+      name: "Magic admin sellado",
+      component: () => import("@/pages/admin/magic/sellado/index.vue"),
       meta: { requiresAuth: true, role: "ADMIN" },
     },
     {
       path: "/admin/magic/binders",
-      name: "Magic binders",
+      name: "Magic admin binders",
       component: () => import("@/pages/admin/magic/binders.vue"),
       meta: { requiresAuth: true, role: "ADMIN" },
     },
+    {
+      path: "/admin/magic/collection",
+      name: "Magic admin collection",
+      component: () => import("@/pages/admin/magic/collection.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    // Yugioh ADMIN
+    {
+      path: "/admin/yugioh",
+      name: "Yugioh admin",
+      component: () => import("@/pages/admin/yugioh/index.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    {
+      path: "/admin/yugioh/ventas",
+      name: "Yugioh admin ventas",
+      component: () => import("@/pages/admin/yugioh/ventas.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    {
+      path: "/admin/yugioh/sellado",
+      name: "Yugioh admin sellado",
+      component: () => import("@/pages/admin/yugioh/sellado/index.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    // Pokemon ADMIN
+    {
+      path: "/admin/pokemon",
+      name: "Pokemon admin",
+      component: () => import("@/pages/admin/pokemon/index.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    {
+      path: "/admin/pokemon/sellado",
+      name: "Pokemon admin sellado",
+      component: () => import("@/pages/admin/pokemon/sellado/index.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    // Riftbound ADMIN
+    {
+      path: "/admin/riftbound",
+      name: "Riftbound admin",
+      component: () => import("@/pages/admin/riftbound/index.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    {
+      path: "/admin/riftbound/sellado",
+      name: "Riftbound admin sellado",
+      component: () => import("@/pages/admin/riftbound/sellado/index.vue"),
+      meta: { requiresAuth: true, role: "ADMIN" },
+    },
+    // AUTH
     {
       path: "/auth/login",
       name: "Login",
@@ -121,12 +175,14 @@ const router = createRouter({
       name: "Auth success",
       component: () => import("@/pages/auth/success.vue"),
     },
+    // USER PAGES
     {
       path: "/user/magic/collection",
       name: "Magic Collection",
       component: () => import("@/pages/user/magic/collection.vue"),
       meta: { requiresAuth: true, role: "USER" },
     },
+    // NOT FOUND
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",

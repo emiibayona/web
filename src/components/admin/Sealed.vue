@@ -33,7 +33,7 @@
                     </div>
                     <Button @click="saveSealed" :disabled="saveDisabled" :loading="uploading">{{ formulario.id ?
                         'Guardar' : 'Agregar'
-                    }}</Button>
+                        }}</Button>
 
                 </form>
                 <div class="border-l-2 border-black pl-2 w-[600px] ">
@@ -53,8 +53,8 @@
         </Modal>
         <!-- Modal ZONE -->
         <div>
-            <h1 class="text-2xl font-bold mb-5">{{ `Panel de Admin > ${capitalizeFirstLetter(route.query.game)} >
-                Sellados`}}</h1>
+            <!-- <h1 class="text-2xl font-bold mb-5">{{ `Panel de Admin > ${capitalizeFirstLetter(route.query.game)} >
+                Sellados`}}</h1> -->
             <Button size="small mb-10" @click="showModal = true">Agregar nuevo artículo</Button>
             <div v-if="loadingSealed || uploading" class="w-full mt-10">
                 <Loader />

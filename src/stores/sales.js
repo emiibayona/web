@@ -7,10 +7,11 @@ import { GAMES } from "@/utils/constants";
 export const useSalesStore = defineStore("sales", () => {
   const sales = ref(null);
   const loading = ref(false);
-  async function fetchSales(params, game = GAMES.MAGIC) {
+  async function fetchSales(params) {
     sales.value = null;
+    if (!params.game) params.game = GAMES.MAGIC;
     try {
-      sales.value = await SalesService.list(game, params);
+      sales.value = await SalesService.list(params.game, params);
     } catch (error) {
       console.error("Error fetching data:", error);
     }

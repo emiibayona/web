@@ -1,5 +1,5 @@
 <template>
-    <Ventas :game="GAMES.MAGIC" />
+    <Ventas :game="GAMES.YUGIOH" />
 </template>
 
 <script setup>

@@ -130,7 +130,7 @@ async function orderConfirmed() {
         setTimeout(() => {
             showOrderConfirmed.value = true;
             loading.value = false;
-            openWhatsApp("Hola, realice una compra por la web, te envio la informacion", `Código de compra: *${res.id}* \n\nGracias!`)
+            openWhatsApp(`Hola, realice una compra por la web, son cartas de ${props.cart?.name}, te envío la información`, `Código de compra: *${res.id}* \n\nGracias!`)
             cleanCart();
         }, 2000)
     } else loading.value = false;

@@ -1,9 +1,10 @@
 <template>
-  <div class="absolute top-0 left-0 p-4 z-50 hover:scale-125 transition-all duration-300 ease-out"
+  <div v-show="!atAdmin" class="absolute top-0 left-0 p-4 z-50 hover:scale-125 transition-all duration-300 ease-out"
     :class="[atHome ? 'h-[100px]' : 'h-min']">
     <a v-show="!atHome && !isMobile" href="/"><img src='/images/ico.png' class="h-16 w-auto " /></a>
   </div>
-  <ul v-show="!isMobile" :class="[headerClass, { 'py-0': atAdmin }, { 'py-5 nm:py-3': !atAdmin }]">
+
+  <ul v-show="!atAdmin && !isMobile" :class="[headerClass, { 'py-0': atAdmin }, { 'py-5 nm:py-3': !atAdmin }]">
     <li @click="!atHome ? router.go(-1) : {}" class="font-extrabold cursor-pointer w-5 h-5"><img v-if="!atHome"
         class="rotate-90 hover:cursor-pointer hover:scale-110 hover:drop-shadow-lg w-5 h-5" src="/images/arrow.svg" />
     </li>
@@ -19,7 +20,7 @@
     </li>
   </ul>
 
-  <div v-show="isMobile" class="w-full relative ">
+  <div v-show="!atAdmin && isMobile" class="w-full relative ">
     <Compressor without-move icon-next-to-content arrow-end mid icon="/images/arrow-dotted.png" id="navList"
       ref="compressorList">
       <template #title>
@@ -45,6 +46,9 @@
       </template>
     </Compressor>
   </div>
+
+  <NavigationBar v-if="isAdmin && atAdmin" />
+  <!-- User Zone -->
   <div class="absolute
   top-2 right-2
   nm:top-4 nm:right-4
@@ -106,6 +110,7 @@ import useDevices from "@/composables/useDevices";
 import Compressor from "./atomic/Compressor.vue";
 import { useAuth } from "@/composables/useAuth";
 import Loader from "@/components/atomic/Loader.vue"
+import NavigationBar from "./admin/NavigationBar.vue";
 
 const { user, loading: loadingUser, isAdmin, updateLoading, logout, isAuthenticated } = useAuth();
 const { isMobile } = useDevices();
