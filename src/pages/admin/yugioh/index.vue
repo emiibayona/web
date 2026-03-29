@@ -2,7 +2,7 @@
     <div class="h-screen">
         <div>
             <div class="tab-content">
-                <AdminPages :pages="games" />
+                <AdminPages :pages="pagesByGame[GAMES.YUGIOH]" />
             </div>
         </div>
     </div>
@@ -12,8 +12,9 @@
 <script setup>
 import AdminPages from '@/components/admin/AdminPages.vue';
 import useAdmin from '@/composables/useAdmin';
+import { GAMES } from '@/utils/constants';
 
-const { games } = useAdmin();
+const { pagesByGame } = useAdmin();
 
 </script>
 

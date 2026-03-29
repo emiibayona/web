@@ -1,8 +1,5 @@
 <template>
-    <div>
-        <h1 class="text-2xl font-bold mb-5">Panel de Admin > Ventas de Magic</h1>
-        <Ventas :game="GAMES.MAGIC" />
-    </div>
+    <Ventas :game="GAMES.MAGIC" />
 </template>
 
 <script setup>

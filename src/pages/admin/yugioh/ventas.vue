@@ -1,8 +1,5 @@
 <template>
-    <div>
-        <h1 class="text-2xl font-bold mb-5">Panel de Admin > Ventas de Yugioh</h1>
-        <Ventas :game="GAMES.YUGIOH" />
-    </div>
+    <Ventas :game="GAMES.YUGIOH" />
 </template>
 
 <script setup>

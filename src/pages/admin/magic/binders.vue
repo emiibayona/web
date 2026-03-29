@@ -1,5 +1,4 @@
 <template>
-    <h1 class="text-2xl font-bold mb-5 ml-8">Panel de Admin > Magic > Binders</h1>
     <div class="justify-self-center w-1/2">
         <div class="grid grid-cols-3 gap-4 items-center flex-wrap">
             <div v-for="(binder, index) in bindersMapped" :key="binder.id" class="w-full binder">
