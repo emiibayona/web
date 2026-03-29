@@ -12,9 +12,8 @@ const useSales = () => {
     }
   };
 
-  const updateSales = async (params) => { };
-  const fetchSalesResumen = async () => {
-    return await store.fetchOrderResumen();
+  const fetchSalesResumen = async (game) => {
+    return await store.fetchOrderResumen(game);
   };
 
   const parseCart = (game, values) => {
@@ -66,7 +65,6 @@ const useSales = () => {
     confirmOrder,
     createOrder,
     fetchSales,
-    updateSales,
     fetchSalesResumen,
     sales,
   };
