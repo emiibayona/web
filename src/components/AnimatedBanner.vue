@@ -2,7 +2,7 @@
     <div class="ab-wrapper" :class="[size, { bgDark }]" @click="path ? router.push(cleanedPath) : null">
         <div class="content">
             <span v-if="text">{{ text }}</span>
-            <img v-if="img" class="img-logo" :src="img" alt="Right Image" />
+            <img v-if="img" class="img-logo" :src="img" alt="Logo Geartown" />
         </div>
         <!-- </div> -->
         <div v-if="bg?.src" class="bg-img"
