@@ -1,8 +1,8 @@
-import { computed, ref, watch } from "vue";
+import { computed, ref, toRaw, watch } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useAuth } from "./useAuth";
 import { useToast } from "primevue/usetoast";
-import { ACTIVE_GAMES, GAMES, RECIPIENTS_LISTS } from "@/utils/constants.js";
+import { ACTIVE_GAMES, GAMES, RECIPIENTS_LISTS, SINGLES_ACTIVE_GAMES } from "@/utils/constants.js";
 import useSets from "./mtg/useSets";
 import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 import { useRoute, useRouter } from "vue-router";
@@ -267,23 +267,24 @@ const useCarts = (game = GAMES.MAGIC, receptor = RECIPIENTS_LISTS.CART) => {
 
   const allGamesCarts = computed(() => {
     const res = [];
-    for (const element of Object.values(GAMES)) {
-      res.push({ name: element, values: store.cart?.[element], count: calculateTotal(store.cart?.[element]) })
+    for (const element of SINGLES_ACTIVE_GAMES) {
+      res.push({ name: element, values: store.cart?.[element], count: calculateTotal(toRaw(store.cart?.[element])) })
     }
-    return res.filter(x => x.count);
+    // return res.filter(x => x.count);
+    return res;
   });
   const allGamesWishlists = computed(() => {
     const res = [];
-    for (const element of Object.values(GAMES)) {
-      res.push({ name: element, values: store.wishlist?.[element], count: calculateTotal(store.wishlist?.[element]) })
+    for (const element of SINGLES_ACTIVE_GAMES) {
+      res.push({ name: element, values: store.wishlist?.[element], count: calculateTotal(toRaw(store.wishlist?.[element])) })
     }
-    return res.filter(x => x.count);
+    // return res.filter(x => x.count);
+    return res;
   });
 
   // Watcher para persistencia local automática
   watch(() => store.cart, (newVal) => {
     if (store.isHydrated) {
-      console.log("NEW VAL: CART", game, newVal)
       for (const element of Object.values(GAMES)) {
         cleanOrUpdateCarts(loggedUser.value?.email, { cart: true, game: element }, JSON.stringify(newVal[element]))
       }

@@ -1,5 +1,5 @@
 <template>
-    <ProductListsCarts :values="allGamesWishlists" wishlist />
+    <ProductListsCarts v-for="(cart, index) in allGamesWishlists" :cart="cart" :key="`${index}-cart-list`" wishlist/>
 </template>
 
 <script setup>

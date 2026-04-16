@@ -115,9 +115,10 @@ import NavigationBar from "./admin/NavigationBar.vue";
 const { user, loading: loadingUser, isAdmin, updateLoading, logout, isAuthenticated } = useAuth();
 const { isMobile } = useDevices();
 const { allGamesCarts, allGamesWishlists } = useCarts(GAMES.MAGIC);
+console.log("🚀 ~ allGamesCarts:", allGamesCarts)
 const listsLength = computed(() => ({
-  cart: allGamesCarts.value.reduce((prev, cur) => prev += cur.count, 0), wishlist:
-    allGamesWishlists.value.reduce((prev, cur) => prev += cur.count, 0)
+  cart: allGamesCarts.value?.reduce((prev, cur) => prev += cur.count, 0), wishlist:
+    allGamesWishlists.value?.reduce((prev, cur) => prev += cur.count, 0)
 }));
 
 const route = useRoute();

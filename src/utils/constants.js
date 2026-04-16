@@ -6,6 +6,7 @@ export const GAMES = Object.freeze({
 });
 
 export const ACTIVE_GAMES = Object.values(GAMES);
+export const SINGLES_ACTIVE_GAMES = [GAMES.MAGIC, GAMES.YUGIOH];
 
 export const NAVIGATION = Object.freeze({
   HOME: { path: "/", name: "Inicio", home: true },
