@@ -58,3 +58,10 @@ export const assembleList = (parsedList) => {
     },
   );
 };
+
+
+export const checkIfLoginIsExpired = (timestamp = 0) => {
+  if (timestamp === 0) return true;
+  const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+  return (Date.now() - timestamp > oneWeekInMs);
+}

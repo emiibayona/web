@@ -4,18 +4,25 @@ import { cleanOrUpdateCarts } from "@/utils/cartUtils";
 import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
+import { checkIfLoginIsExpired } from "@/utils/utils";
 
 export function useAuth() {
   const store = useAuthStore();
   const user = computed(() => store.user);
   const loading = computed(() => store.loading);
   const token = ref(localStorage.getItem("token") || null);
+  const tokenTimestamp = ref(localStorage.getItem("token_timestamp") || 0);
   const router = useRouter();
   const route = useRoute();
   const toast = useToast();
 
   // Getters reactivos
-  const isAuthenticated = computed(() => !!token.value);
+  const isAuthenticated = computed(() => {
+    if (!token.value || tokenTimestamp.value === 0) return false;
+    const timestamp = parseInt(tokenTimestamp.value);
+    return !checkIfLoginIsExpired(timestamp)
+  });
+
   const isAdmin = computed(() => {
     if (!isAuthenticated.value) return false;
     const currentTenants = user.value?.Tenants || user.value?.UserTenant || [];
@@ -29,6 +36,7 @@ export function useAuth() {
         tenant: "geartown",
       });
     }
+
   };
 
   // Función interna para sincronizar localStorage y estado reactivo
@@ -43,9 +51,10 @@ export function useAuth() {
   };
 
   // Guardar sesión
-  const setSession = (newToken, userData = null) => {
-    token.value = newToken;
-    localStorage.setItem("token", newToken);
+  const setSession = ({ token: tokencin, timestamp }, userData = null) => {
+    token.value = tokencin;
+    localStorage.setItem("token", tokencin);
+    localStorage.setItem("token_timestamp", timestamp)
     if (userData) _updateUser(userData);
   };
 
@@ -56,7 +65,7 @@ export function useAuth() {
   };
 
   // Cerrar sesión
-  const logout = () => {
+  const logout = (url = '/') => {
     store.updateLoading(true);
     cleanOrUpdateCarts(user?.value?.email, { cart: true, wish: true, user: true }, [])
     setTimeout(() => {
@@ -65,7 +74,7 @@ export function useAuth() {
       localStorage.removeItem("token");
       store.updateLocal(null);
       store.updateLoading(false);
-      router.push('/')
+      router.push(url);
     }, 1000)
   };
 
@@ -100,7 +109,7 @@ export function useAuth() {
           detail: "",
           life: 3000,
         })
-        router.push({ name: "Auth success", query: { ...loginResult } })
+        router.push({ name: "Auth success", query: loginResult })
       }
     } catch (err) { console.error("!!!!!!!!!!" + err) }
   }
@@ -115,7 +124,9 @@ export function useAuth() {
   }
 
   watch(() => store.user, (newVal) => {
-    sessionStorage.setItem(`loggedUser_${'geartown'}`, JSON.stringify(newVal))
+    if (store.user) {
+      sessionStorage.setItem(`loggedUser_${'geartown'}`, JSON.stringify(newVal))
+    }
   }, { deep: true })
 
   init();

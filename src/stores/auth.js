@@ -1,13 +1,17 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import AuthService from "@/services/AuthService";
+import { checkIfLoginIsExpired } from "@/utils/utils";
+import { useRoute, useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
     const user = ref(null);
     const isHydrated = ref(false);
     const loading = ref(false);
     const token = ref(localStorage.getItem("token") || null);
-
+    const tokenTimestamp = ref(localStorage.getItem("token_timestamp") || 0);
+    const router = useRouter();
+    const route = useRoute();
     // Guardamos la promesa para evitar colisiones de llamadas simultáneas
     let loadPromise = null;
     async function fetchUser({ tenant, force = false }) {
@@ -21,14 +25,18 @@ export const useAuthStore = defineStore("auth", () => {
                 const key = `loggedUser_${tenant || 'geartown'}`
                 const userOnStorage = sessionStorage.getItem(key);
 
-                if (userOnStorage === 'undefined' || !userOnStorage) {
+
+                const timestamp = parseInt(tokenTimestamp.value);
+                const tokenDead = checkIfLoginIsExpired(timestamp)
+
+                if (tokenDead || userOnStorage === 'undefined' || !userOnStorage) {
                     const response = await AuthService.profile();
-
-                    // Hidratamos el estado global
                     if (response) {
-                        user.value = response;
+                        user.value = response.status === 403 ? null : response;
+                        if (!user.value) {
+                            router.push("/auth/login?redirect=" + window.location.origin + (route?.redirectedFrom?.fullPath || '/'))
+                        }
                     }
-
                 } else {
                     user.value = JSON.parse(userOnStorage);
                 }

@@ -140,7 +140,7 @@ const canRegister = computed(() =>
 const handleLogin = () => {
     if (!registerMode.value && canLogin.value) {
         try {
-            loginWithLocal({ tenant: 'geartown', ...loginForm.value }, window.location.origin + (route?.redirectedFrom?.fullPath || '/'));
+            loginWithLocal({ tenant: 'geartown', ...loginForm.value }, route?.query?.redirect || window.location.origin + (route?.redirectedFrom?.fullPath || '/'));
             if (googleEnabled.value) {
                 loginWithGoogle('geartown', route?.query?.redirect || null);
             }

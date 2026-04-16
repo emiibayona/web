@@ -15,12 +15,13 @@ onMounted(async () => {
     if (Object.values(route.query).length) {
         auth.updateLoading(true);
         const token = route.query.token;
+        const timestamp = route.query.timestamp;
         const redirect = route.query.redirect;
 
         setTimeout(async () => { txt.value = "Validado, redirigiendo..." }, 1000);
         setTimeout(async () => {
             if (token) {
-                auth.setSession(token);
+                auth.setSession({ token, timestamp });
                 await auth.fetchUser();
                 window.location.href = redirect;
             } else {
